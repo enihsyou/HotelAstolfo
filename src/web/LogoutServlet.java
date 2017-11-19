@@ -13,12 +13,12 @@ public class LogoutServlet extends HttpServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     final HttpSession session = request.getSession(false);
     if (session == null) {
-      response.sendRedirect("/login.html");
+      response.sendRedirect("/index.html");
       return;
     }
     session.removeAttribute("username");
     session.invalidate();
-    response.sendRedirect("/login.html");
+    response.sendRedirect("/index.html");
   }
 
   @Override

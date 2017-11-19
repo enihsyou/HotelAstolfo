@@ -1,3 +1,5 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="zh_CN">
 <head>
@@ -5,12 +7,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>留言版</title>
-  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.css">
   <link href="https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/css/bootstrap.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
   <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/js/bootstrap.js"></script>
-  <script src="js/jquery-3.2.1.js"></script>
-  <script src="js/bootstrap.js"></script>
+  <%--<!--<script src="js/jquery-3.2.1.js"></script>-->--%>
+  <%--<!--<script src="js/bootstrap.js"></script>-->--%>
   <style>
     /*
  * Specific styles of signin component
@@ -23,13 +25,13 @@
       background: linear-gradient(rgb(112, 162, 158), rgb(95, 124, 177)) no-repeat;
     }
 
-    .container, .card-container {
-      margin: auto;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+    /*.container, .card-container {*/
+      /*margin: auto;*/
+      /*height: 100%;*/
+      /*display: flex;*/
+      /*justify-content: center;*/
+      /*align-items: center;*/
+    /*}*/
 
     /*
      * Card component
@@ -90,22 +92,41 @@
 
   </style>
 </head>
+
 <body data-gr-c-s-loaded="true">
 <div class="container">
-  <div class="card-container hoverable">
+  <div class="card-container">
     <div class="card">
-      <form class="form-signin text-center" action="/login.do" method="post">
-        <label for="username_input" class="form-control-label">尊姓大名：</label>
-        <input type="text" name="username" id="username_input" class="form-control username_input" placeholder="少女祈祷中…"
-            required autofocus pattern="\S+" maxlength="64" title="空的名字可不允许哟qaq">
-        <!--<label>-->
-        <!--<input type="checkbox" name="remember" value="1">-->
-        <!--记住我-->
-        <!--</label>-->
-        <button type="submit" class="btn btn-primary btn-block font-weight-bold">进入</button>
-      </form><!-- /form -->
+      <h4 class="card-header w-100">留言板</h4>
+
+      <div class="card-body">
+        <form action="list.do" id="make_note" method="post" class="form-group">
+          <textarea class="form-control" placeholder="写点什么吧😘" name="textarea" rows="3" spellcheck="true"></textarea>
+          <br>
+          <button formaction="logout.do" formmethod="get" class="btn btn-outline-danger float-left">登出</button>
+          <button type="submit" class="btn btn-primary float-right">┏ (゜ω゜)=☞</button>
+        </form>
+
+        <div class="clearfix"></div>
+        <hr>
+        <div class="list-group">
+          <jsp:useBean id="note_list" scope="request" class="java.util.ArrayList" type="java.util.ArrayList<model.Note>"/>
+          <c:forEach items="${note_list}" var="note">
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">@${note.author.username}</h5>
+                <small>${note.formatTime()}</small>
+              </div>
+              <p class="mb-1">${note.body}</p>
+            </a>
+          </c:forEach>
+        </div>
+      </div>
+      <!--<span class="text-danger float-right">4个</span>-->
     </div>
-  </div><!-- /card-container -->
-</div><!-- /container -->
+  </div>
+
+</div>
+
 </body>
 </html>
