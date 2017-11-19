@@ -28,7 +28,7 @@ public class ListServlet extends HttpServlet {
           username = cookie.getValue();
       }
       final Note note = new Note(input_textarea, new User(username), LocalDateTime.now());
-      list.add(note);
+      NoteList.getInstance().addNote(note);
     }
     response.sendRedirect("/list");
   }

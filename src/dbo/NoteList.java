@@ -1,6 +1,8 @@
 package dbo;
+
 import model.Note;
 import model.User;
+import org.sqlite.SQLiteDataSource;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -16,6 +18,11 @@ public class NoteList {
   }
 
   private NoteList() {
+    try {
+      DriverManager.registerDriver(new org.sqlite.JDBC());
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
     populateNotes();
   }
 
@@ -32,6 +39,18 @@ public class NoteList {
 
   public void addNote(Note note) {
     notes.add(note);
+    final SQLiteDataSource dataSource = new SQLiteDataSource();
+    // dataSource.setDatabaseName("javaweb.db");
+    dataSource.setUrl(JDBC_DB_URL);
+    try (Connection connection = dataSource.getConnection()) {
+      System.out.println("connected");
+
+      Statement s = connection.createStatement();
+      s.executeUpdate("INSERT INTO note_app(author, note_body, create_time) VALUES ('dfdfm','sdfa','adfd')");
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
     // Connection connection = null;
     // try {
     //   // create a database connection
