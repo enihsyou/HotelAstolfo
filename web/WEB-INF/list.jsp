@@ -11,8 +11,7 @@
   <link href="https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/css/bootstrap.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
   <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/js/bootstrap.js"></script>
-  <%--<!--<script src="js/jquery-3.2.1.js"></script>-->--%>
-  <%--<!--<script src="js/bootstrap.js"></script>-->--%>
+  <%--<!--<script src="js/jquery-3.2.1.js"></script>-->--%> <%--<!--<script src="js/bootstrap.js"></script>-->--%>
   <style>
     /*
  * Specific styles of signin component
@@ -26,11 +25,11 @@
     }
 
     /*.container, .card-container {*/
-      /*margin: auto;*/
-      /*height: 100%;*/
-      /*display: flex;*/
-      /*justify-content: center;*/
-      /*align-items: center;*/
+    /*margin: auto;*/
+    /*height: 100%;*/
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
     /*}*/
 
     /*
@@ -110,7 +109,9 @@
         <div class="clearfix"></div>
         <hr>
         <div class="list-group">
-          <jsp:useBean id="note_list" scope="request" class="java.util.ArrayList" type="java.util.ArrayList<model.Note>"/>
+          <jsp:useBean id="note_list" scope="request" class="java.util.ArrayList"
+              type="java.util.ArrayList<model.Note>"/>
+
           <c:forEach items="${note_list}" var="note">
             <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
               <div class="d-flex w-100 justify-content-between">
@@ -122,7 +123,7 @@
           </c:forEach>
         </div>
       </div>
-      <!--<span class="text-danger float-right">4个</span>-->
+      <span class="text-danger float-right">${note_list.size()}条留言</span>
     </div>
   </div>
 

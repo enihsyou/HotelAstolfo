@@ -12,14 +12,16 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import java.io.IOException
 import java.time.LocalDateTime
-import java.util.ArrayList
+import java.util.*
 
 @WebServlet(name = "web.ListServlet", urlPatterns = arrayOf("/list", "/list.do"))
 class ListServlet : HttpServlet() {
   @Throws(ServletException::class, IOException::class)
   override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
-    if (request.getSession(false) == null)
+    if (request.getSession(false) == null) {
       response.sendError(HttpServletResponse.SC_FORBIDDEN)
+      return
+    }
     val inputTextBody = request.getParameter("textarea")
     if (!inputTextBody.isEmpty()) {
       val noteList = NoteList.getNotes()
@@ -32,12 +34,13 @@ class ListServlet : HttpServlet() {
 
   @Throws(ServletException::class, IOException::class)
   override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
-    if (request.session.isNew) {
+    if (request.session.isNew || request.session.getAttribute("username") == null) {
       response.sendError(HttpServletResponse.SC_FORBIDDEN)
       return
     }
-    val list = NoteList.getNotes()
-
+    println("request.session.id = ${request.session.id}")
+    /*反转*/
+    val list = NoteList.getNotes().reversed()
     request.setAttribute("note_list", list)
     request.getRequestDispatcher("/WEB-INF/list.jsp").forward(request, response)
   }
