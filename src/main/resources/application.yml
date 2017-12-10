@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: Hotel Astolfo
+  ## DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost/?useSSL=false
+    username: enihsyou
+    password: enihsyou
+    sql-script-encoding: utf-8
+    initialize: true
+    # Schema (DDL) script resource references.
+    schema: classpath:hotel_schema.sql
+    # Data (DML) script resource references.
+    data: classpath:hotel_data.sql
+    name: astolfo_hotel
+    # Hikari先不使用
+    # hikari:
+    #   connection-init-sql: "SET NAMES 'utf8mb4'"
+
+
+  jpa:
+    show-sql: true
+    generate-ddl: true
+  session:
+    store-type: hash_map
+#  mail:
+#    host:
+#    port:
+#    username:
+#    password:
+#    protocol:
+#    jndi-name:
+#    test-connection: true
+
+## EMBEDDED SERVER CONFIGURATION (ServerProperties)
+server:
+  address: 0.0.0.0
+  port: 80
+  connection-timeout: 2000
+
+  compression:
+    enabled: true
+  tomcat:
+    uri-encoding: utf-8
+
+banner:
+  location: banner.txt
+mybatis:
+  type-aliases-package: com.enihsyou.astolfo.hotel.domain
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 3
+    default-executor-type: BATCH
+
+#---
+#
+#spring:
+#    profiles: development
+#server:
+#    port: 8080
+#
+#---
+#
+#spring:
+#    profiles: production
+#server:
+#    port: 0
