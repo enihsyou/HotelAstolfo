@@ -6,15 +6,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LoveHotelApplication implements CommandLineRunner {
+public class HotelAstolfoApplication implements CommandLineRunner {
 
   public static void main(String[] args) {
-    SpringApplication.run(LoveHotelApplication.class, args);
+    SpringApplication.run(HotelAstolfoApplication.class, args);
   }
 
   final private UserMapper userMapper;
 
-  public LoveHotelApplication(UserMapper userMapper) {
+  public HotelAstolfoApplication(UserMapper userMapper) {
     this.userMapper = userMapper;
   }
 
