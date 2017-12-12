@@ -22,6 +22,7 @@ spring:
   jpa:
     show-sql: true
     generate-ddl: true
+    database: mysql
   session:
     store-type: hash_map
 #  mail:
@@ -48,11 +49,17 @@ banner:
   location: banner.txt
 mybatis:
   type-aliases-package: com.enihsyou.astolfo.hotel.domain
+#  mapper-locations: com.enihsyou.astolfo.hotel.mybatis.mapper.xml
+#  config-location: mybatis.xml
   configuration:
-    map-underscore-to-camel-case: true
+#    map-underscore-to-camel-case: true
     default-fetch-size: 100
     default-statement-timeout: 3
     default-executor-type: BATCH
+logging:
+  level:
+    com.enihsyou.astolfo.hotel.mybatis:
+      mapper: TRACE
 
 #---
 #
