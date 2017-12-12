@@ -18,13 +18,13 @@ spring:
     # hikari:
     #   connection-init-sql: "SET NAMES 'utf8mb4'"
 
-
   jpa:
     show-sql: true
     generate-ddl: true
     database: mysql
   session:
     store-type: hash_map
+
 #  mail:
 #    host:
 #    port:
@@ -36,7 +36,7 @@ spring:
 
 ## EMBEDDED SERVER CONFIGURATION (ServerProperties)
 server:
-  address: 0.0.0.0
+  address: localhost
   port: 80
   connection-timeout: 2000
 
@@ -47,6 +47,10 @@ server:
 
 banner:
   location: banner.txt
+  image:
+    location: banner.jpg
+    width: 80
+    margin: 0
 mybatis:
   type-aliases-package: com.enihsyou.astolfo.hotel.domain
 #  mapper-locations: com.enihsyou.astolfo.hotel.mybatis.mapper.xml
@@ -60,6 +64,10 @@ logging:
   level:
     com.enihsyou.astolfo.hotel.mybatis:
       mapper: TRACE
+security:
+  basic:
+    enabled: false
+
 
 #---
 #
