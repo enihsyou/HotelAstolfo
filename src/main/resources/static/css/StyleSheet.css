@@ -1,0 +1,24 @@
+html {
+}
+
+body {
+    position: relative;
+}
+
+.login {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height:100vh;
+    /*background-color: rgba(52, 101, 139, 0.92);*/
+    display: block;
+    /*display: none;*/
+}
+
+.login .login-window{
+    position: absolute;
+    margin: auto;
+    width: 100%;
+    top: 30%;
+}
