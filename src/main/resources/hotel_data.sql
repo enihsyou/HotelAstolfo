@@ -1,1 +1,2 @@
-INSERT INTO student VALUE (100, 'email@e.com', 'dfd', sha2('password', 256))
+INSERT INTO registered_user (phone_number, username, password) VALUES
+  (18888888888, '我是第一个注册的', sha2('password', 256));

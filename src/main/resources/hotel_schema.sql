@@ -1,12 +1,14 @@
 CREATE DATABASE IF NOT EXISTS astolfo_hotel
-  DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+  DEFAULT CHARACTER SET utf8mb4
+  COLLATE utf8mb4_general_ci;
 
 USE astolfo_hotel;
-DROP TABLE IF EXISTS student CASCADE;
+DROP TABLE IF EXISTS registered_user CASCADE;
 
-CREATE TABLE IF NOT EXISTS student (
-  student_uid    INTEGER UNSIGNED AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY COMMENT '学生学号，唯一编号',
-  student_email  VARCHAR(100)                    NOT NULL COMMENT '学生邮箱，用于登录',
-  student_name   VARCHAR(30) COMMENT '学生姓名',
-  student_passwd VARCHAR(64) COMMENT 'SHA-256加密'
-) COMMENT '学生表';
+CREATE TABLE IF NOT EXISTS registered_user (
+  phone_number  BIGINT UNSIGNED NOT NULL UNIQUE PRIMARY KEY COMMENT '用户手机号，可用于登录',
+  username      VARCHAR(30) DEFAULT '' COMMENT '昵称',
+  password      VARCHAR(64)     NOT NULL COMMENT 'SHA-256加密',
+  register_date DATETIME    DEFAULT now(),
+  CONSTRAINT UNIQUE (phone_number)
+) COMMENT '注册用户';
