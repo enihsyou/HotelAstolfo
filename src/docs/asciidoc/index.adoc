@@ -1,6 +1,14 @@
-= Getting Started With Spring REST Docs
+= アストルフォ ホテル管理システム
+九条涼果 <s1131234@gmail.com>
+:Author:    九条涼果
+:Email:     s1131234@gmail.com
+:Date:      AlternativeWayToSetOptional date
+:Revision:  0.0.1
 
-This is an example output for a service running at http://localhost:8080:
+阿福旅馆，默认运行在 +http://localhost:80+ 下
+
+
+Author is {myname}
 
 ifndef::snippets[]
 :snippets: ../../../target/snippets
@@ -16,3 +24,14 @@ As you can see the format is very simple, and in fact you always get the same me
 
 include::{snippets}/home/http-request.adoc[]
 
+
+https://jsonschema.net/[JSON to JSON Schema生成工具]
+
+http://brutusin.org/json-forms/[JSON Schema to HTML form生成工具]
+
+
+
+.Optional Title
+
+Usual
+paragraph.

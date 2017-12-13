@@ -1,11 +1,12 @@
 package com.enihsyou.astolfo.hotel.controller
 
 //import com.enihsyou.astolfo.hotel.repository.UserRepository
+import com.enihsyou.astolfo.hotel.domain.LoginPayload
 import com.enihsyou.astolfo.hotel.mybatis.UserMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 
@@ -17,10 +18,8 @@ class LoginController {
 //  lateinit var userRepository: UserRepository
 
   @PostMapping
-  fun doLogin(@RequestParam("username") username: String, @RequestParam("password") password: String): String {
-    println("username = ${username}")
-    println("password = ${password}")
-    return "$username + $password"
+  fun doLogin(@RequestBody payload: LoginPayload): String {
+    return payload.toString()
   }
 
 }
@@ -29,14 +28,13 @@ class LoginController {
 @RequestMapping("/api/signup")
 class SignupController {
   @Autowired
-  private val userMapper: UserMapper? = null
-
+  lateinit var userMapper: UserMapper
 
   @PostMapping
-  fun doSignup(@RequestParam("username") username: String, @RequestParam("password") password: String) {
-    println("username = ${username}")
-    println("password = ${password}")
-    userMapper?.signUp(username, password)
+  fun doSignup(@RequestBody payload: LoginPayload) {
+    println("phone_number = ${payload.phoneNumber}")
+    println("password = ${payload.password}")
+    userMapper.signUp(payload.phoneNumber, payload.password)
 
   }
 

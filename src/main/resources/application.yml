@@ -4,11 +4,11 @@ spring:
   ## DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost/?useSSL=false
+    url: jdbc:mysql://localhost/astolfo_hotel?useSSL=false
     username: enihsyou
     password: enihsyou
     sql-script-encoding: utf-8
-    initialize: true
+    initialize: false
     # Schema (DDL) script resource references.
     schema: classpath:hotel_schema.sql
     # Data (DML) script resource references.
@@ -24,7 +24,6 @@ spring:
     database: mysql
   session:
     store-type: hash_map
-
 #  mail:
 #    host:
 #    port:
@@ -56,7 +55,7 @@ mybatis:
 #  mapper-locations: com.enihsyou.astolfo.hotel.mybatis.mapper.xml
 #  config-location: mybatis.xml
   configuration:
-#    map-underscore-to-camel-case: true
+    map-underscore-to-camel-case: true
     default-fetch-size: 100
     default-statement-timeout: 3
     default-executor-type: BATCH
@@ -65,8 +64,12 @@ logging:
     com.enihsyou.astolfo.hotel.mybatis:
       mapper: TRACE
 security:
+  user:
+    password: 2333
+    name: user
   basic:
     enabled: false
+
 
 
 #---
