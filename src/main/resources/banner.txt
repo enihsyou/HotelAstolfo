@@ -1,4 +1,4 @@
-${AnsiColor.BLUE}
+${AnsiColor.BRIGHT_MAGENTA}
 
  █████╗ ███████╗████████╗ ██████╗ ██╗     ███████╗ ██████╗
 ██╔══██╗██╔════╝╚══██╔══╝██╔═══██╗██║     ██╔════╝██╔═══██╗
@@ -7,6 +7,6 @@ ${AnsiColor.BLUE}
 ██║  ██║███████║   ██║   ╚██████╔╝███████╗██║     ╚██████╔╝
 ╚═╝  ╚═╝╚══════╝   ╚═╝    ╚═════╝ ╚══════╝╚═╝      ╚═════╝
 
-${AnsiColor.BRIGHT_CYAN}
+${AnsiColor.BLUE}
 Application Version: ${application.version}${application.formatted-version}
 Spring Boot Version: ${spring-boot.version}${spring-boot.formatted-version}

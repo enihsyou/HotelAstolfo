@@ -24,15 +24,12 @@ spring:
     database: mysql
   session:
     store-type: hash_map
-#  mail:
-#    host:
-#    port:
-#    username:
-#    password:
-#    protocol:
-#    jndi-name:
-#    test-connection: true
-
+  mvc:
+    locale: zh_CN
+  jackson:
+    locale: zh_CN
+    serialization:
+      write_dates_as_timestamps: false
 ## EMBEDDED SERVER CONFIGURATION (ServerProperties)
 server:
   address: localhost
@@ -50,10 +47,9 @@ banner:
     location: banner.jpg
     width: 80
     margin: 0
+
 mybatis:
   type-aliases-package: com.enihsyou.astolfo.hotel.domain
-#  mapper-locations: com.enihsyou.astolfo.hotel.mybatis.mapper.xml
-#  config-location: mybatis.xml
   configuration:
     map-underscore-to-camel-case: true
     default-fetch-size: 100
@@ -61,27 +57,20 @@ mybatis:
     default-executor-type: BATCH
 logging:
   level:
-    com.enihsyou.astolfo.hotel.mybatis:
-      mapper: TRACE
-security:
-  user:
-    password: 2333
-    name: user
-  basic:
-    enabled: false
-
-
-
-#---
-#
-#spring:
-#    profiles: development
-#server:
-#    port: 8080
-#
-#---
-#
-#spring:
-#    profiles: production
-#server:
-#    port: 0
+    org.springframework.web: warn
+    com.enihsyou.astolfo.hotel.mybatis: trace
+#security:
+#  basic:
+#    enabled: false
+#  user:
+#    name: test
+#    password: 2333
+#  enable-csrf: false
+#mail:
+#  host:
+#  port:
+#  username:
+#  password:
+#  protocol:
+#  jndi-name:
+#  test-connection: true

@@ -6,17 +6,19 @@ Content-Type: application/json
   "password": "abc"
 }
 ###
-GET http://localhost/greeting?name=Kotlin
-
-###
-
 POST http://localhost/api/signup
 Content-Type: application/json
 
-#Authorization: Basic user:2333
-#Authorization: Basic dXNlcjoyMzMz
 {
-  "phone_number": "18812341255",
+  "phone_number": "18832321239",
   "password": "abc"
 }
+###
+GET http://localhost
+Accept-Charset: UTF-8
+X-Device-Accept-Charset: UTF-8
+
+###
+GET http://localhost/api/signup
+
 ###

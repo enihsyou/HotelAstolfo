@@ -6,9 +6,20 @@ import java.sql.Timestamp
 import javax.validation.Payload
 
 
-data class User(val phoneNumber: Number, var username: String?, val password: String, val register_date: Timestamp) : Serializable
+enum class UserRole {
+  管理员, 前台, 注册用户
+}
 
-data class LoginPayload(
-    @JsonProperty("phone_number") val phoneNumber: String = "",
-    @JsonProperty("password") val password: String = ""
-) : Payload
+
+/*用户类*/
+data class User(
+    val phone_number: Long,
+    var nickname: String?,
+    val password: String,
+    val register_date: Timestamp,
+
+    /*标记用户类型*/
+    val user_role: String
+) : Serializable {
+  fun user_role(): UserRole = UserRole.valueOf(user_role)
+}
