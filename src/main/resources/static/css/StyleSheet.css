@@ -15,6 +15,7 @@ body {
 
 .top_banner .login_button {
     position: absolute;
+    z-index: 11;
     left: 90%;
     cursor: pointer;
     display: inline-block;
@@ -34,6 +35,7 @@ body {
 
 .login {
     position: fixed;
+    z-index: 10;
     top: 0;
     left: 0;
     width: 100vw;
@@ -45,7 +47,6 @@ body {
 
 .login .login_window {
     position: absolute;
-    z-index: 10;
     margin: auto;
     width: 100%;
     top: 30%;
@@ -68,6 +69,7 @@ body {
 
 .main .slider_container div {
     position: absolute;
+    z-index: 0;
     width: 100vw;
     height: 85vh;
     opacity: 1;
@@ -77,31 +79,31 @@ body {
 }
 
 .slider_container div:nth-child(5) {
-    background: url(../images/image5.jpg);
+    background: url(../images/image5.jpg) center center;
     background-size: cover;
     animation-delay: 0s;
 }
 
 .slider_container div:nth-child(4) {
-    background: url(../images/image4.jpg);
+    background: url(../images/image4.jpg) center center;
     background-size: cover;
     animation-delay: 10s;
 }
 
 .slider_container div:nth-child(3) {
-    background: url(../images/image3.jpg);
+    background: url(../images/image3.jpg) center center;
     background-size: cover;
     animation-delay: 20s;
 }
 
 .slider_container div:nth-child(2) {
-    background: url(../images/image2.jpg);
+    background: url(../images/image2.jpg) center center;
     background-size: cover;
     animation-delay: 30s;
 }
 
 .slider_container div:nth-child(1) {
-    background: url(../images/image1.jpg);
+    background: url(../images/image1.jpg) center center;
     background-size: cover;
     animation-delay: 40s;
 }
@@ -113,7 +115,7 @@ body {
 .main .slider_container span {
     position: absolute;
     width: 100%;
-    top: 80%;
+    top: 90%;
     color: #000;
     font-size: 30px;
     text-align: center;
@@ -142,11 +144,15 @@ body {
         opacity: 0;
         filter: alpha(opacity=0);
     }
-    100%{
+    100% {
         left: -100%;
         opacity: 0;
         filter: alpha(opacity=0);
     }
+}
+
+.searchBox {
+    box-shadow: #0f0f0f;
 }
 
 .footer {
