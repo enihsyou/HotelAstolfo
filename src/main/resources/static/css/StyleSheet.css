@@ -53,6 +53,23 @@ body {
     color: #ffffff;
 }
 
+.login .login_window .checkbox {
+    padding-bottom: .5em;
+}
+
+.login .login_window .checkbox em {
+    font-size: 12px;
+    color: darkgray;
+}
+
+.login .login_window .tips {
+    cursor: auto;
+}
+
+.login .login_window .confirm {
+    cursor: pointer;
+}
+
 .main {
     z-index: 0;
     display: block;
@@ -69,10 +86,9 @@ body {
 
 .main .slider_container div {
     position: absolute;
-    z-index: 0;
     width: 100vw;
     height: 85vh;
-    opacity: 1;
+    opacity: 0;
     filter: alpha(opacity=0);
     -webkit-animation: round 25s linear infinite;
     animation: round 50s linear infinite 0s;
@@ -131,28 +147,54 @@ body {
 @keyframes round {
     0% {
         left: 0;
+        z-index: 1;
         opacity: 1;
-        filter: alpha(opacity=100);
     }
     20% {
         left: 0;
+        z-index: 2;
         opacity: 1;
-        filter: alpha(opacity=100);
     }
     23% {
         left: -50%;
+        z-index: 2;
         opacity: 0;
-        filter: alpha(opacity=0);
     }
     100% {
         left: -100%;
+        z-index: 2;
         opacity: 0;
-        filter: alpha(opacity=0);
     }
 }
 
 .searchBox {
-    box-shadow: #0f0f0f;
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    width: 30vw;
+    height: 50vh;
+    z-index: 5;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 3%;
+    box-shadow: 1.2em 1.2em 5em .5em rgba(41, 41, 41, 0.3);
+}
+
+.searchBox .searchBoxContent {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    top: 5%;
+    left: 5%;
+}
+.searchBox .searchBoxContent *{
+    zoom: 1.2;
+}
+
+.searchBox .searchBoxContent .confirm {
+    position: absolute;
+    bottom: 2%;
+    width: 100%;
+    cursor: pointer;
 }
 
 .footer {
