@@ -13,9 +13,6 @@ import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import java.time.LocalDateTime
 
-
-abstract class ApiSubError
-
 class ApiError private constructor() {
   /*HTTP 状态码*/
   lateinit var status: HttpStatus
@@ -26,8 +23,6 @@ class ApiError private constructor() {
   var message: String = "什么地方出错了orz"
   /*调用栈信息*/
   var debugMessage: String? = null
-  /*子错误*/
-  val subErrors: List<ApiSubError>? = null
 
   constructor(status: HttpStatus) : this() {
     this.status = status
@@ -62,5 +57,15 @@ class RestExceptionHandler : ResponseEntityExceptionHandler() {
   @ExceptionHandler(注册时用户已存在::class)
   fun userAlreadyExist(exception: 注册时用户已存在): ResponseEntity<Any> {
     return buildResponseEntity(ApiError(HttpStatus.CONFLICT, "该用户已注册", exception))
+  }
+
+  @ExceptionHandler(用户不存在::class)
+  fun userNotExist(exception: 用户不存在): ResponseEntity<Any> {
+    return buildResponseEntity(ApiError(HttpStatus.NOT_FOUND, "当前用户名未注册", exception))
+  }
+
+  @ExceptionHandler(账号名或密码错误::class)
+  fun wrongPassword(exception: 账号名或密码错误): ResponseEntity<Any> {
+    return buildResponseEntity(ApiError(HttpStatus.BAD_REQUEST, "账号名或密码错误", exception))
   }
 }
