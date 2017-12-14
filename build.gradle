@@ -51,6 +51,7 @@ dependencies {
     compile 'com.github.pagehelper:pagehelper-spring-boot:1.2.3'
     compile group: 'com.fasterxml.jackson.module', name: 'jackson-modules-java8', version: '2.8.5', ext: 'pom'
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.8.8'
+    compile group: 'com.google.guava', name: 'guava', version: '23.5-jre'
     compileOnly('org.springframework.boot:spring-boot-configuration-processor')
     runtime('mysql:mysql-connector-java')
     runtime('org.springframework.boot:spring-boot-devtools')

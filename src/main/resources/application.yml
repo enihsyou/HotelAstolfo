@@ -22,7 +22,7 @@ spring:
     generate-ddl: true
     database: mysql
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 
     properties:
       hibernate:

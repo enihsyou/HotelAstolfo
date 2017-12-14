@@ -1,9 +1,7 @@
 package com.enihsyou.astolfo.hotel.controller
 
-import com.enihsyou.astolfo.hotel.domain.Users
-import com.enihsyou.astolfo.hotel.error.注册时用户已存在
-import com.enihsyou.astolfo.hotel.error.用户不存在
-import com.enihsyou.astolfo.hotel.repository.UserRepository
+import com.enihsyou.astolfo.hotel.domain.User
+import com.enihsyou.astolfo.hotel.service.UserService
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -11,7 +9,8 @@ import javax.validation.Payload
 
 data class LoginPayload(
     @JsonProperty("phone_number") val phone_number: Long = 0,
-    @JsonProperty("password") val password: String = ""
+    @JsonProperty("password") val password: String = "",
+    @JsonProperty("nickname") val nickname: String = ""
 ) : Payload
 
 
@@ -19,50 +18,42 @@ data class LoginPayload(
 @RequestMapping("/api/users")
 class UserController {
   @Autowired
-  lateinit var userRepository: UserRepository
+  lateinit var userService: UserService
 
   @GetMapping("/list")
-  fun listUsers(): MutableIterable<Users>? {
-    return userRepository.findAll()
-  }
+  fun listUsers(): MutableIterable<User>? =
+      userService.listUsers()
 
-  @GetMapping("/{phone}")
-  fun getUser(@PathVariable phone: Long): Users? =
-      userRepository.findOne(phone)
 
   @PostMapping("/signup")
-  fun signUp(@RequestBody payload: LoginPayload): Unit {
-    val (phone_number, password) = payload
-    val user = userRepository.findOne(phone_number)
-    /*如果用户已经存在*/
-    if (user == null) {
-      /*注册并返回*/
-      userRepository.save(Users(
-              phone_number = phone_number,
-              password = password
-      ))
-    } else throw 注册时用户已存在(phone_number.toString())
+  fun signUp(@RequestBody payload: LoginPayload) {
+    val (phone_number, password, nickname) = payload
+    userService.signUp(phone_number, password, nickname)
   }
 
   @PostMapping("/login")
-  fun login(@RequestBody payload: LoginPayload): Unit {
+  fun login(@RequestBody payload: LoginPayload) {
     val (phone_number, password) = payload
-    val user = userRepository.findOne(phone_number)?: throw 用户不存在(phone_number.toString())
-    return
+    userService.login(phone_number, password)
   }
+
   @GetMapping("/{userID}/book")
   fun getUserCustomers(@PathVariable userID: Long?) {
     // ...
   }
 
-  @PutMapping("/{userID}")
-  fun updateUser() {
-    //todo 更新用户信息
-  }
+  @GetMapping("/{phone}")
+  fun getUser(@PathVariable phone: Long): User? =
+      userService.findUserByPhone(phone)
 
-  @DeleteMapping("/{userID}")
-  fun deleteUser(@PathVariable userID: Long?) {
-    //todo 删除用户
-  }
+  @PutMapping("/{phone}")
+  fun updateUser(@PathVariable phone: Long) =
+      userService.updateInformation(phone)
+
+
+  @DeleteMapping("/{phone}")
+  fun deleteUser(@PathVariable phone: Long) =
+      userService.deleteUser(phone)
+
 
 }

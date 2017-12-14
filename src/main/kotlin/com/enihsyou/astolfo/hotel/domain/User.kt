@@ -45,7 +45,7 @@ enum class UserRole {
 
 @Entity
 @Table(name = "user")
-data class Users(
+data class User(
     @Id
     @PrimaryKeyJoinColumn
     @Column(name = "phone_number")
