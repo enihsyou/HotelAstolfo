@@ -8,7 +8,7 @@ spring:
     password: enihsyou
     schema: classpath*:hotel_schema.sql
     data: classpath*:hotel_data.sql
-#    initialize: true
+    initialize: false
   jpa:
     show-sql: true
   session:

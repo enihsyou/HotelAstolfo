@@ -6,6 +6,7 @@ import com.enihsyou.astolfo.hotel.error.用户不存在
 import com.enihsyou.astolfo.hotel.repository.UserRepository
 import com.google.common.hash.Hashing
 import org.springframework.stereotype.Service
+import org.springframework.data.domain.Pageable
 import java.nio.charset.StandardCharsets
 import javax.annotation.Resource
 
@@ -13,18 +14,18 @@ interface UserService {
     fun signUp(phoneNumber: Long, password: String, nickname: String = "")
     fun login(phoneNumber: Long, password: String)
     fun findUserByPhone(phone: Long): User?
-    fun listUsers(): MutableIterable<User>?
-    fun updateInformation(phone: Long)
-    fun deleteUser(phone: Any)
+    fun listUsers(pageable: Pageable): MutableIterable<User>?
+    fun updateInformation(user:User)
+    fun deleteUser(phone: Long)
 }
 
 @Service
 class UserServiceImpl : UserService {
-    override fun updateInformation(phone: Long) {
+    override fun updateInformation(user: User) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun deleteUser(phone: Any) {
+    override fun deleteUser(phone: Long) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -35,8 +36,8 @@ class UserServiceImpl : UserService {
         return repository.findOne(phone)
     }
 
-    override fun listUsers(): MutableIterable<User>? {
-        return repository.findAll()
+    override fun listUsers(pageable: Pageable): MutableIterable<User>? {
+        return repository.findAll(pageable)
     }
 
     override fun signUp(phoneNumber: Long, password: String, nickname: String) {

@@ -1,4 +1,5 @@
 GET http://localhost/api/users/list
+Authorization:Basic dGVzdDoyMzMz
 ###
 
 GET http://localhost/api/users/18834321239

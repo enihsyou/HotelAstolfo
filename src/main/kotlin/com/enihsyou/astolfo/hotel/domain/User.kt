@@ -1,5 +1,6 @@
 package com.enihsyou.astolfo.hotel.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -23,15 +24,11 @@ data class User(
         @Column(name = "register_date")
         @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
         val register_data: LocalDateTime = LocalDateTime.MIN,
-//        @OneToOne
-//        @JoinColumn(name = "role_id")
-//        @Enumerated(EnumType.STRING)
-//        @Convert(converter = UserRoleConverter::class)
-//        var role: UserRoleTable? = null
-        @Column(name="role")
-        var role: Int = UserRole.未注册.ordinal
-
-
+        @OneToOne(targetEntity = UserRoleTable::class)
+        @JoinColumn(name = "role")
+        @Enumerated(EnumType.STRING)
+        @Convert(converter = UserRoleConverter::class)
+        var role: UserRoleTable? = null
 )
 
 class UserRoleConverter : AttributeConverter<UserRole, String> {
@@ -49,7 +46,7 @@ class UserRoleConverter : AttributeConverter<UserRole, String> {
 @Table(name = "user_role")
 data class UserRoleTable(
         @Id
-        var id: Long,
+        var id: Long = 0,
 
         var type: String = "未注册"
 )

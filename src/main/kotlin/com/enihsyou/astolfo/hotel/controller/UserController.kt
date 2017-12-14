@@ -4,6 +4,7 @@ import com.enihsyou.astolfo.hotel.domain.User
 import com.enihsyou.astolfo.hotel.service.UserService
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.*
 import javax.validation.Payload
 
@@ -17,15 +18,13 @@ data class LoginPayload(
 @RestController("用户接口控制器")
 @RequestMapping("/api/users")
 class UserController {
+
     @Autowired
     lateinit var userService: UserService
 
-    @RequestMapping("/list")
-    fun listUsers2(): MutableIterable<User>? =
-            userService.listUsers()
     @GetMapping("/list")
-    fun listUsers(): MutableIterable<User>? =
-            userService.listUsers()
+    fun listUsers(pageable: Pageable): MutableIterable<User>? =
+            userService.listUsers(pageable)
 
 
     @PostMapping("/signup")
@@ -50,8 +49,10 @@ class UserController {
             userService.findUserByPhone(phone)
 
     @PutMapping("/{phone}")
-    fun updateUser(@PathVariable phone: Long) =
-            userService.updateInformation(phone)
+    fun updateUser(@PathVariable phone: Long) {
+        val user = getUser(phone)
+        user?.let { userService.updateInformation(it) }
+    }
 
 
     @DeleteMapping("/{phone}")
