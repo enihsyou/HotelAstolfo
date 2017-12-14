@@ -8,52 +8,55 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Payload
 
 data class LoginPayload(
-    @JsonProperty("phone_number") val phone_number: Long = 0,
-    @JsonProperty("password") val password: String = "",
-    @JsonProperty("nickname") val nickname: String = ""
+        @JsonProperty("phone_number") val phone_number: Long = 0,
+        @JsonProperty("password") val password: String = "",
+        @JsonProperty("nickname") val nickname: String = ""
 ) : Payload
 
 
-@RestController
+@RestController("用户接口控制器")
 @RequestMapping("/api/users")
 class UserController {
-  @Autowired
-  lateinit var userService: UserService
+    @Autowired
+    lateinit var userService: UserService
 
-  @GetMapping("/list")
-  fun listUsers(): MutableIterable<User>? =
-      userService.listUsers()
-
-
-  @PostMapping("/signup")
-  fun signUp(@RequestBody payload: LoginPayload) {
-    val (phone_number, password, nickname) = payload
-    userService.signUp(phone_number, password, nickname)
-  }
-
-  @PostMapping("/login")
-  fun login(@RequestBody payload: LoginPayload) {
-    val (phone_number, password) = payload
-    userService.login(phone_number, password)
-  }
-
-  @GetMapping("/{userID}/book")
-  fun getUserCustomers(@PathVariable userID: Long?) {
-    // ...
-  }
-
-  @GetMapping("/{phone}")
-  fun getUser(@PathVariable phone: Long): User? =
-      userService.findUserByPhone(phone)
-
-  @PutMapping("/{phone}")
-  fun updateUser(@PathVariable phone: Long) =
-      userService.updateInformation(phone)
+    @RequestMapping("/list")
+    fun listUsers2(): MutableIterable<User>? =
+            userService.listUsers()
+    @GetMapping("/list")
+    fun listUsers(): MutableIterable<User>? =
+            userService.listUsers()
 
 
-  @DeleteMapping("/{phone}")
-  fun deleteUser(@PathVariable phone: Long) =
-      userService.deleteUser(phone)
+    @PostMapping("/signup")
+    fun signUp(@RequestBody payload: LoginPayload) {
+        val (phone_number, password, nickname) = payload
+        userService.signUp(phone_number, password, nickname)
+    }
+
+    @PostMapping("/login")
+    fun login(@RequestBody payload: LoginPayload) {
+        val (phone_number, password) = payload
+        userService.login(phone_number, password)
+    }
+
+    @GetMapping("/{userID}/book")
+    fun getUserCustomers(@PathVariable userID: Long?) {
+        // ...
+    }
+
+    @GetMapping("/{phone}")
+    fun getUser(@PathVariable phone: Long): User? =
+            userService.findUserByPhone(phone)
+
+    @PutMapping("/{phone}")
+    fun updateUser(@PathVariable phone: Long) =
+            userService.updateInformation(phone)
+
+
+    @DeleteMapping("/{phone}")
+    fun deleteUser(@PathVariable phone: Long) =
+            userService.deleteUser(phone)
 
 
 }

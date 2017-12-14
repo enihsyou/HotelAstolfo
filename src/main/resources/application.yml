@@ -6,32 +6,14 @@ spring:
     url: jdbc:mysql://localhost/astolfo_hotel?useSSL=false
     username: enihsyou
     password: enihsyou
-    sql-script-encoding: utf-8
-    initialize: false
-    # Schema (DDL) script resource references.
-#    schema: classpath:hotel_schema.sql
-    # Data (DML) script resource references.
-    data: classpath:import.sql
-    name: astolfo_hotel
-    # Hikari先不使用
-    # hikari:
-    #   connection-init-sql: "SET NAMES 'utf8mb4'"
+    schema: classpath*:hotel_schema.sql
+    data: classpath*:hotel_data.sql
+#    initialize: true
   jpa:
     show-sql: true
-    generate-ddl: true
-    database: mysql
-    hibernate:
-      ddl-auto: create-drop
-    properties:
-      hibernate:
-        dialect:
-          org.hibernate.dialect.MySQL5Dialect
   session:
     store-type: hash_map
-  mvc:
-    locale: zh_CN
   jackson:
-    locale: zh_CN
     serialization:
       write_dates_as_timestamps: false
   h2:
@@ -39,48 +21,26 @@ spring:
       enabled: true
       settings:
         trace: true
-## EMBEDDED SERVER CONFIGURATION (ServerProperties)
 server:
   address: localhost
   port: 80
   connection-timeout: 2000
-
   compression:
     enabled: true
   tomcat:
     uri-encoding: utf-8
-#
-#banner:
-#  location: banner.txt
-#  image:
-#    location: banner.jpg
-#    width: 80
-#    margin: 0
-
-mybatis:
-  type-aliases-package: com.enihsyou.astolfo.hotel.domain
-  configuration:
-    map-underscore-to-camel-case: true
-    default-fetch-size: 100
-    default-statement-timeout: 3
-    default-executor-type: BATCH
-
-logging:
-  level:
-#    org.springframework.web: warn
-    com.enihsyou.astolfo.hotel.mybatis: trace
+banner:
+  image:
+    width: 80
+    margin: 0
 security:
   basic:
-    enabled: false
-#  user:
-#    name: test
-#    password: 2333
+    enabled: true
+    path: /api/**
+    realm: Astolfo
   enable-csrf: false
-#mail:
-#  host:
-#  port:
-#  username:
-#  password:
-#  protocol:
-#  jndi-name:
-#  test-connection: true
+  user:
+    name: test
+    password: 2333
+  ignored: /api/users/login, /api/users/signup
+

@@ -7,5 +7,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 class HotelAstolfoApplication
 
 fun main(args: Array<String>) {
-  SpringApplication.run(HotelAstolfoApplication::class.java, *args)
+    SpringApplication.run(HotelAstolfoApplication::class.java, *args)
 }
