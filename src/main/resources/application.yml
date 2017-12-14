@@ -9,21 +9,19 @@ spring:
     sql-script-encoding: utf-8
     initialize: false
     # Schema (DDL) script resource references.
-    schema: classpath:hotel_schema.sql
+#    schema: classpath:hotel_schema.sql
     # Data (DML) script resource references.
-    data: classpath:hotel_data.sql
+    data: classpath:import.sql
     name: astolfo_hotel
     # Hikari先不使用
     # hikari:
     #   connection-init-sql: "SET NAMES 'utf8mb4'"
-
   jpa:
     show-sql: true
     generate-ddl: true
     database: mysql
     hibernate:
-      ddl-auto: update
-
+      ddl-auto: create-drop
     properties:
       hibernate:
         dialect:

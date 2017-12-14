@@ -9,7 +9,8 @@ Content-Type: application/json
 
 {
   "phone_number": "18834321239",
-  "password": "abc"
+  "password": "abc",
+  "nickname":"dfadfdas"
 }
 ###
 

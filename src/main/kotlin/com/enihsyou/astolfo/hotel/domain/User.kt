@@ -1,46 +1,11 @@
 package com.enihsyou.astolfo.hotel.domain
 
-
-import com.sun.javafx.beans.IDProperty
 import javax.persistence.*
 
 
 enum class UserRole {
-  管理员, 前台, 注册用户
+  管理员, 前台, 注册用户, 未注册
 }
-
-
-/*用户类*/
-////@Entity
-////@Table(name = "user")
-//class User {
-//  //  @Id
-//  private val id: Long = 0
-//
-//  //  @NotBlank
-//  var phone_number: Long = 0
-//
-//  var nickname: String? = null
-//
-//  //  @NotBlank
-////  @JsonIgnoreProperties
-//  var password: String = ""
-//
-//  //  @NotBlank
-//  var user_role: UserRole = UserRole.注册用户
-//
-//
-//  //  @Column(nullable = false, updatable = false)
-////  @Temporal(TemporalType.TIMESTAMP)
-////  @CreatedDate
-//  private val createdAt: Date? = null
-//
-//
-//  //  @Column(nullable = false)
-////  @Temporal(TemporalType.TIMESTAMP)
-////  @LastModifiedDate
-//  private val updatedAt: Date? = null
-//}
 
 
 @Entity
@@ -53,5 +18,33 @@ data class User(
     @Column(name = "nick_name")
     var nick_name: String = "",
     @Column(name = "password")
-    var password: String = ""
+    var password: String = "",
+    @OneToOne
+    @JoinColumn(name = "role_id")
+    @Enumerated(EnumType.STRING)
+    @Convert(converter = UserRoleConverter::class)
+    var role: UserRoleTable? = null
+//    var role:UserRole=UserRole.注册用户
+
+
+)
+
+class UserRoleConverter : AttributeConverter<UserRole, String> {
+  override fun convertToEntityAttribute(dbData: String?): UserRole {
+    return dbData?.let { UserRole.valueOf(dbData) } ?: UserRole.未注册
+  }
+
+  override fun convertToDatabaseColumn(attribute: UserRole?): String {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
+}
+
+@Entity
+@Table(name = "user_role")
+data class UserRoleTable(
+    @Id
+    var id: Long,
+
+    var type: String = "未注册"
 )
