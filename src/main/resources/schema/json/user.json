@@ -1,0 +1,33 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://enihsyou.com/schema/user.json",
+  "type": "object",
+  "properties": {
+    "phone_number": {
+      "id": "/properties/phone_number",
+      "type": "string",
+      "title": "手机号",
+      "description": "使用手机号登录",
+      "default": "",
+      "minLength": 11,
+      "maxLength": 11,
+      "pattern": "\\d{11}"
+    },
+    "password": {
+      "id": "/properties/password",
+      "type": "string",
+      "title": "The Password Schema.",
+      "description": "SHA256加密后的密码",
+      "minLength": 256,
+      "maxLength": 256,
+      "pattern": "^\\w+$"
+    },
+    "nickname": {
+      "id": "/properties/nickname",
+      "type": "string",
+      "title": "昵称",
+      "description": "用户昵称"
+    }
+  }
+}
