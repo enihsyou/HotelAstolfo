@@ -1,0 +1,27 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://example.com/example.json",
+  "type": "object",
+  "properties": {
+    "phone_number": {
+      "id": "/properties/phone_number",
+      "type": "string",
+      "title": "用户手机号",
+      "description": "使用手机号当做用户名",
+      "default": ""
+    },
+    "password": {
+      "id": "/properties/password",
+      "type": "string",
+      "title": "The Password Schema.",
+      "description": "登录密码，明文",
+      "default": ""
+    }
+  },
+  "required": [
+    "phone_number",
+    "password"
+  ]
+}
+

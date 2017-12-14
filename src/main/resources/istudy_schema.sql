@@ -53,8 +53,7 @@ CREATE TABLE IF NOT EXISTS paper (
 CREATE TABLE question__paper (
   question_id INTEGER UNSIGNED NOT NULL,
   paper_id    INTEGER UNSIGNED NOT NULL,
-  ind INTEGER UNSIGNED NOT NULL 
-  PRIMARY KEY (question_id, paper_id),
+  ind INTEGER UNSIGNED NOT NULL, PRIMARY KEY (question_id, paper_id),
   CONSTRAINT FOREIGN KEY (question_id) REFERENCES istudy.question (question_id),
   CONSTRAINT FOREIGN KEY (paper_id) REFERENCES istudy.paper (paper_id)
 ) COMMENT '将试卷和试题关联';

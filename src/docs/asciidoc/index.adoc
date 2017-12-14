@@ -1,0 +1,37 @@
+= アストルフォ ホテル管理システム
+九条涼果 <s1131234@gmail.com>
+:Author:    九条涼果
+:Email:     s1131234@gmail.com
+:Date:      AlternativeWayToSetOptional date
+:Revision:  0.0.1
+
+阿福旅馆，默认运行在 +http://localhost:80+ 下
+
+
+Author is {myname}
+
+ifndef::snippets[]
+:snippets: ../../../target/snippets
+endif::[]
+
+.request
+include::{snippets}/home/http-request.adoc[]
+
+.response
+include::{snippets}/home/http-response.adoc[]
+
+As you can see the format is very simple, and in fact you always get the same message.
+
+include::{snippets}/home/http-request.adoc[]
+
+
+https://jsonschema.net/[JSON to JSON Schema生成工具]
+
+http://brutusin.org/json-forms/[JSON Schema to HTML form生成工具]
+
+
+
+.Optional Title
+
+Usual
+paragraph.

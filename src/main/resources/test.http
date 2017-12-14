@@ -1,0 +1,23 @@
+GET http://localhost/api/users/list
+###
+
+GET http://localhost/api/users/18834321239
+
+###
+POST http://localhost/api/users/signup
+Content-Type: application/json
+
+{
+  "phone_number": "18834321239",
+  "password": "abc"
+}
+###
+
+PUT http://localhost/api/users/18834321239
+Content-Type: application/json
+
+{
+  "nickname": "abc"
+}
+
+###
