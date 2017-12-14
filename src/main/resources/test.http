@@ -1,24 +1,24 @@
-POST http://localhost/api/login
-Content-Type: application/json
-
-{
-  "phone_number": "18812341235",
-  "password": "abc"
-}
-###
-POST http://localhost/api/signup
-Content-Type: application/json
+GET http://localhost/api/users/list
 
 {
   "phone_number": "18832321239",
   "password": "abc"
 }
 ###
-GET http://localhost
-Accept-Charset: UTF-8
-X-Device-Accept-Charset: UTF-8
+GET http://localhost/api/users/2
+
+{
+  "phone_number": "18832321239",
+  "password": "abc"
+}
+###
+POST http://localhost/api/users/signup
+Content-Type: application/json
+
+{
+  "phone_number": "18834321239",
+  "password": "abc"
+}
 
 ###
-GET http://localhost/api/signup
 
-###
