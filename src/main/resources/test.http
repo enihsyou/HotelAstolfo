@@ -10,7 +10,7 @@ GET http://localhost/greeting?name=Kotlin
 
 ###
 
-POST http://localhost/api/signup
+POST http://localhost:8888/api/signup
 Content-Type: application/json
 
 #Authorization: Basic user:2333

@@ -58,11 +58,26 @@ CREATE TABLE question__paper (
   CONSTRAINT FOREIGN KEY (paper_id) REFERENCES istudy.paper (paper_id)
 ) COMMENT '将试卷和试题关联';
 CREATE TABLE IF NOT EXISTS notes (
-  student_uid VARCHAR(20),
+  student_uid INTEGER UNSIGNED AUTO_INCREMENT NOT NULL ,
   note        VARCHAR(10000),
   PRIMARY KEY (student_uid),
   FOREIGN KEY (student_uid) REFERENCES student (student_uid)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
+
+
+UPDATE student SET student_passwd=#{student_passwd} WHERE student_uid=#{student_uid};
+UPDATE teacher SET teacher_passwd=#{student_passwd} WHERE teacher_uid=#{student_uid};
+UPDATE student SET student_email=#{student_email} WHERE student_uid=#{student_uid};
+UPDATE teacher SET teacher_email=#{teacher_email} WHERE teacher_uid=#{teacher_uid};
+
+DELETE FROM student WHERE student_uid=#{student_uid};
+DELETE FROM teacher WHERE teacher_uid=#{teacher_uid};
+//退课
+DELETE FROM take_course WHERE student_uid=#{student_uid} AND teacher_uid=#{teacher_uid};
+
+
+
+
 

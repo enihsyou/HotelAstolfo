@@ -5,10 +5,10 @@ spring:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost/astolfo_hotel?useSSL=false
-    username: enihsyou
-    password: enihsyou
+    username: root
+    password: 286956679hjy
     sql-script-encoding: utf-8
-    initialize: false
+    initialize: true
     # Schema (DDL) script resource references.
     schema: classpath:hotel_schema.sql
     # Data (DML) script resource references.
@@ -36,7 +36,7 @@ spring:
 ## EMBEDDED SERVER CONFIGURATION (ServerProperties)
 server:
   address: localhost
-  port: 80
+  port: 8888
   connection-timeout: 2000
 
   compression:
