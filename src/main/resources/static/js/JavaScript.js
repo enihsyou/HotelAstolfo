@@ -1,9 +1,11 @@
+//延时函数
 function sleep(time) {
     return new Promise((resolve, reject) => {
         setTimeout(resolve, time);
     });
 }
 
+//标题滚动
 async function titleScroller() {
     let index = 0;
     do {
@@ -13,6 +15,7 @@ async function titleScroller() {
     setTimeout(titleScroller, 2000);
 }
 
+//右上角登录入口按钮
 $('.login_button').click((e) => {
     let login = $('.login');
     let signup = $('.signup');
@@ -26,6 +29,8 @@ $('.login_button').click((e) => {
         $('.main').css('filter', 'none');
     }
 });
+
+//登录界面注册按钮
 $('.login .window .loginFooter .signup_button').click(function () {
     let signup = $('.signup');
     if (signup.css('display') === 'none') {
@@ -37,6 +42,7 @@ $('.login .window .loginFooter .signup_button').click(function () {
     }
 });
 
+//登录界面确认登录按钮
 $('.login .window .confirm').click(function () {
     if (isLogin) return;
     let _this = this;
@@ -71,6 +77,7 @@ $('.login .window .confirm').click(function () {
     }
 });
 
+//注册界面确认注册按钮
 $('.signup .window .confirm').click(function () {
     if (isSignup) return;
     let _this = this;
@@ -112,6 +119,7 @@ $('.signup .window .confirm').click(function () {
     }
 });
 
+//登录、注册界面关闭图标动作
 $('.window .close').click(function () {
     $(this).parent().parent().fadeOut();
     isLogin = false;
@@ -119,6 +127,7 @@ $('.window .close').click(function () {
     $('.main').css('filter', 'none');
 });
 
+//首页搜索框确认动作
 $('.searchBox .confirm').click(function () {
     if (isSearch) return;
     let _this = this;
@@ -158,6 +167,7 @@ $('.searchBox .confirm').click(function () {
     }
 });
 
+//封装消息提示
 async function showMsg(msg) {
     let newMsg = $(`<div class="msg untouchable"><span>${msg}</span></div>`);
     $('.main').after(newMsg);
@@ -168,13 +178,13 @@ async function showMsg(msg) {
     newMsg.remove();
 }
 
-function init() {
+//初始化
+(function init() {
     titleScroller();
     $('#bookingStart').val(new Date().toLocaleDateString().replace(/\//g, '-'));
     $('#bookingEnd').val(new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toLocaleDateString().replace(/\//g, '-'));
-}
+})();
 
-let isLogin = false;
-let isSignup = false;
-let isSearch = false;
-init();
+let isLogin = false;//登录确认按钮状态
+let isSignup = false;//注册确认按钮状态
+let isSearch = false;//搜索确认按钮状态
