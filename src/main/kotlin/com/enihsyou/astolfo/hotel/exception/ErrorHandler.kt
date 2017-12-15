@@ -1,4 +1,4 @@
-package com.enihsyou.astolfo.hotel.error
+package com.enihsyou.astolfo.hotel.exception
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import org.springframework.core.Ordered
@@ -42,7 +42,7 @@ class ApiError private constructor() {
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
-class RestExceptionHandler : ResponseEntityExceptionHandler() {
+class RestException2Handler : ResponseEntityExceptionHandler() {
     /*构建返回相应的方法*/
     private fun buildResponseEntity(apiError: ApiError): ResponseEntity<Any> {
         return ResponseEntity(apiError, apiError.status)
@@ -64,8 +64,8 @@ class RestExceptionHandler : ResponseEntityExceptionHandler() {
         return buildResponseEntity(ApiError(HttpStatus.NOT_FOUND, "当前用户名未注册", exception))
     }
 
-    @ExceptionHandler(账号名或密码错误::class)
-    fun wrongPassword(exception: 账号名或密码错误): ResponseEntity<Any> {
-        return buildResponseEntity(ApiError(HttpStatus.BAD_REQUEST, "账号名或密码错误", exception))
+    @ExceptionHandler(用户名和密码不匹配::class)
+    fun wrongPassword(exception: 用户名和密码不匹配): ResponseEntity<Any> {
+        return buildResponseEntity(ApiError(HttpStatus.BAD_REQUEST, "用户名和密码不匹配", exception))
     }
 }

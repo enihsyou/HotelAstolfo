@@ -1,13 +1,13 @@
-package com.enihsyou.astolfo.hotel.error
+package com.enihsyou.astolfo.hotel.exception
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
 
-
-@ResponseStatus(HttpStatus.NOT_FOUND, reason = "项目不存在")
-class EntityNotFoundException(val id: String) : RuntimeException(id)
-
-
+@ResponseStatus(value = HttpStatus.CONFLICT)
 class 注册时用户已存在(val id: String) : RuntimeException("手机号$id，注册时用户已存在")
+
+@ResponseStatus(value= HttpStatus.NOT_FOUND)
 class 用户不存在(val id: String) : RuntimeException("手机号$id，用户不存在")
-class 账号名或密码错误 : RuntimeException("账号名或者密码错误")
+
+@ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+class 用户名和密码不匹配 : RuntimeException("用户名和密码不匹配")

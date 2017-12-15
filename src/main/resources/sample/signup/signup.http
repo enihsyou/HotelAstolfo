@@ -1,4 +1,0 @@
-POST http://localhost/api/users/signup
-Content-Type: application/json
-
-< signup.json

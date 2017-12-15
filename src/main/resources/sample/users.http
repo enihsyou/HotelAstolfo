@@ -1,8 +1,54 @@
 GET http://localhost/api/users/list
-# username: test password: 2333
 Authorization:Basic dGVzdDoyMzMz
+# 列出所有用户列表，注意到需要认证
+
 ###
-GET http://localhost/api/users/list?page=3
-# username: test password: 2333
+GET http://localhost/api/users/list
+# 不带认证会导致401，返回头部上有这个
+# WWW-Authenticate: Basic realm="Astolfo"
+
+###
+GET http://localhost/api/users/18834321239
 Authorization:Basic dGVzdDoyMzMz
+# 请求一个未注册的用户，应该返回404
+# HTTP/1.1 404
+# Content-Type: application/json;charset=UTF-8
+# 错误格式
+# {
+#    "status": "NOT_FOUND",
+#    "timestamp": "2017-12-15 23:36:38",
+#    "message": "当前用户名未注册",
+#    "debugMessage": "手机号18834321239，用户不存在"
+#  }
+
+###
+GET http://localhost/api/users/13112602707
+Authorization:Basic dGVzdDoyMzMz
+# 这是一个在预填充Dumy数据里的用户，返回200 以及用户信息，这里返回内容不包含密码
+
+###
+POST http://localhost/api/users/signup
+# 注册接口，昵称域是可选的。如果密码不是SHA256加密后的(256位长度)会在后台加密保存
+# 请求格式不正确就是400
+Content-Type: application/json
+
+{
+  "phone_number": "18834321239",
+  "password": "abc",
+  "nickname": "nick"
+}
+###
+PUT http://localhost/api/users/18834321239
+# 更新用户信息，比如这里是修改密码，需要提供原始密码 放在password域下
+# 返回更新后的用户信息
+# 如果密码不符，422
+Content-Type: application/json
+Authorization:Basic dGVzdDoyMzMz
+
+{
+  "phone_number": "18834321239",
+  "password": "abc",
+  "new_password": "new_pass",
+  "nickname": "abc"
+}
 ###

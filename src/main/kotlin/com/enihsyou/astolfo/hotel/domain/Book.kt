@@ -1,6 +1,8 @@
 package com.enihsyou.astolfo.hotel.domain
 
-class Book {
+import javax.persistence.Id
 
-    private val id: Long = 0
-}
+data class Book(
+        @Id
+        val id: Int
+)

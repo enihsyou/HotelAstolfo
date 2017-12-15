@@ -1,5 +1,4 @@
-INSERT INTO USER_ROLE (type)
-VALUES ('管理员'), ('前台'), ('注册用户');
+INSERT INTO USER_ROLE (type) VALUES ('管理员'), ('前台'), ('注册用户');
 
 INSERT INTO REGISTERED_USER (phone_number, nickname, password, register_date, role)
 VALUES
