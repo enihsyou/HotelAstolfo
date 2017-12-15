@@ -50,13 +50,11 @@ $('.login .window .confirm').click(function () {
         $.ajax({
             url: '/api/users/login',
             type: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: {
+            contentType: "application/json; charset=UTF-8",
+            data: JSON.stringify({
                 phone_number: username.val(),
                 password: sha256(password.val())
-            },
+            }),
             success: function () {
                 isLogin = false;
                 //TODO dateStructure of callback
@@ -92,14 +90,12 @@ $('.signup .window .confirm').click(function () {
         $.ajax({
             url: '/api/users/signup',
             type: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: {
+            contentType: "application/json; charset=UTF-8",
+            data: JSON.stringify({
                 phone_number: username.val(),
                 nickname: nickname.val(),
                 password: sha256(password.val())
-            },
+            }),
             success: function () {
                 isSignup = false;
                 //TODO dateStructure of callback
@@ -140,14 +136,12 @@ $('.searchBox .confirm').click(function () {
         $.ajax({
             url: '/api/search',
             type: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: {
+            contentType: "application/json; charset=UTF-8",
+            data: JSON.stringify({
                 searchStart: searchStart.val(),
                 searchEnd: searchEnd.val(),
                 searchType: $('#bookingType').val()
-            },
+            }),
             success: function () {
                 isSignup = false;
                 //TODO dateStructure of callback
