@@ -1,22 +1,23 @@
-POST http://localhost/api/login
+GET http://localhost/api/users/list
+###
+
+GET http://localhost/api/users/18834321239
+
+###
+POST http://localhost/api/users/signup
 Content-Type: application/json
 
 {
-  "phone_number": "18812341235",
+  "phone_number": "18834321239",
   "password": "abc"
 }
 ###
-GET http://localhost/greeting?name=Kotlin
 
-###
-
-POST http://localhost:8888/api/signup
+PUT http://localhost/api/users/18834321239
 Content-Type: application/json
 
-#Authorization: Basic user:2333
-#Authorization: Basic dXNlcjoyMzMz
 {
-  "phone_number": "18812341255",
-  "password": "abc"
+  "nickname": "abc"
 }
+
 ###

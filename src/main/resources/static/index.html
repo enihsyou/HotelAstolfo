@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <title>--★阿福旅店★--USST48集团旗下八星级旅店 (つﾟωﾟ)つ</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="stylesheet" href="src/css/bootstrap.css">
-    <link rel="stylesheet" href="src/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.css">
     <link rel="stylesheet" href="css/StyleSheet.css">
 </head>
 <body>
 <div class="login">
-    <div class="login-window">
+    <div class="login_window untouchable">
         <form class="form-horizontal">
             <div class="form-group">
                 <label for="inputUserName"
@@ -27,22 +27,67 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-xs-offset-3 col-xs-4 col-sm-offset-4 col-sm-2 col-lg-offset-5 col-lg-1 text-center">
+                <div class=" text-center">
                     <div class="checkbox">
-                        <label>
-                            <input type="checkbox"> 记住我
+                        <label class="tips">
+                            <input type="checkbox">保持登录状态<em> 非私人设备请勿勾选 </em>
                         </label>
                     </div>
                 </div>
-                <div class="col-xs-5 col-sm-2">
-                    <div type="submit" class="btn btn-default">登录</div>
+                <div class="col-xs-offset-1 col-xs-10 col-sm-offset-4 col-sm-4 col-lg-offset-5 col-lg-2 text-center">
+                    <div type="submit" class="btn-primary btn-lg confirm">登录</div>
                 </div>
             </div>
         </form>
     </div>
 </div>
-<h1>Hello World!</h1>
-<script src="src/js/jquery-3.2.1.js"></script>
+<div class="row top_banner">
+    <span class="login_button untouchable confirm">登录</span>
+</div>
+<div class="main">
+    <div class="slider_container">
+        <div>
+            <span class="info">今夜，相约阿福，不见不散</span>
+        </div>
+        <div>
+            <span class="info">贴心小姐姐尊贵体验</span>
+        </div>
+        <div>
+            <span class="info">分店辐射全国各大USST</span>
+        </div>
+        <div>
+            <span class="info">优雅，与生俱来</span>
+        </div>
+        <div>
+            <span class="info">全球最大的同性交友旅店</span>
+        </div>
+    </div>
+    <div class="searchBox">
+        <div class="searchBoxContent">
+            <label for="bookingStart">入住日期:
+            <input type="date" id="bookingStart"></label>
+            <br>
+            <label for="bookingEnd">离店日期:
+                <input type="date" id="bookingEnd"></label>
+            <br>
+            <label for="bookingType">客房类型:
+                <select id="bookingType">
+                    <option value="标准间" selected>标准间</option>
+                    <option value="大床房">大床房</option>
+                    <option value="三人房">三人房</option>
+                    <option value="总统套房">总统套房</option>
+                </select>
+            </label>
+            <div class=" text-center">
+                <div type="submit" class="btn-default btn-lg confirm">搜索</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer">
+
+</div>
+<script src="js/jquery-3.2.1.js"></script>
 <script src="js/JavaScript.js"></script>
 </body>
 </html>
