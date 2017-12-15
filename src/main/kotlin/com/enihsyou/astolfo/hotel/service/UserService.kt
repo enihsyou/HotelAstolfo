@@ -11,12 +11,12 @@ import java.nio.charset.StandardCharsets
 import javax.annotation.Resource
 
 interface UserService {
-    fun signUp(phoneNumber: Long, password: String, nickname: String = "")
-    fun login(phoneNumber: Long, password: String)
-    fun findUserByPhone(phone: Long): User?
-    fun listUsers(pageable: Pageable): MutableIterable<User>?
+    fun signUp(phoneNumber: String, password: String, nickname: String = "")
+    fun login(phoneNumber: String, password: String)
+    fun findUserByPhone(phone: String): User?
+    fun listUsers(pageable: Pageable): List<User>
     fun updateInformation(user:User)
-    fun deleteUser(phone: Long)
+    fun deleteUser(phone: String)
 }
 
 @Service
@@ -25,22 +25,22 @@ class UserServiceImpl : UserService {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun deleteUser(phone: Long) {
+    override fun deleteUser(phone: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     @Resource
     lateinit var repository: UserRepository
 
-    override fun findUserByPhone(phone: Long): User? {
+    override fun findUserByPhone(phone: String): User? {
         return repository.findOne(phone)
     }
 
-    override fun listUsers(pageable: Pageable): MutableIterable<User>? {
-        return repository.findAll(pageable)
+    override fun listUsers(pageable: Pageable): List<User> {
+        return repository.findAll(pageable).toList()
     }
 
-    override fun signUp(phoneNumber: Long, password: String, nickname: String) {
+    override fun signUp(phoneNumber: String, password: String, nickname: String) {
         val user = repository.findOne(phoneNumber)
         /*如果用户已经存在*/
         if (user == null) {
@@ -54,11 +54,11 @@ class UserServiceImpl : UserService {
                     nickname = nickname,
                     password = password_checked
                     ))
-        } else throw 注册时用户已存在(phoneNumber.toString())
+        } else throw 注册时用户已存在(phoneNumber)
     }
 
-    override fun login(phoneNumber: Long, password: String) {
-        val user = repository.findOne(phoneNumber) ?: throw 用户不存在(phoneNumber.toString())
+    override fun login(phoneNumber: String, password: String) {
+        val user = repository.findOne(phoneNumber) ?: throw 用户不存在(phoneNumber)
         return
     }
 

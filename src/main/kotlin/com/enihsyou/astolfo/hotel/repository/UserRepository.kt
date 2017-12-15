@@ -7,9 +7,6 @@ import org.springframework.stereotype.Repository
 
 @Repository("用户")
 @RepositoryRestResource
-interface UserRepository : PagingAndSortingRepository<User, Long> {
-
-//  fun findByPhone_number(phoneNumber: String): List<Users>
-}
+interface UserRepository : PagingAndSortingRepository<User, String>
 
 

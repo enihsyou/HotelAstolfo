@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Payload
 
 data class LoginPayload(
-        @JsonProperty("phone_number") val phone_number: Long = 0,
+        @JsonProperty("phone_number") val phone_number: String = "",
         @JsonProperty("password") val password: String = "",
         @JsonProperty("nickname") val nickname: String = ""
 ) : Payload
@@ -21,11 +21,6 @@ class UserController {
 
     @Autowired
     lateinit var userService: UserService
-
-    @GetMapping("/list")
-    fun listUsers(pageable: Pageable): MutableIterable<User>? =
-            userService.listUsers(pageable)
-
 
     @PostMapping("/signup")
     fun signUp(@RequestBody payload: LoginPayload) {
@@ -39,24 +34,34 @@ class UserController {
         userService.login(phone_number, password)
     }
 
+    @PostMapping("/logout")
+    fun logout(header: RequestHeader) {
+//        val (phone_number, password) = payload
+//        userService.login(phone_number, password)
+    }
+
+    @GetMapping("/list")
+    fun listUsers(pageable: Pageable, header: RequestHeader): List<User> =
+            userService.listUsers(pageable)
+
     @GetMapping("/{userID}/book")
-    fun getUserCustomers(@PathVariable userID: Long?) {
+    fun getUserCustomers(@PathVariable userID: Long, header: RequestHeader) {
         // ...
     }
 
     @GetMapping("/{phone}")
-    fun getUser(@PathVariable phone: Long): User? =
+    fun getUser(@PathVariable phone: String, header: RequestHeader): User? =
             userService.findUserByPhone(phone)
 
     @PutMapping("/{phone}")
-    fun updateUser(@PathVariable phone: Long) {
-        val user = getUser(phone)
+    fun updateUser(@PathVariable phone: String, header: RequestHeader) {
+        val user = getUser(phone, header)
         user?.let { userService.updateInformation(it) }
     }
 
 
     @DeleteMapping("/{phone}")
-    fun deleteUser(@PathVariable phone: Long) =
+    fun deleteUser(@PathVariable phone: String, header: RequestHeader) =
             userService.deleteUser(phone)
 
 

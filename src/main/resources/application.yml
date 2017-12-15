@@ -8,9 +8,15 @@ spring:
     password: enihsyou
     schema: classpath*:hotel_schema.sql
     data: classpath*:hotel_data.sql
-    initialize: false
+    initialize: true
   jpa:
     show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      use-new-id-generator-mappings: true
   session:
     store-type: hash_map
   jackson:
@@ -42,5 +48,5 @@ security:
   user:
     name: test
     password: 2333
-  ignored: /api/users/login, /api/users/signup
+  ignored: /api/users/login, /api/users/signup, /api/users/logout
 

@@ -1,9 +1,11 @@
 GET http://localhost/api/users/list
 Authorization:Basic dGVzdDoyMzMz
 ###
+GET http://localhost/api/users/list
+###
 
 GET http://localhost/api/users/18834321239
-
+Authorization:Basic dGVzdDoyMzMz
 ###
 POST http://localhost/api/users/signup
 Content-Type: application/json
