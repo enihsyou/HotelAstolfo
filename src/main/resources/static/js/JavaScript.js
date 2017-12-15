@@ -17,7 +17,7 @@ $('.login_button').click((e) => {
     let login = $('.login');
     let signup = $('.signup')
     if (login.css('display') === 'none' && signup.css('display') === 'none') {
-        login.fadeIn(1000);
+        login.fadeIn(800);
         $('.main').css('filter', 'blur(5px)');
     }
     else {
@@ -62,13 +62,13 @@ $('.login .window .confirm').click(function () {
                 $(_this).children('.loading').remove();
             },
             error: function (err) {
-                alert('网络错误！');
+                showMsg('网络错误！');
                 isLogin = false;
                 $(_this).children('.loading').remove();
             }
         });
     } else {
-        alert('用户名和密码不能为空');
+        showMsg('用户名和密码不能为空');
     }
 });
 
@@ -80,8 +80,8 @@ $('.signup .window .confirm').click(function () {
     let password = $('#signupPassword');
     let passwordAgain = $('#signupPasswordAgain');
     if (username.val().length > 0 && password.val().length > 0 && passwordAgain.val().length > 0) {
-        if (password.val()!==passwordAgain.val()){
-            alert('两次输入密码不相符');
+        if (password.val() !== passwordAgain.val()) {
+            showMsg('两次输入密码不相符');
             return;
         }
         if (!isSignup) {
@@ -96,7 +96,7 @@ $('.signup .window .confirm').click(function () {
             },
             data: {
                 phone_number: username.val(),
-                nickname:nickname.val(),
+                nickname: nickname.val(),
                 password: sha256(password.val())
             },
             success: function () {
@@ -105,37 +105,74 @@ $('.signup .window .confirm').click(function () {
                 $(_this).children('.loading').remove();
             },
             error: function (err) {
-                alert('网络错误！');
+                showMsg('网络错误！');
                 isSignup = false;
                 $(_this).children('.loading').remove();
             }
         });
     } else {
-        alert('用户名和密码不能为空');
+        showMsg('用户名和密码不能为空');
     }
 });
 
 $('.searchBox .confirm').click(function () {
+    if (isSearch) return;
+    let _this = this;
     let searchStart = $('#bookingStart');
     let searchEnd = $('#bookingEnd');
-    $.ajax({
-        url: '/api/search',
-        type: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        data: {
-            searchStart: searchStart.val(),
-            searchEnd: searchEnd.val()
-        },
-        success: function () {
-        },
-        error: function (err) {
-            alert('网络错误！');
+    if (searchStart.val().length > 0 && searchEnd.val().length > 0) {
+        if (new Date(searchStart.val()) >= new Date(searchEnd.val())) {
+            showMsg('离店时间必须晚于预定时间');
+            return;
         }
-    });
+        if (!isSearch) {
+            isSearch = true;
+            $(_this).append('<span class="loading line"></span>');
+        }
+        $.ajax({
+            url: '/api/search',
+            type: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                searchStart: searchStart.val(),
+                searchEnd: searchEnd.val(),
+                searchType: $('#bookingType').val()
+            },
+            success: function () {
+                isSignup = false;
+                //TODO dateStructure of callback
+                $(_this).children('.loading').remove();
+            },
+            error: function (err) {
+                showMsg('网络错误！');
+                isSearch = false;
+                $(_this).children('.loading').remove();
+            }
+        });
+    } else {
+        showMsg('请输入完整的入住日期和离店日期');
+    }
 });
 
-titleScroller();
+async function showMsg(msg) {
+    let newMsg = $(`<div class="msg untouchable"><span>${msg}</span></div>`);
+    $('.main').after(newMsg);
+    newMsg.slideDown(400);
+    await sleep(Math.max(1000, msg.length * 100));
+    newMsg.slideUp(300);
+    await sleep(400);
+    newMsg.remove();
+}
+
+function init() {
+    titleScroller();
+    $('#bookingStart').val(new Date().toLocaleDateString().replace(/\//g, '-'));
+    $('#bookingEnd').val(new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toLocaleDateString().replace(/\//g, '-'));
+}
+
 let isLogin = false;
 let isSignup = false;
+let isSearch = false;
+init();
