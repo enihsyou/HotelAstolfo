@@ -15,10 +15,10 @@ async function titleScroller() {
 
 $('.login_button').click((e) => {
     let login = $('.login');
-    let signup = $('.signup')
+    let signup = $('.signup');
     if (login.css('display') === 'none' && signup.css('display') === 'none') {
         login.fadeIn(800);
-        $('.main').css('filter', 'blur(5px)');
+        $('.main').css('filter', 'blur(20px)');
     }
     else {
         login.fadeOut(500);
@@ -36,6 +36,7 @@ $('.login .window .loginFooter .signup_button').click(function () {
         signup.fadeOut(500);
     }
 });
+
 $('.login .window .confirm').click(function () {
     if (isLogin) return;
     let _this = this;
@@ -113,6 +114,13 @@ $('.signup .window .confirm').click(function () {
     } else {
         showMsg('用户名和密码不能为空');
     }
+});
+
+$('.window .close').click(function () {
+    $(this).parent().parent().fadeOut();
+    isLogin = false;
+    isSignup = false;
+    $('.main').css('filter', 'none');
 });
 
 $('.searchBox .confirm').click(function () {
