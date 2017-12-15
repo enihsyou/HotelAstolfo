@@ -1,5 +1,7 @@
 GET http://localhost/api/users/list
 Authorization:Basic dGVzdDoyMzMz
+test:2333
+29384932:6374826
 ###
 GET http://localhost/api/users/list
 ###

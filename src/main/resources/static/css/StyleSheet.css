@@ -29,45 +29,85 @@ body {
     border-radius: 0 0 1em 1em;
 }
 
+.loading {
+    display: inline-block;
+    overflow: hidden;
+    height: 1.3em;
+    margin-top: -0.3em;
+    line-height: 1.5em;
+    vertical-align: text-bottom;
+}
+
+.loading::after {
+    display: inline-table;
+    white-space: pre;
+    text-align: left;
+}
+
+.loading::after {
+    content: "\A.\A..\A...";
+    animation: spin4 2s steps(4) infinite;
+}
+
+.loading.line::after {
+    content: "/\A–\A\\\A|";
+    text-align: center;
+    animation: spin4 1s steps(4) infinite;
+}
+
+@keyframes spin4 {
+    to {
+        transform: translateY(-6.0em);
+    }
+}
+
 .login_button:hover {
     box-shadow: 2px 2px 10em 1em #ffffff;
 }
 
-.login {
+.login, .signup {
     position: fixed;
     z-index: 10;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(52, 101, 139, 0.92);
     display: none;
     /*display: block;*/
 }
 
-.login .login_window {
+.window {
     position: absolute;
     margin: auto;
     width: 100%;
     top: 30%;
     color: #ffffff;
+    padding: 2em 0 1em 0;
+    background-color: rgba(23, 45, 62, 0.8);
+    box-shadow: 0 0 5em .8em #ffffff;
+    border-radius: 1em;
 }
 
-.login .login_window .checkbox {
+.window .confirm {
+    cursor: pointer;
+}
+
+.login .window a {
+    color: #ffffff;
+    margin: 0 2em 0 2em;
+}
+
+.login .window .checkbox {
     padding-bottom: .5em;
 }
 
-.login .login_window .checkbox em {
+.login .window .checkbox em {
     font-size: 12px;
     color: darkgray;
 }
 
-.login .login_window .tips {
+.login .window .tips {
     cursor: auto;
-}
-
-.login .login_window .confirm {
-    cursor: pointer;
 }
 
 .main {
@@ -75,6 +115,7 @@ body {
     display: block;
     height: 85vh;
     box-shadow: #0f0f0f;
+    transition: filter 0.5s linear;
 }
 
 .main .slider_container {
@@ -186,7 +227,8 @@ body {
     top: 5%;
     left: 5%;
 }
-.searchBox .searchBoxContent *{
+
+.searchBox .searchBoxContent * {
     zoom: 1.2;
 }
 
