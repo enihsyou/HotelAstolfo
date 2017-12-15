@@ -1,0 +1,8 @@
+GET http://localhost/api/users/list
+# username: test password: 2333
+Authorization:Basic dGVzdDoyMzMz
+###
+GET http://localhost/api/users/list?page=3
+# username: test password: 2333
+Authorization:Basic dGVzdDoyMzMz
+###

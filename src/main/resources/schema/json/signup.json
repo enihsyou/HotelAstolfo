@@ -1,7 +1,7 @@
 {
   "definitions": {},
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://enihsyou.com/schema/login.json",
+  "id": "https://enihsyou.com/schema/signup.json",
   "type": "object",
   "properties": {
     "phone_number": {
@@ -17,6 +17,13 @@
       "title": "The Password Schema.",
       "description": "登录密码，应该是SHA256加密过的",
       "default": ""
+    },
+    "nickname": {
+      "id": "/properties/nickname",
+      "type": "string",
+      "title": "The Nickname Schema.",
+      "description": "An explanation about the purpose of this instance.",
+      "default": ""
     }
   },
   "required": [
@@ -24,4 +31,3 @@
     "password"
   ]
 }
-

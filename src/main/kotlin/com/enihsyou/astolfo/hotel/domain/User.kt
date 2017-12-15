@@ -1,57 +1,56 @@
 package com.enihsyou.astolfo.hotel.domain
 
-
-import com.sun.javafx.beans.IDProperty
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters
+import java.time.LocalDateTime
 import javax.persistence.*
 
 
 enum class UserRole {
-  管理员, 前台, 注册用户
+    管理员, 前台, 注册用户, 未注册
 }
 
 
-/*用户类*/
-////@Entity
-////@Table(name = "user")
-//class User {
-//  //  @Id
-//  private val id: Long = 0
-//
-//  //  @NotBlank
-//  var phone_number: Long = 0
-//
-//  var nickname: String? = null
-//
-//  //  @NotBlank
-////  @JsonIgnoreProperties
-//  var password: String = ""
-//
-//  //  @NotBlank
-//  var user_role: UserRole = UserRole.注册用户
-//
-//
-//  //  @Column(nullable = false, updatable = false)
-////  @Temporal(TemporalType.TIMESTAMP)
-////  @CreatedDate
-//  private val createdAt: Date? = null
-//
-//
-//  //  @Column(nullable = false)
-////  @Temporal(TemporalType.TIMESTAMP)
-////  @LastModifiedDate
-//  private val updatedAt: Date? = null
-//}
+@Entity
+@Table(name = "REGISTERED_USER")
+data class User(
+        @Id
+        @Column(name = "phone_number")
+        var phone_number: String = "",
+
+        @Column(name = "nickname")
+        var nickname: String = "",
+
+        @Column(name = "password")
+        var password: String = "",
+
+        @Column(name = "register_date")
+        @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
+        val register_data: LocalDateTime = LocalDateTime.MIN,
+
+        @OneToOne(targetEntity = UserRoleTable::class)
+        @JoinColumn(name = "role")
+        @Enumerated(EnumType.STRING)
+        @Convert(converter = UserRoleConverter::class)
+        var role: UserRoleTable? = null
+) {
+
+    class UserRoleConverter : AttributeConverter<UserRole, String> {
+        override fun convertToEntityAttribute(dbData: String?): UserRole {
+            return dbData?.let { UserRole.valueOf(dbData) } ?: UserRole.未注册
+        }
+
+        override fun convertToDatabaseColumn(attribute: UserRole?): String {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+    }
+}
 
 
 @Entity
-@Table(name = "user")
-data class User(
-    @Id
-    @PrimaryKeyJoinColumn
-    @Column(name = "phone_number")
-    var phone_number: Long = 0L,
-    @Column(name = "nick_name")
-    var nick_name: String = "",
-    @Column(name = "password")
-    var password: String = ""
+@Table(name = "USER_ROLE")
+data class UserRoleTable(
+        @Id
+        var id: Long = 0,
+
+        var type: String = "未注册"
 )
