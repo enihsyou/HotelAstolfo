@@ -68,5 +68,5 @@ security:
 spring:
     profiles: production
 server:
-    address: 0.0.0.0
+    address: localhost
     port: 8899
