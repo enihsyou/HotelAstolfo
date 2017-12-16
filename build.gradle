@@ -14,13 +14,30 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
     }
 }
-
+plugins {
+    id("org.jetbrains.kotlin.jvm") version "1.1.61"
+    id("com.github.johnrengelman.shadow") version "2.0.1"
+    id("io.spring.dependency-management") version "1.0.3.RELEASE"
+}
+apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
 apply plugin: 'idea'
-apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'org.asciidoctor.convert'
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        // Should use Spring IO platform milestone or release when available
+        mavenBom("org.springframework.boot:spring-boot-dependencies:1.5.9.RELEASE")
+    }
+}
+
 
 group = 'com.enihsyou'
 version = '0.0.1-SNAPSHOT'
@@ -31,10 +48,10 @@ compileKotlin {
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
-
-repositories {
-    jcenter()
-    mavenCentral()
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.enihsyou.astolfo.hotel.HotelAstolfoApplicationKt'
+    }
 }
 
 
@@ -49,6 +66,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-actuator')
 //     compile('org.springframework.session:spring-session')
     compile('org.springframework.boot:spring-boot-starter-web')
+    compile("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
     compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}")
     compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
     runtime('org.springframework.boot:spring-boot-devtools')
