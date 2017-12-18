@@ -19,11 +19,15 @@ SELECT room_id FROM rooms WHERE room_left=TRUE AND room_direction=#{room_directi
 
 
 --根据手机号查询旅客定的房间
-SELECT room_id FROM bookings WHERE phone_number=#{phone_number};
+SELECT room_id
+FROM bookings
+WHERE phone_number=#{phone_number};
 
 
 --根据订房的编号查询旅客定的房间
-SELECT room_id FROM bookings WHERE booking_id=#{booking_id};
+SELECT room_id
+FROM bookings
+WHERE booking_id=#{booking_id};
 
 -- 查询某日有哪些空房间可以预定
 SELECT room_id
@@ -49,4 +53,6 @@ FROM (
          WHERE #{date} < bookings.date_to AND #{date} >= bookings.date_from)
 )
 GROUP BY room_type;
+
+
 
