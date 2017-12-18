@@ -9,3 +9,5 @@ class HotelAstolfoApplication
 fun main(args: Array<String>) {
     SpringApplication.run(HotelAstolfoApplication::class.java, *args)
 }
+
+
