@@ -26,5 +26,27 @@ SELECT room_id FROM bookings WHERE phone_number=#{phone_number};
 SELECT room_id FROM bookings WHERE booking_id=#{booking_id};
 
 -- 查询某日有哪些空房间可以预定
-SELECT room_id FROM  rooms WHERE room_id NOT IN
-  (SELECT room_id FROM bookings WHERE #{date}>bookings.date_to AND #{date}<=bookings.date_from);
+SELECT room_id
+FROM rooms
+WHERE room_id NOT IN
+      (SELECT room_id
+       FROM bookings
+       WHERE #{date} < bookings.date_to AND #{date} >= bookings.date_from);
+
+
+-- 查询某日各种客房的余量
+SELECT
+  room_type,
+  count(*) AS NUM
+FROM (
+  SELECT
+    room_id,
+    room_type
+  FROM rooms
+  WHERE room_id NOT IN
+        (SELECT room_id
+         FROM bookings
+         WHERE #{date} < bookings.date_to AND #{date} >= bookings.date_from)
+)
+GROUP BY room_type;
+
