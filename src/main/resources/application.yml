@@ -43,7 +43,7 @@ spring:
     location:
 server:
   address: localhost
-  port: 80
+  port: 10080
   connection-timeout: 2000
   compression:
     enabled: true
