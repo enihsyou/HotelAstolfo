@@ -3,28 +3,28 @@ spring:
     name: Hotel Astolfo
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://rm-uf6f1vb486241vmq86o.mysql.rds.aliyuncs.com/astolfo_hotel?verifyServerCertificate=false&useSSL=true
-    username: root
-    password: W78mnABYG$Is*N17
+#    url: jdbc:mysql://rm-uf6f1vb486241vmq86o.mysql.rds.aliyuncs.com/astolfo_hotel?verifyServerCertificate=false&useSSL=true
+#    username: root
+#    password: W78mnABYG$Is*N17
     schema: classpath*:hotel_schema.sql
     data: classpath*:hotel_data.sql
-    initialize: true
-#    name: astolfo_hotel
-#    url: jdbc:mysql://localhost/astolfo_hotel?useSSL=false
-#    username: enihsyou
-#    password: enihsyou
+    initialize: false
+    name: astolfo_hotel
+    url: jdbc:mysql://localhost/astolfo_hotel?useSSL=false
+    username: enihsyou
+    password: enihsyou
   jpa:
     show-sql: true
     generate-ddl: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       use-new-id-generator-mappings: true
     properties:
       hibernate:
-        hbm2ddl:
-          import_files: hotel_data.sql
+#        hbm2ddl:
+#          import_files: hotel_data.sql
         show_sql: true
         use_sql_comments: true
         format_sql: true

@@ -1,6 +1,6 @@
 package com.enihsyou.astolfo.hotel.controller
 
-import com.enihsyou.astolfo.hotel.domain.Book
+import com.enihsyou.astolfo.hotel.domain.BookTransaction
 import com.enihsyou.astolfo.hotel.domain.User
 import com.enihsyou.astolfo.hotel.service.UserService
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import java.awt.print.Book
 import javax.validation.Payload
 
 data class UserPayload(
@@ -67,6 +68,6 @@ class UserController {
         userService.deleteUser(phone)
 
     @GetMapping("/{phone}/book")
-    fun getUserBooks(@PathVariable phone: Long, @RequestHeader("Authorization") header: String): List<Book> =
+    fun getUserBooks(@PathVariable phone: Long, @RequestHeader("Authorization") header: String): List<BookTransaction> =
         userService.books(phone)
 }

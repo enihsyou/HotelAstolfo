@@ -1,6 +1,6 @@
 package com.enihsyou.astolfo.hotel.service
 
-import com.enihsyou.astolfo.hotel.domain.Book
+import com.enihsyou.astolfo.hotel.domain.BookTransaction
 import com.enihsyou.astolfo.hotel.domain.User
 import com.enihsyou.astolfo.hotel.exception.注册时用户已存在
 import com.enihsyou.astolfo.hotel.exception.用户不存在
@@ -28,7 +28,7 @@ interface UserService {
                           nickname: String?): User
 
     fun deleteUser(phone: String)
-    fun books(phone: Long): List<Book>
+    fun books(phone: Long): List<BookTransaction>
 }
 
 @Service
@@ -46,7 +46,7 @@ class UserServiceImpl : UserService {
             password
     }
 
-    override fun books(phone: Long): List<Book> {
+    override fun books(phone: Long): List<BookTransaction> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
