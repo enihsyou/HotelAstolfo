@@ -16,13 +16,14 @@ import java.time.LocalDateTime
 class RoomController(@Autowired val roomService: RoomService) {
 
     @GetMapping("/list")
-    fun listRoomByDate(
-        @RequestParam("from", required = false) from: LocalDateTime= LocalDateTime.now(),
-        @RequestParam("to", required = false) to: LocalDateTime= LocalDateTime.MAX,
-        @RequestParam("type", required = false) type: Room.RoomType=Room.RoomType.Any,
-        @RequestParam("direction", required = false) direction: Room.RoomDirection=Room.RoomDirection.Any,
-        @RequestParam("priceFrom", required = false) priceFrom: Int=0,
-        @RequestParam("priceTo", required = false) priceTo: Int= Int.MAX_VALUE,
-        pageable: Pageable) = roomService.listRoomByDate(from, to, type, direction, priceFrom, priceTo, pageable)
+    fun listRoom(
+        @RequestParam("from", required = false) from: LocalDateTime = LocalDateTime.now(),
+        @RequestParam("to", required = false) to: LocalDateTime = LocalDateTime.MAX,
+        @RequestParam("type", required = false) type: Room.RoomType = Room.RoomType.Any,
+        @RequestParam("direction", required = false) direction: Room.RoomDirection = Room.RoomDirection.Any,
+        @RequestParam("priceFrom", required = false) priceFrom: Int = 0,
+        @RequestParam("priceTo", required = false) priceTo: Int = Int.MAX_VALUE,
+        pageable: Pageable) =
+        roomService.listRoomByParameter(from, to, type, direction, priceFrom, priceTo, pageable)
 }
 

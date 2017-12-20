@@ -7,19 +7,40 @@ import org.springframework.web.bind.annotation.RequestParam
 import java.time.LocalDateTime
 
 interface RoomService {
-    fun listRoomByDate(@RequestParam("from", required = false) from: LocalDateTime,
-                       @RequestParam("to", required = false) to: LocalDateTime,
-                       @RequestParam("type", required = false) type: Room.RoomType,
-                       @RequestParam("direction", required = false) direction: Room.RoomDirection,
-                       @RequestParam("priceFrom", required = false) priceFrom: Int,
-                       @RequestParam("priceTo", required = false) priceTo: Int,
-                       pageable: Pageable)
-}
+    fun listRoomByParameter(
+        from: LocalDateTime,
+        to: LocalDateTime,
+        type: Room.RoomType,
+        direction: Room.RoomDirection,
+        priceFrom: Int,
+        priceTo: Int,
+        pageable: Pageable
+    ):List<Room>
 
-@Service
-class RoomServiceImpl : RoomService {
+    fun listRoomByDateBetween(
+        from: LocalDateTime,
+        to: LocalDateTime,
+        pageable: Pageable
+    ): List<Room>
 
-    override fun listRoomByDate(@RequestParam(required = false, value = "from") from: LocalDateTime, @RequestParam(required = false, value = "to") to: LocalDateTime, @RequestParam(required = false, value = "type") type: Room.RoomType, @RequestParam(required = false, value = "direction") direction: Room.RoomDirection, @RequestParam(required = false, value = "priceFrom") priceFrom: Int, @RequestParam(required = false, value = "priceTo") priceTo: Int, pageable: Pageable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    fun listRoomByPriceBetween(
+        priceFrom: Int,
+        priceTo: Int,
+        pageable: Pageable
+    ): List<Room>
+
+    fun listRoomByDirection(
+        direction: Room.RoomDirection,
+        pageable: Pageable
+    ): List<Room>
+
+    fun listRoomByType(
+        type: Room.RoomType,
+        pageable: Pageable
+    ): List<Room>
 }
+//
+//@Service
+//class RoomServiceImpl : RoomService {
+//
+//}
