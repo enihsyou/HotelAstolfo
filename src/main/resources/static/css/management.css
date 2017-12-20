@@ -1,0 +1,31 @@
+[v-cloak] {
+    display: none;
+}
+
+.left-nav {
+    position: absolute;
+    height: inherit;
+    width: 15em;
+    box-shadow: .1em 0 0 0 rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.left-nav dt {
+    text-align: center;
+}
+
+.left-nav dd {
+    cursor: pointer;
+    text-align: center;
+    line-height: 3em;
+    background-color: #dfdfdf;
+    margin: 2px;
+}
+
+.container {
+    position: absolute;
+    left: 15em;
+    width: calc(100% - 15em);
+    height: inherit;
+    background: linear-gradient(to bottom, white 10%, #eff8ff);
+}
