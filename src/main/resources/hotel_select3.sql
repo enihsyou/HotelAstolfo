@@ -21,7 +21,7 @@ SELECT room_id FROM rooms WHERE room_left=TRUE AND room_direction=#{room_directi
 --根据手机号查询旅客定的房间
 SELECT room_id
 FROM bookings
-WHERE phone_number=#{phone_number};
+åWHERE phone_number=#{phone_number};
 
 
 --根据订房的编号查询旅客定的房间
