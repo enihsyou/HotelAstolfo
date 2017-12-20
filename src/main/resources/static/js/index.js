@@ -1,20 +1,3 @@
-//延时函数
-function sleep(time) {
-    return new Promise((resolve, reject) => {
-        setTimeout(resolve, time);
-    });
-}
-
-//标题滚动
-async function titleScroller() {
-    let index = 0;
-    do {
-        await sleep(250);
-        document.title = document.title.substr(1) + document.title.substr(0, 1);
-    } while (++index < document.title.length);
-    setTimeout(titleScroller, 2000);
-}
-
 //右上角登录入口按钮
 $('.login_button').click((e) => {
     let login = $('.login');
@@ -166,17 +149,6 @@ $('.searchBox .confirm').click(function () {
         showMsg('请输入完整的入住日期和离店日期');
     }
 });
-
-//封装消息提示
-async function showMsg(msg) {
-    let newMsg = $(`<div class="msg untouchable"><span>${msg}</span></div>`);
-    $('.main').after(newMsg);
-    newMsg.slideDown(400);
-    await sleep(Math.max(1000, msg.length * 100));
-    newMsg.slideUp(300);
-    await sleep(400);
-    newMsg.remove();
-}
 
 //初始化
 (function init() {
