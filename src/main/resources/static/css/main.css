@@ -41,20 +41,47 @@ body {
     height: 8vh;
 }
 
-.top_banner .login_button {
+.top_banner .login-btn {
     position: absolute;
     z-index: 11;
     right: 5%;
     cursor: pointer;
-    display: inline-block;
     font-size: 1.8em;
     line-height: 7vh;
     padding: 0 2vw 0 2vw;
-    opacity: .95;
+    opacity: .85;
     color: #ffffff;
     font-weight: bold;
-    background: linear-gradient(to bottom, #0091d2, #7dc3f9);
     border-radius: 0 0 1em 1em;
+    /*background: linear-gradient(to bottom, #0091d2, #7dc3f9);*/
+    /*display: inline-block;*/
+    display: none;
+}
+
+.top_banner .user-info {
+    position: absolute;
+    right: 10%;
+    font-size: 1.5em;
+    color: #0f0f0f;
+    line-height: 7vh;
+    padding: 0 2vw 0 2vw;
+    font-weight: bolder;
+    /*display: inline-block;*/
+    display: none;
+}
+
+.top_banner .user-info .user-btn {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.top_banner .user-info .logout-btn {
+    display: inline-block;
+    cursor: pointer;
+    color: #363638;
+    margin-left: 2em;
+    font-size: 0.5em;
+    vertical-align: center;
 }
 
 .loading {
@@ -73,12 +100,12 @@ body {
 }
 
 .loading::after {
-    content: "\A.\A..\A...";
+    content: " \A.\A..\A...";
     animation: spin4 2s steps(4) infinite;
 }
 
 .loading.line::after {
-    content: "/\A–\A\\\A|";
+    content: " /\A–\A\\\A|";
     text-align: center;
     animation: spin4 1s steps(4) infinite;
 }
@@ -87,10 +114,6 @@ body {
     to {
         transform: translateY(-6.0em);
     }
-}
-
-.login_button:hover {
-    box-shadow: 2px 2px 10em 1em rgba(255, 255, 255, .8);
 }
 
 .login, .signup {

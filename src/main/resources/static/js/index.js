@@ -1,5 +1,5 @@
 //右上角登录入口按钮
-$('.login_button').click((e) => {
+$('.login-btn').click((e) => {
     let login = $('.login');
     let signup = $('.signup');
     if (login.css('display') === 'none' && signup.css('display') === 'none') {
@@ -14,7 +14,7 @@ $('.login_button').click((e) => {
 });
 
 //登录界面注册按钮
-$('.login .window .loginFooter .signup_button').click(function () {
+$('.login .window .loginFooter .signup-btn').click(function () {
     let signup = $('.signup');
     if (signup.css('display') === 'none') {
         $('.login').fadeOut(500);
@@ -152,11 +152,24 @@ $('.searchBox .confirm').click(function () {
 
 //初始化
 (function init() {
+    //开始标题滚动
     titleScroller();
+    //初始化首页搜索
     $('#bookingStart').val(new Date().toLocaleDateString().replace(/\//g, '-'));
     $('#bookingEnd').val(new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toLocaleDateString().replace(/\//g, '-'));
+    //初始化顶栏
+    let username = sessionStorage.username || localStorage.username;
+    if (username != null && username !== "") {
+        showMsg('欢迎回来~');
+        $('.user-info .user-btn').html(username);
+        $('.user-info ').show();
+    }
+    else {
+        $('.login-btn').show();
+    }
 })();
 
+//未来重构
 let isLogin = false;//登录确认按钮状态
 let isSignup = false;//注册确认按钮状态
 let isSearch = false;//搜索确认按钮状态
