@@ -1,6 +1,6 @@
 package com.enihsyou.astolfo.hotel.controller
 
-import com.enihsyou.astolfo.hotel.domain.BookTransaction
+import com.enihsyou.astolfo.hotel.domain.Transaction
 import com.enihsyou.astolfo.hotel.domain.User
 import com.enihsyou.astolfo.hotel.service.UserService
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import java.awt.print.Book
 import javax.validation.Payload
 
 data class UserPayload(
@@ -30,9 +29,7 @@ data class UserPayload(
 
 @RestController("用户接口控制器")
 @RequestMapping("/api/users")
-class UserController {
-
-    @Autowired lateinit var userService: UserService
+class UserController(@Autowired var userService: UserService) {
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
@@ -67,7 +64,7 @@ class UserController {
     fun deleteUser(@PathVariable phone: String) =
         userService.deleteUser(phone)
 
-    @GetMapping("/{phone}/book")
-    fun getUserBooks(@PathVariable phone: Long, @RequestHeader("Authorization") header: String): List<BookTransaction> =
-        userService.books(phone)
+    @GetMapping("/{phone}/transaction")
+    fun getUserTransactions(@PathVariable phone: Long, @RequestHeader("Authorization") header: String): List<Transaction> =
+        userService.transactions(phone)
 }

@@ -14,12 +14,8 @@ import javax.persistence.Enumerated
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
 import javax.persistence.Table
-
-
-enum class UserRole {
-    管理员, 前台, 注册用户, 未注册
-}
 
 
 @Entity
@@ -44,8 +40,16 @@ data class User(
     @JoinColumn(name = "role")
     @Enumerated(EnumType.STRING)
     @Convert(converter = UserRoleConverter::class)
-    var role: UserRoleTable = UserRoleTable(3)
+    var role: UserRoleTable = UserRoleTable(3),
+
+    @OneToMany
+    @JoinColumn(name = "user_guest")
+    var guests: List<Guest> = emptyList()
 ) {
+
+    enum class UserRole {
+        管理员, 前台, 注册用户, 未注册
+    }
     class UserRoleConverter : AttributeConverter<UserRole, String> {
         override fun convertToEntityAttribute(dbData: String?): UserRole {
             return dbData?.let { UserRole.valueOf(dbData) } ?: UserRole.未注册

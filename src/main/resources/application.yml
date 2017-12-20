@@ -11,7 +11,7 @@ spring:
     initialize: false
     name: astolfo_hotel
     url: jdbc:mysql://localhost/astolfo_hotel?useSSL=false
-    username: enihsyou
+    username: root
     password: enihsyou
   jpa:
     show-sql: true

@@ -1,6 +1,6 @@
 package com.enihsyou.astolfo.hotel.repository
 
-import com.enihsyou.astolfo.hotel.domain.BookTransaction
+import com.enihsyou.astolfo.hotel.domain.Transaction
 import org.springframework.data.repository.PagingAndSortingRepository
 
-interface TransactionRepository: PagingAndSortingRepository<BookTransaction, Int>
+interface TransactionRepository: PagingAndSortingRepository<Transaction, Int>

@@ -25,38 +25,44 @@ data class Room(
     @Enumerated
     @Convert(converter = RoomTypeConverter::class)
     @Column(name = "type")
-    var type: RoomType = RoomType.单人间,
+    var type: RoomType = RoomType.Undefined,
 
     @Enumerated
     @Convert(converter = RoomDirectionConverter::class)
     @Column(name = "direction")
-    var direction: RoomDirection = RoomDirection.东,
+    var direction: RoomDirection = RoomDirection.Undefined,
 
+    /*简介信息*/
     var specialty: String = "",
 
+    /*单独房间的价格*/
+    var price: Int = 0,
+
     @OneToMany
-    @JoinColumn(name = "room_book")
-    var book_transactions: MutableList<BookTransaction>? = null
+    @JoinColumn(name = "room_transaction")
+    var transactions: MutableList<Transaction>? = null
 ) {
 
     enum class RoomType {
-        大床房, 单人间, 双人间, 总统套房
+        大床房, 单人间, 双人间, 总统套房, Undefined, Any
     }
 
     enum class RoomDirection {
-        东, 西, 南, 北
+        东, 西, 南, 北, Undefined, Any
     }
 
     @Embeddable
     data class RoomNumber(
+        /*楼层*/
         var floor: Int,
+        /*当前楼层的房号*/
         var number: Int
     )
 
     class RoomTypeConverter : AttributeConverter<RoomType, String> {
 
         override fun convertToEntityAttribute(dbData: String?): RoomType? {
-            return dbData?.let { RoomType.valueOf(dbData) } ?: RoomType.单人间
+            return dbData?.let { RoomType.valueOf(dbData) } ?: RoomType.Undefined
         }
 
         override fun convertToDatabaseColumn(attribute: RoomType?): String? {
@@ -67,7 +73,7 @@ data class Room(
     class RoomDirectionConverter : AttributeConverter<RoomDirection, String> {
 
         override fun convertToEntityAttribute(dbData: String?): RoomDirection? {
-            return dbData?.let { RoomDirection.valueOf(dbData) } ?: RoomDirection.东
+            return dbData?.let { RoomDirection.valueOf(dbData) } ?: RoomDirection.Undefined
         }
 
         override fun convertToDatabaseColumn(attribute: RoomDirection?): String? {
@@ -81,6 +87,10 @@ data class RoomTypeTable(
     @Id
     var type_id: Int = 1,
 
-    var type: String = "单人间"
+    /*类型名字*/
+    var type: String = "Undefined",
+
+    /*类型简介*/
+    var description:String = ""
 )
 
