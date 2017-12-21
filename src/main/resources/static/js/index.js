@@ -39,15 +39,14 @@ $('.login .window .loginFooter .signup-btn').click(function () {
 
 //登录界面确认登录按钮
 $('.login .window .confirm').click(function () {
-    if (isLogin) return;
+    if ($(this).children('span').hasClass('loading')) {
+        return;
+    }
     let _this = this;
     let username = $('#inputUserName');
     let password = $('#inputPassword');
     if (username.val().length > 0 && password.val().length > 0) {
-        if (!isLogin) {
-            isLogin = true;
-            $(_this).append('<span class="loading line"></span>');
-        }
+        $(_this).append('<span class="loading line"></span>');
         $.ajax({
             url: '/api/users/login',
             type: 'POST',
@@ -57,13 +56,11 @@ $('.login .window .confirm').click(function () {
                 password: sha256(password.val())
             }),
             success: function (data, textStatus, jqXHR) {
-                isLogin = false;
                 //TODO dateStructure of callback
                 $(_this).children('.loading').remove();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 showMsg('网络错误！');
-                isLogin = false;
                 $(_this).children('.loading').remove();
             }
         });
@@ -74,7 +71,9 @@ $('.login .window .confirm').click(function () {
 
 //注册界面确认注册按钮
 $('.signup .window .confirm').click(function () {
-    if (isSignup) return;
+    if ($(this).children('span').hasClass('loading')) {
+        return;
+    }
     let _this = this;
     let username = $('#signupUsername');
     let nickname = $('#signupNickname');
@@ -85,10 +84,7 @@ $('.signup .window .confirm').click(function () {
             showMsg('两次输入密码不相符');
             return;
         }
-        if (!isSignup) {
-            isSignup = true;
-            $(_this).append('<span class="loading line"></span>');
-        }
+        $(_this).append('<span class="loading line"></span>');
         $.ajax({
             url: '/api/users/signup',
             type: 'POST',
@@ -99,13 +95,11 @@ $('.signup .window .confirm').click(function () {
                 password: sha256(password.val())
             }),
             success: function (data, textStatus, jqXHR) {
-                isSignup = false;
                 //TODO dateStructure of callback
                 $(_this).children('.loading').remove();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 showMsg('网络错误！');
-                isSignup = false;
                 $(_this).children('.loading').remove();
             }
         });
@@ -117,14 +111,15 @@ $('.signup .window .confirm').click(function () {
 //登录、注册界面关闭图标动作
 $('.window .close').click(function () {
     $(this).parent().parent().fadeOut();
-    isLogin = false;
-    isSignup = false;
+    $('.loading').remove();
     $('.main').css('filter', 'none');
 });
 
 //首页搜索框确认动作
 $('.searchBox .confirm').click(function () {
-    if (isSearch) return;
+    if ($(this).children('span').hasClass('loading')) {
+        return;
+    }
     let _this = this;
     let searchStart = $('#bookingStart');
     let searchEnd = $('#bookingEnd');
@@ -133,10 +128,7 @@ $('.searchBox .confirm').click(function () {
             showMsg('离店时间必须晚于预定时间');
             return;
         }
-        if (!isSearch) {
-            isSearch = true;
-            $(_this).append('<span class="loading line"></span>');
-        }
+        $(_this).append('<span class="loading line"></span>');
         $.ajax({
             url: '/api/search',
             type: 'POST',
@@ -147,13 +139,15 @@ $('.searchBox .confirm').click(function () {
                 searchType: $('#bookingType').val()
             }),
             success: function (data, textStatus, jqXHR) {
-                isSignup = false;
                 //TODO dateStructure of callback
                 $(_this).children('.loading').remove();
+                //显示右侧搜索列表
+                $('.slider_container').css('filter', 'blur(10px)');
+                $('.searchBox').css('left', '5%');
+                $('.searchList').slideDown(333);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 showMsg('网络错误！');
-                isSearch = false;
                 $(_this).children('.loading').remove();
             }
         });
@@ -191,7 +185,3 @@ $(function init() {
     }
 );
 
-//未来重构
-let isLogin = false;//登录确认按钮状态
-let isSignup = false;//注册确认按钮状态
-let isSearch = false;//搜索确认按钮状态
