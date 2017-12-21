@@ -12,8 +12,8 @@ interface RoomService {
     fun listRoomByParameter(
         from: LocalDateTime,
         to: LocalDateTime,
-        type: Room.RoomType,
-        direction: Room.RoomDirection,
+        type: String,
+        direction: String,
         priceFrom: Int,
         priceTo: Int,
         pageable: Pageable
@@ -32,12 +32,12 @@ interface RoomService {
     ): List<Room>
 
     fun listRoomByDirection(
-        direction: Room.RoomDirection,
+        direction: String,
         pageable: Pageable
     ): List<Room>
 
     fun listRoomByType(
-        type: Room.RoomType,
+        type: String,
         pageable: Pageable
     ): List<Room>
 }
@@ -50,8 +50,8 @@ class RoomServiceImpl : RoomService {
     @Autowired lateinit var guestRepository: GuestRepository
     override fun listRoomByParameter(from: LocalDateTime,
                                      to: LocalDateTime,
-                                     type: Room.RoomType,
-                                     direction: Room.RoomDirection,
+                                     type: String,
+                                     direction: String,
                                      priceFrom: Int,
                                      priceTo: Int,
                                      pageable: Pageable): List<Room> {
@@ -70,12 +70,12 @@ class RoomServiceImpl : RoomService {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun listRoomByDirection(direction: Room.RoomDirection,
+    override fun listRoomByDirection(direction: String,
                                      pageable: Pageable): List<Room> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun listRoomByType(type: Room.RoomType,
+    override fun listRoomByType(type: String,
                                 pageable: Pageable): List<Room> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

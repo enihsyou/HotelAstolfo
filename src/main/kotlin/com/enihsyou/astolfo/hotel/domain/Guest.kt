@@ -1,5 +1,6 @@
 package com.enihsyou.astolfo.hotel.domain
 
+import org.springframework.data.annotation.CreatedBy
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
@@ -15,6 +16,7 @@ data class Guest(
     var id: Int = 0,
 
     @ManyToOne
+    @CreatedBy
     var user :User,
 
     /*身份证号码*/

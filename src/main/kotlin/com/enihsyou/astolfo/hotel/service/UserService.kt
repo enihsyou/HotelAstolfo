@@ -19,27 +19,30 @@ import java.nio.charset.StandardCharsets
 interface UserService {
     fun signUp(phoneNumber: String,
                password: String,
-               nickname: String = "")
+               nickname: String = ""): User
 
     fun login(phoneNumber: String,
               password: String)
 
-    fun findUserByPhone(phone: String): User
-    fun listUsers(pageable: Pageable): List<User>
-    fun updateInformation(phone: String,
-                          old_password: String,
-                          new_password: String?,
-                          nickname: String?): User
+    fun findByPhone(phone:String):User?
 
-    fun deleteUser(phone: String)
-    fun transactions(phone: Long): List<Transaction>
+    fun transactions(phone: String): List<Transaction>
+
     fun listGuests(phone: String): List<Guest>
-    fun addGuest(phone: String,
-                 guest: Guest)
+
+    fun addGuest(phone: String, guest: Guest)
 }
 
 @Service(value = "用户层逻辑")
 class UserServiceImpl : UserService {
+
+    override fun findByPhone(phone: String): User? {
+        return userRepository.findByPhoneNumber(phone)
+    }
+
+    override fun transactions(phone: String): List<Transaction> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     @Autowired lateinit var userRepository: UserRepository
     @Autowired lateinit var guestRepository: GuestRepository
@@ -73,11 +76,7 @@ class UserServiceImpl : UserService {
             password
     }
 
-    override fun transactions(phone: Long): List<Transaction> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun updateInformation(phone: String,
+    fun updateInformation(phone: String,
                                    old_password: String,
                                    new_password: String?,
                                    nickname: String?): User {
@@ -91,30 +90,29 @@ class UserServiceImpl : UserService {
         }
     }
 
-    override fun deleteUser(phone: String) {
-    }
 
-
-    override fun findUserByPhone(phone: String): User {
+    private fun findUserByPhone(phone: String): User {
         return userRepository.findOne(phone) ?: throw 用户不存在(phone)
     }
 
-    override fun listUsers(pageable: Pageable): List<User> {
+     fun listUsers(pageable: Pageable): List<User> {
         return userRepository.findAll(pageable).toList()
     }
 
     override fun signUp(phoneNumber: String,
                         password: String,
-                        nickname: String) {
+                        nickname: String): User {
         /*如果用户已经存在*/
-        userRepository.findByPhone_number(phoneNumber)?.let {
+        userRepository.findByPhoneNumber(phoneNumber)?.let {
             /*注册并返回*/
-            userRepository.save(User(
-                phone_number = phoneNumber,
+            val user = User(
+                phoneNumber = phoneNumber,
                 nickname = nickname,
                 /*如果密码不是经过前端哈希的，这里进行哈希*/
                 password = getCheckedPassword(password)
-            ))
+            )
+            userRepository.save(user)
+            return user
         } ?: throw 注册时用户已存在(phoneNumber)
     }
 

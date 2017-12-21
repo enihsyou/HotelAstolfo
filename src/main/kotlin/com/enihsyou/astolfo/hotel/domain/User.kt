@@ -1,7 +1,5 @@
 package com.enihsyou.astolfo.hotel.domain
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonSetter
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.NaturalId
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters
@@ -14,8 +12,6 @@ import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToMany
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.Table
@@ -29,7 +25,8 @@ data class User(
     var id: Int = 0,
 
     @NaturalId
-    var phone_number: String = "",
+    @Column(name = "phone_number")
+    var phoneNumber: String = "",
 
     var nickname: String = "",
 
@@ -74,7 +71,7 @@ data class UserRoleTable(
     var type: String = "未注册",
 
     @OneToMany
-    var users:List<User>
+    var users: List<User>
 
     //todo add user role permissions
 )

@@ -10,3 +10,12 @@ Authorization:Basic dGVzdDoyMzMz
   "register_date": "2016-03-16T13:56:39.492"
 }
 ###
+POST http://localhost:10080/api/restful/roomTypes/
+Content-Type: application/json
+
+{
+  "type": "官方",
+  "description": "估读法"
+}
+
+###

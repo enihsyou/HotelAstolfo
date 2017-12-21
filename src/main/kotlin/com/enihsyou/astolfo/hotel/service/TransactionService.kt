@@ -19,12 +19,12 @@ interface TransactionService {
     ): List<Transaction>
 
     fun listTransactionByType(
-        type: Room.RoomType,
+        type: String,
         pageable: Pageable
     ): List<Transaction>
 
     fun listTransactionByDirection(
-        direction: Room.RoomDirection,
+        direction: String,
         pageable: Pageable
     ): List<Transaction>
 
@@ -48,12 +48,12 @@ class TransactionServiceImpl : TransactionService {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun listTransactionByType(type: Room.RoomType,
+    override fun listTransactionByType(type: String,
                                        pageable: Pageable): List<Transaction> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun listTransactionByDirection(direction: Room.RoomDirection,
+    override fun listTransactionByDirection(direction: String,
                                             pageable: Pageable): List<Transaction> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
