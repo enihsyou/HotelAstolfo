@@ -8,13 +8,18 @@ import javax.persistence.Embeddable
 import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.Enumerated
+import javax.persistence.ForeignKey
+import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
+import javax.persistence.Table
 
 @Entity
+@Table(name = "ROOM")
 data class Room(
-    @Id
+    @Id @GeneratedValue
     var id: Int = 0,
 
     @NaturalId
@@ -24,12 +29,12 @@ data class Room(
 
     @Enumerated
     @Convert(converter = RoomTypeConverter::class)
-    @Column(name = "type")
+    @ManyToOne(targetEntity = RoomTypeTable::class)
     var type: RoomType = RoomType.Undefined,
 
     @Enumerated
     @Convert(converter = RoomDirectionConverter::class)
-    @Column(name = "direction")
+    @ManyToOne(targetEntity = RoomDirectionTable::class)
     var direction: RoomDirection = RoomDirection.Undefined,
 
     /*简介信息*/
@@ -39,7 +44,6 @@ data class Room(
     var price: Int = 0,
 
     @OneToMany
-    @JoinColumn(name = "room_transaction")
     var transactions: MutableList<Transaction>? = null
 ) {
 
@@ -83,14 +87,33 @@ data class Room(
 }
 
 @Entity
+@Table(name = "ROOM_TYPE")
 data class RoomTypeTable(
-    @Id
-    var type_id: Int = 1,
+    @Id @GeneratedValue
+    var id: Int = 1,
 
     /*类型名字*/
     var type: String = "Undefined",
 
-    /*类型简介*/
-    var description:String = ""
+    /*房型简介*/
+    var description:String = "",
+
+    @OneToMany
+    var room:List<Room>
 )
 
+@Entity
+@Table(name = "ROOM_DIRECTION")
+data class RoomDirectionTable(
+    @Id @GeneratedValue
+    var id: Int = 1,
+
+    /*方向名字*/
+    var type: String = "Undefined",
+
+    /*方向简介*/
+    var description: String = "",
+
+    @OneToMany
+    var room: List<Room>
+)

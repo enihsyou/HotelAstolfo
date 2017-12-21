@@ -1,3 +1,12 @@
-GET http://localhost:10080/api/
+POST http://localhost:10080/api/users/signup
+Content-Type: application/json;charset=utf8
+Authorization:Basic dGVzdDoyMzMz
 
+{
+  "role": "注册用户",
+  "password": "2333",
+  "nickname": "的4rq34re",
+  "phone_number": "12345678911",
+  "register_date": "2016-03-16T13:56:39.492"
+}
 ###

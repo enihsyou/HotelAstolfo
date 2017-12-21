@@ -1,11 +1,13 @@
 package com.enihsyou.astolfo.hotel.controller
 
+import com.enihsyou.astolfo.hotel.domain.Guest
 import com.enihsyou.astolfo.hotel.domain.Transaction
 import com.enihsyou.astolfo.hotel.domain.User
 import com.enihsyou.astolfo.hotel.service.UserService
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
+import org.springframework.data.rest.core.annotation.RestResource
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -29,15 +31,16 @@ data class UserPayload(
 
 @RestController("用户接口控制器")
 @RequestMapping("/api/users")
-class UserController(@Autowired var userService: UserService) {
+class UserController {
 
+    @Autowired lateinit var userService: UserService
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    fun signUp(@RequestBody payload: UserPayload): User {
-        payload.run {
+    fun signUp(@RequestBody user: User): User {
+        user.run {
             userService.signUp(phone_number, password, nickname)
+            return userService.findUserByPhone(phone_number)
         }
-        return getUser(payload.phone_number)
     }
 
     @PostMapping("/login")
@@ -47,24 +50,4 @@ class UserController(@Autowired var userService: UserService) {
     @PostMapping("/logout")
     fun logout(@RequestHeader("Authorization") header: String): String =
         "忘掉密码不就退出了么w"
-
-    @GetMapping("/list")
-    fun listUsers(pageable: Pageable): List<User> =
-        userService.listUsers(pageable)
-
-    @GetMapping("/{phone}")
-    fun getUser(@PathVariable phone: String): User =
-        userService.findUserByPhone(phone)
-
-    @PutMapping("/{phone}")
-    fun updateUser(@PathVariable phone: String, @RequestBody payload: UserPayload): User =
-        payload.run { userService.updateInformation(phone, password, new_password, nickname) }
-
-    @DeleteMapping("/{phone}")
-    fun deleteUser(@PathVariable phone: String) =
-        userService.deleteUser(phone)
-
-    @GetMapping("/{phone}/transaction")
-    fun getUserTransactions(@PathVariable phone: Long, @RequestHeader("Authorization") header: String): List<Transaction> =
-        userService.transactions(phone)
 }

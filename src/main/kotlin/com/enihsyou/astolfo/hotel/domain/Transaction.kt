@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.NotBlank
 import java.time.LocalDateTime
 import javax.persistence.Entity
 import javax.persistence.ForeignKey
+import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToMany
@@ -12,21 +13,21 @@ import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity
-@Table(name = "transaction")
+@Table(name = "TRANSACTION")
 data class Transaction(
-    @Id
+    @Id @GeneratedValue
     var id: Int,
 
     @ManyToOne
-    @JoinColumn(name = "user_transaction")
+    /*这个用户创建的订单*/
     var user: User,
 
     @ManyToOne
-    @JoinColumn(name = "room_transaction")
+    /*预定的这个房间*/  //现在只支持单个房间
     var room: Room,
 
     @OneToMany
-    @JoinColumn(name = "transaction_guest")
+    /*入住这些旅客*/
     var guests: List<Guest>,
 
     /*预定开始日期*/
@@ -35,7 +36,7 @@ data class Transaction(
     /*预定结束日期*/
     var date_to: LocalDateTime,
 
-    /*订单没取消*/
+    /*订单还在有效期*/
     var activated: Boolean,
 
     /*旅客是否来入住了*/
