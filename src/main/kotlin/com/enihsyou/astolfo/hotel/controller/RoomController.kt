@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDateTime
 
 
-@RestController("用户接口控制器")
+@RestController("房间接口控制器")
 @RequestMapping("/api/rooms")
-class RoomController(@Autowired val roomService: RoomService) {
+class RoomController {
+
+    @Autowired lateinit var roomService: RoomService
 
     @GetMapping("/list")
     fun listRoom(
@@ -21,7 +23,7 @@ class RoomController(@Autowired val roomService: RoomService) {
         @RequestParam("to", required = false) to: LocalDateTime = LocalDateTime.MAX,
         @RequestParam("type", required = false) type: Room.RoomType = Room.RoomType.Any,
         @RequestParam("direction", required = false) direction: Room.RoomDirection = Room.RoomDirection.Any,
-        @RequestParam("priceFrom", required = false) priceFrom: Int = 0,
+        @RequestParam("priceFrom", required = false) priceFrom: Int = Int.MIN_VALUE,
         @RequestParam("priceTo", required = false) priceTo: Int = Int.MAX_VALUE,
         pageable: Pageable) =
         roomService.listRoomByParameter(from, to, type, direction, priceFrom, priceTo, pageable)

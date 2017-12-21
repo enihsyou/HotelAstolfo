@@ -1,14 +1,25 @@
 package com.enihsyou.astolfo.hotel.domain
 
 import javax.persistence.Entity
+import javax.persistence.GeneratedValue
 import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
+import javax.persistence.Table
 
 @Entity
+@Table(name = "GUEST")
 data class Guest(
     @Id
-    var id: Int,
+    @GeneratedValue
+    var id: Int = 0,
 
-    var identification_number: String,
+    @ManyToOne
+    var user :User,
 
+    /*身份证号码*/
+    var identification: String,
+
+    /*姓名*/
     var name: String
 )
