@@ -124,10 +124,10 @@
             <br>
             <label for="bookingType">客房类型:
                 <select id="bookingType">
-                    <option value="标准间">标准间</option>
-                    <option value="大床房">大床房</option>
-                    <option value="三人房">三人房</option>
-                    <option value="总统套房" selected>总统套房</option>
+                    <option value="std">高端双床间</option>
+                    <option value="big">至尊大床房</option>
+                    <option value="thr">激情三人房</option>
+                    <option value="suit" selected>奢华总统套房</option>
                 </select>
             </label>
             <div class=" text-center">
@@ -135,8 +135,31 @@
             </div>
         </div>
     </div>
-    <div class="searchList">
-        假装是搜索结果
+    <div class="searchList untouchable">
+        <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <table>
+            <tr>
+                <td>房型</td>
+                <td>床型</td>
+                <td>特殊服务</td>
+                <td>房价</td>
+                <td><!--预定--></td>
+            </tr>
+            <tr>
+                <td>高端双床间</td>
+                <td>2</td>
+                <td>大保健</td>
+                <td>699</td>
+                <td>
+                    <div class="book-btn btn-default btn-md">立即预定</div>
+                </td>
+            </tr>
+            <tr v-cloak>
+                <td class="searchListItem" v-for="item in searchResults">
+                    {{item}}
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
 <div class="footer">

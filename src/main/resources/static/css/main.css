@@ -6,6 +6,10 @@ body {
     height: 100%;
 }
 
+[v-cloak] {
+    display: none;
+}
+
 .msg {
     position: fixed;
     z-index: 99;
@@ -309,10 +313,47 @@ body {
     width: 60vw;
     height: 80vh;
     z-index: 6;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, .95);
     border-radius: 1em;
     box-shadow: 1.2em 1.2em 5em .5em rgba(41, 41, 41, 0.3);
     display: none;
+}
+
+.searchList .close {
+    position: absolute;
+    top: 1%;
+    right: 1%;
+}
+
+.searchList table {
+    margin: 2em 2em 0 2em;
+    text-align: center;
+    border: 1px solid darkgrey;
+    width: calc(100% - 4em);
+}
+
+.searchList table tr {
+    height: 4em;
+    border-bottom: 1px solid grey;
+}
+
+.searchList table tr:first-child {
+    height: 2em;
+}
+
+.searchList table td {
+    max-width: 4em;
+}
+
+.searchList table td:last-child {
+    width: 6em;
+}
+
+.searchList table td .book-btn {
+    margin: 0;
+    text-align: center;
+    cursor: pointer;
+    width: 4em;
 }
 
 .footer {

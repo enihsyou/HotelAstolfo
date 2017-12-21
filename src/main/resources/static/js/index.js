@@ -156,6 +156,13 @@ $('.searchBox .confirm').click(function () {
     }
 });
 
+//搜索框关闭图标动作
+$('.searchList .close').click(function () {
+    $(this).parent().slideUp();
+    $('.slider_container').css('filter', 'none');
+    $('.searchBox').css('left', '10%');
+});
+
 //初始化
 $(function init() {
         //开始标题滚动
@@ -173,15 +180,20 @@ $(function init() {
             .attr('min', `${year}-${month}-${nday}`)
             .attr('max', `${year + 1}-${month}-${nday}`);
         //初始化顶栏
-        let nickname = sessionStorage.nickname || localStorage.nickname;
-        if (nickname != null && nickname.length > 0) {
-            showMsg('欢迎回来~');
-            $('.user-info .user-btn').html();
-            $('.user-info ').show();
-        }
-        else {
-            $('.login-btn').show();
-        }
+        reqLogin(sessionStorage.username || localStorage.username, sessionStorage.password || localStorage.password)
+            .then((data) => {
+                //将接受到的数据解析
+                //...
+                showMsg('欢迎回来~');
+                $('.user-info .user-btn').html(sessionStorage.nickname || localStorage.nickname);
+                $('.user-info ').show();
+            }, (error) => {
+                if (error !== 'EMPTY_USERNAME_OR_PASSWORD') {
+                    console.error('autoLogin:', error);
+                    showMsg(error)
+                }
+                $('.login-btn').show();
+            });
     }
 );
 

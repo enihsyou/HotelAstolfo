@@ -30,6 +30,10 @@ async function titleScroller() {
 //请求登录的数据(promise)
 function reqLogin(username, password) {
     return new Promise((resolve, reject) => {
+        if (username == null || password == null) {
+            reject('EMPTY_USERNAME_OR_PASSWORD');
+            return
+        }
         $.ajax({
             url: `/api/users/${username}`,
             type: 'GET',
