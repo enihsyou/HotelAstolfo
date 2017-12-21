@@ -41,7 +41,8 @@
                     </div>
                 </div>
             </div>
-            <div class="loginFooter text-center"><a class="forgot" href="#">忘记密码</a>|<a class="signup_button" href="#">注册用户</a>
+            <div class="loginFooter text-center"><a class="forgot" href="#">忘记密码</a>|<a class="signup-btn"
+                                                                                        href="#">注册用户</a>
             </div>
         </form>
     </div>
@@ -90,7 +91,10 @@
     </div>
 </div>
 <div class="row top_banner">
-    <span class="login_button confirm untouchable">登录</span>
+    <div class="btn-primary login-btn confirm untouchable">登录</div>
+    <div class="user-info untouchable">
+        尊敬的 <span class="user-btn">(๑˙ー˙๑)未登录</span>，您好！<span class="logout-btn">登出</span>
+    </div>
 </div>
 <div class="main">
     <div class="slider_container untouchable">
@@ -120,10 +124,10 @@
             <br>
             <label for="bookingType">客房类型:
                 <select id="bookingType">
-                    <option value="标准间">标准间</option>
-                    <option value="大床房">大床房</option>
-                    <option value="三人房">三人房</option>
-                    <option value="总统套房" selected>总统套房</option>
+                    <option value="std">高端双床间</option>
+                    <option value="big">至尊大床房</option>
+                    <option value="thr">激情三人房</option>
+                    <option value="suit" selected>奢华总统套房</option>
                 </select>
             </label>
             <div class=" text-center">
@@ -131,11 +135,38 @@
             </div>
         </div>
     </div>
+    <div class="searchList untouchable">
+        <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <table>
+            <tr>
+                <td>房型</td>
+                <td>床型</td>
+                <td>特殊服务</td>
+                <td>房价</td>
+                <td><!--预定--></td>
+            </tr>
+            <tr>
+                <td>高端双床间</td>
+                <td>2</td>
+                <td>大保健</td>
+                <td>699</td>
+                <td>
+                    <div class="book-btn btn-default btn-md">立即预定</div>
+                </td>
+            </tr>
+            <tr v-cloak>
+                <td class="searchListItem" v-for="item in searchResults">
+                    {{item}}
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
 <div class="footer">
 
 </div>
 <script src="js/jquery-3.2.1.js"></script>
+<script src="js/vue.js"></script>
 <script src="js/js-sha256.js"></script>
 <script src="js/tools.js"></script>
 <script src="js/index.js"></script>

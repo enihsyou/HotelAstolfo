@@ -132,11 +132,7 @@ async function client_analyze() {
 }
 
 async function logout() {
-    //身份验证
-    //获取订单
-    let resStrBuilder = [];
-    resStrBuilder.push();
-    //生成html
-    await render_Container(resStrBuilder.toString());
-    //addListeners
+    localStorage.clear();
+    sessionStorage.clear();
+    location.href = '/';
 }

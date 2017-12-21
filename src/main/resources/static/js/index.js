@@ -1,5 +1,5 @@
 //右上角登录入口按钮
-$('.login_button').click((e) => {
+$('.login-btn').click((e) => {
     let login = $('.login');
     let signup = $('.signup');
     if (login.css('display') === 'none' && signup.css('display') === 'none') {
@@ -13,8 +13,20 @@ $('.login_button').click((e) => {
     }
 });
 
+//登出按钮动作
+$('.user-btn').click((e) => {
+    location.href = 'management.html'
+});
+
+//登出按钮动作
+$('.logout-btn').click((e) => {
+    localStorage.clear();
+    sessionStorage.clear();
+    location.href = '/'
+});
+
 //登录界面注册按钮
-$('.login .window .loginFooter .signup_button').click(function () {
+$('.login .window .loginFooter .signup-btn').click(function () {
     let signup = $('.signup');
     if (signup.css('display') === 'none') {
         $('.login').fadeOut(500);
@@ -27,15 +39,14 @@ $('.login .window .loginFooter .signup_button').click(function () {
 
 //登录界面确认登录按钮
 $('.login .window .confirm').click(function () {
-    if (isLogin) return;
+    if ($(this).children('span').hasClass('loading')) {
+        return;
+    }
     let _this = this;
     let username = $('#inputUserName');
     let password = $('#inputPassword');
     if (username.val().length > 0 && password.val().length > 0) {
-        if (!isLogin) {
-            isLogin = true;
-            $(_this).append('<span class="loading line"></span>');
-        }
+        $(_this).append('<span class="loading line"></span>');
         $.ajax({
             url: '/api/users/login',
             type: 'POST',
@@ -44,14 +55,12 @@ $('.login .window .confirm').click(function () {
                 phone_number: username.val(),
                 password: sha256(password.val())
             }),
-            success: function () {
-                isLogin = false;
+            success: function (data, textStatus, jqXHR) {
                 //TODO dateStructure of callback
                 $(_this).children('.loading').remove();
             },
-            error: function (err) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 showMsg('网络错误！');
-                isLogin = false;
                 $(_this).children('.loading').remove();
             }
         });
@@ -62,7 +71,9 @@ $('.login .window .confirm').click(function () {
 
 //注册界面确认注册按钮
 $('.signup .window .confirm').click(function () {
-    if (isSignup) return;
+    if ($(this).children('span').hasClass('loading')) {
+        return;
+    }
     let _this = this;
     let username = $('#signupUsername');
     let nickname = $('#signupNickname');
@@ -73,10 +84,7 @@ $('.signup .window .confirm').click(function () {
             showMsg('两次输入密码不相符');
             return;
         }
-        if (!isSignup) {
-            isSignup = true;
-            $(_this).append('<span class="loading line"></span>');
-        }
+        $(_this).append('<span class="loading line"></span>');
         $.ajax({
             url: '/api/users/signup',
             type: 'POST',
@@ -86,14 +94,12 @@ $('.signup .window .confirm').click(function () {
                 nickname: nickname.val(),
                 password: sha256(password.val())
             }),
-            success: function () {
-                isSignup = false;
+            success: function (data, textStatus, jqXHR) {
                 //TODO dateStructure of callback
                 $(_this).children('.loading').remove();
             },
-            error: function (err) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 showMsg('网络错误！');
-                isSignup = false;
                 $(_this).children('.loading').remove();
             }
         });
@@ -105,14 +111,15 @@ $('.signup .window .confirm').click(function () {
 //登录、注册界面关闭图标动作
 $('.window .close').click(function () {
     $(this).parent().parent().fadeOut();
-    isLogin = false;
-    isSignup = false;
+    $('.loading').remove();
     $('.main').css('filter', 'none');
 });
 
 //首页搜索框确认动作
 $('.searchBox .confirm').click(function () {
-    if (isSearch) return;
+    if ($(this).children('span').hasClass('loading')) {
+        return;
+    }
     let _this = this;
     let searchStart = $('#bookingStart');
     let searchEnd = $('#bookingEnd');
@@ -121,10 +128,7 @@ $('.searchBox .confirm').click(function () {
             showMsg('离店时间必须晚于预定时间');
             return;
         }
-        if (!isSearch) {
-            isSearch = true;
-            $(_this).append('<span class="loading line"></span>');
-        }
+        $(_this).append('<span class="loading line"></span>');
         $.ajax({
             url: '/api/search',
             type: 'POST',
@@ -134,14 +138,16 @@ $('.searchBox .confirm').click(function () {
                 searchEnd: searchEnd.val(),
                 searchType: $('#bookingType').val()
             }),
-            success: function () {
-                isSignup = false;
+            success: function (data, textStatus, jqXHR) {
                 //TODO dateStructure of callback
                 $(_this).children('.loading').remove();
+                //显示右侧搜索列表
+                $('.slider_container').css('filter', 'blur(10px)');
+                $('.searchBox').css('left', '5%');
+                $('.searchList').slideDown(333);
             },
-            error: function (err) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 showMsg('网络错误！');
-                isSearch = false;
                 $(_this).children('.loading').remove();
             }
         });
@@ -150,13 +156,44 @@ $('.searchBox .confirm').click(function () {
     }
 });
 
-//初始化
-(function init() {
-    titleScroller();
-    $('#bookingStart').val(new Date().toLocaleDateString().replace(/\//g, '-'));
-    $('#bookingEnd').val(new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toLocaleDateString().replace(/\//g, '-'));
-})();
+//搜索框关闭图标动作
+$('.searchList .close').click(function () {
+    $(this).parent().slideUp();
+    $('.slider_container').css('filter', 'none');
+    $('.searchBox').css('left', '10%');
+});
 
-let isLogin = false;//登录确认按钮状态
-let isSignup = false;//注册确认按钮状态
-let isSearch = false;//搜索确认按钮状态
+//初始化
+$(function init() {
+        //开始标题滚动
+        titleScroller();
+        //初始化首页搜索
+        let time = new Date();
+        let year = time.getFullYear();
+        let month = time.getMonth();
+        let day = time.getDay() > 9 ? time.getDay() : '0' + time.getDay();
+        $('#bookingStart').val(`${year}-${month}-${day}`)
+            .attr('min', `${year}-${month}-${day}`)
+            .attr('max', `${year + 1}-${month}-${day}`);
+        let nday = (time.getDay() + 1) > 9 ? (time.getDay() + 1) : '0' + (time.getDay() + 1);
+        $('#bookingEnd').val(`${year}-${month}-${nday}`)
+            .attr('min', `${year}-${month}-${nday}`)
+            .attr('max', `${year + 1}-${month}-${nday}`);
+        //初始化顶栏
+        reqLogin(sessionStorage.username || localStorage.username, sessionStorage.password || localStorage.password)
+            .then((data) => {
+                //将接受到的数据解析
+                //...
+                showMsg('欢迎回来~');
+                $('.user-info .user-btn').html(sessionStorage.nickname || localStorage.nickname);
+                $('.user-info ').show();
+            }, (error) => {
+                if (error !== 'EMPTY_USERNAME_OR_PASSWORD') {
+                    console.error('autoLogin:', error);
+                    showMsg(error)
+                }
+                $('.login-btn').show();
+            });
+    }
+);
+
