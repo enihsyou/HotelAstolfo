@@ -1,5 +1,6 @@
 package com.enihsyou.astolfo.hotel.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.CreationTimestamp
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
@@ -26,6 +27,7 @@ data class Transaction(
 
     @ManyToOne
     @CreatedBy
+    @JsonIgnore
     /*这个用户创建的订单*/
     var user: User,
 

@@ -1,15 +1,8 @@
-GET http://localhost/api/users/list
-Authorization:Basic dGVzdDoyMzMz
-# 列出所有用户列表，注意到需要认证
-
 ###
-GET http://localhost/api/users/list
+GET http://localhost:10080/api/users/18834321239
+Authorization:Basic dGVzdDoyMzMz
 # 不带认证会导致401，返回头部上有这个
 # WWW-Authenticate: Basic realm="Astolfo"
-
-###
-GET http://localhost/api/users/18834321239
-Authorization:Basic dGVzdDoyMzMz
 # 请求一个未注册的用户，应该返回404
 # HTTP/1.1 404
 # Content-Type: application/json;charset=UTF-8
@@ -22,23 +15,58 @@ Authorization:Basic dGVzdDoyMzMz
 #  }
 
 ###
-GET http://localhost/api/users/13112602707
+GET http://localhost:10080/api/users/13112602707
 Authorization:Basic dGVzdDoyMzMz
 # 这是一个在预填充Dumy数据里的用户，返回200 以及用户信息，这里返回内容不包含密码
 
 ###
-POST http://localhost/api/users/signup
+POST http://localhost:10080/api/users/make
 # 注册接口，昵称域是可选的。如果密码不是SHA256加密后的(256位长度)会在后台加密保存
 # 请求格式不正确就是400
 Content-Type: application/json
 
 {
-  "phone_number": "18834321239",
+  "phoneNumber": "18834321240",
   "password": "abc",
-  "nickname": "nick"
+  "nickname": "temp"
+}
+
+###
+POST http://localhost:10080/api/users/login
+# 登录接口,需要提供用户名和密码
+# 正确的话 200 并返回用户信息
+# 错误的话 400
+# 关于用户的操作都需要加上HTTP Basic认证
+Content-Type: application/json
+
+{
+  "phoneNumber": "18834321240",
+  "password": "abc"
 }
 ###
-PUT http://localhost/api/users/18834321239
+GET http://localhost:10080/api/users/transactions?phone=18834321240
+Authorization:Basic dGVzdDoyMzMz
+# 列出用户的所有订单记录，注意到需要认证
+
+[{"id":5,"identification":"34534","name":"435"},{"id":14,"identification":"130622199901017437","name":"宋娘"}]
+###
+GET http://localhost:10080/api/users/guests?phone=18834321240
+Authorization:Basic dGVzdDoyMzMz
+# 列出用户绑定的身份证
+###
+POST http://localhost:10080/api/users/guests?phone=18834321240
+Content-Type: application/json
+Authorization:Basic dGVzdDoyMzMz
+# 向用户添加一个身份证绑定
+# 身份证从这生成http://www.welefen.com/lab/identify/
+# 姓名从这里生成https://uinames.com/
+
+{
+  "identification":"130622199901017437",
+  "name":"宋娘"
+}
+###
+PUT http://localhost:10080/api/users/18834321239
 # 更新用户信息，比如这里是修改密码，需要提供原始密码 放在password域下
 # 返回更新后的用户信息
 # 如果密码不符，422
@@ -52,7 +80,9 @@ Authorization:Basic dGVzdDoyMzMz
   "nickname": "abc"
 }
 ###
-
+GET http://localhost:10080/api/users/transactions
+Authorization:Basic dGVzdDoyMzMz
+# 列出用户的所有订单记录，注意到需要认证
 
 
 
@@ -61,7 +91,7 @@ Authorization:Basic dGVzdDoyMzMz
 
 
 ###
-POST http://localhost:10080/api/restful/users
+POST http://localhost:10080:10080/api/restful/users
 # 这里是完全的后台, 不应该被外部直接访问
 # 注意手机号的域名是phoneNumber
 Content-Type: application/json;charset=utf8

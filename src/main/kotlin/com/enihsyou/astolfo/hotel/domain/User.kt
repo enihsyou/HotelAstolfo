@@ -30,7 +30,6 @@ data class User(
 
     var nickname: String = "",
 
-    @JsonIgnore
     @Column(nullable = false)
     var password: String = "",
 
