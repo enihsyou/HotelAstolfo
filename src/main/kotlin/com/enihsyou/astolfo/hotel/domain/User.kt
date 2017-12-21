@@ -1,5 +1,6 @@
 package com.enihsyou.astolfo.hotel.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.NaturalId
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters
@@ -12,7 +13,6 @@ import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
-import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.Table
 
@@ -25,19 +25,20 @@ data class User(
     var id: Int = 0,
 
     @NaturalId
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", nullable = false)
     var phoneNumber: String = "",
 
     var nickname: String = "",
 
+    @JsonIgnore
+    @Column(nullable = false)
     var password: String = "",
 
     @CreationTimestamp
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
     val register_date: LocalDateTime = LocalDateTime.now(),
 
-    @Enumerated(EnumType.ORDINAL)
-    @ManyToOne(targetEntity = UserRoleTable::class)
+    @Enumerated(EnumType.STRING)
     @Convert(converter = UserRoleConverter::class)
     var role: UserRole = UserRole.未注册,
 
@@ -59,19 +60,3 @@ data class User(
         }
     }
 }
-
-
-@Entity
-@Table(name = "USER_ROLE")
-data class UserRoleTable(
-    @Id
-    @GeneratedValue
-    var id: Int = 3,
-
-    var type: String = "未注册",
-
-    @OneToMany
-    var users: List<User>
-
-    //todo add user role permissions
-)

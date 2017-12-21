@@ -64,10 +64,10 @@ class UserServiceImpl : UserService {
         }
     }
 
-    private fun existUser(phone: String): User =
-        if (userRepository.exists(phone))
-            userRepository.findOne(phone)
-        else throw throw 用户不存在(phone)
+    private fun existUser(phone: String): User = TODO()
+//        if (userRepository.exists(phone))
+//            userRepository.findOne(phone)
+//        else throw throw 用户不存在(phone)
 
     private fun getCheckedPassword(password: String): String {
         return if (password.length != 64)
@@ -90,10 +90,10 @@ class UserServiceImpl : UserService {
         }
     }
 
-
-    private fun findUserByPhone(phone: String): User {
-        return userRepository.findOne(phone) ?: throw 用户不存在(phone)
-    }
+//
+//    private fun findUserByPhone(phone: String): User {
+//        return userRepository.findOne(phone) ?: throw 用户不存在(phone)
+//    }
 
      fun listUsers(pageable: Pageable): List<User> {
         return userRepository.findAll(pageable).toList()
@@ -117,8 +117,9 @@ class UserServiceImpl : UserService {
     }
 
     override fun login(phoneNumber: String,
-                       password: String) {
-        val user = userRepository.findOne(phoneNumber) ?: throw 用户不存在(phoneNumber)
-        return
-    }
+                       password: String) {}
+//    {
+//        val user = userRepository.findOne(phoneNumber) ?: throw 用户不存在(phoneNumber)
+//        return
+//    }
 }

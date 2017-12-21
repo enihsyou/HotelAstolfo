@@ -3,6 +3,7 @@ package com.enihsyou.astolfo.hotel.domain
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.io.Serializable
 import javax.persistence.Embeddable
+import javax.persistence.Embedded
 import javax.persistence.EmbeddedId
 import javax.persistence.Entity
 import javax.persistence.Enumerated
@@ -19,12 +20,12 @@ data class Room(
     @EmbeddedId
     var roomNumber: RoomNumber,
 
-    @Enumerated
     @ManyToOne(targetEntity = RoomTypeTable::class)
+    @Embedded
     var type: String = "",
 
-    @Enumerated
     @ManyToOne(targetEntity = RoomDirectionTable::class)
+    @Embedded
     var direction: String = "",
 
     /*简介信息*/
@@ -36,7 +37,6 @@ data class Room(
     @OneToMany
     var transactions: MutableList<Transaction>? = null
 ) {
-
     @Embeddable
     data class RoomNumber(
         /*楼层*/
@@ -50,6 +50,7 @@ data class Room(
 
 @Entity
 @Table(name = "ROOM_TYPE")
+@Embeddable
 data class RoomTypeTable(
     @Id @GeneratedValue
     var id: Int = 1,
@@ -67,6 +68,7 @@ data class RoomTypeTable(
 
 @Entity
 @Table(name = "ROOM_DIRECTION")
+@Embeddable
 data class RoomDirectionTable(
     @Id @GeneratedValue
     var id: Int = 1,
