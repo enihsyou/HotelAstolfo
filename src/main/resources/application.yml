@@ -43,7 +43,7 @@ spring:
     location:
   data:
     rest:
-      base-path: "/api/"
+      base-path: "/api/restful"
 server:
   address: localhost
   port: 10080

@@ -1,13 +1,14 @@
 package com.enihsyou.astolfo.hotel.domain
 
-import org.hibernate.validator.constraints.NotBlank
+import org.hibernate.annotations.CreationTimestamp
+import org.springframework.data.annotation.CreatedBy
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters
 import java.time.LocalDateTime
+import javax.persistence.Convert
 import javax.persistence.Entity
-import javax.persistence.ForeignKey
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToMany
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.Table
@@ -18,7 +19,13 @@ data class Transaction(
     @Id @GeneratedValue
     var id: Int,
 
+    @CreatedDate
+    @CreationTimestamp
+    @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
+    var create_date: LocalDateTime,
+
     @ManyToOne
+    @CreatedBy
     /*这个用户创建的订单*/
     var user: User,
 
@@ -31,9 +38,11 @@ data class Transaction(
     var guests: List<Guest>,
 
     /*预定开始日期*/
+    @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
     var date_from: LocalDateTime,
 
     /*预定结束日期*/
+    @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
     var date_to: LocalDateTime,
 
     /*订单还在有效期*/

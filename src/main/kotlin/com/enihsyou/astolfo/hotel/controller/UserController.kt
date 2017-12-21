@@ -1,19 +1,11 @@
 package com.enihsyou.astolfo.hotel.controller
 
-import com.enihsyou.astolfo.hotel.domain.Guest
-import com.enihsyou.astolfo.hotel.domain.Transaction
 import com.enihsyou.astolfo.hotel.domain.User
 import com.enihsyou.astolfo.hotel.service.UserService
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Pageable
-import org.springframework.data.rest.core.annotation.RestResource
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
@@ -38,8 +30,7 @@ class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     fun signUp(@RequestBody user: User): User {
         user.run {
-            userService.signUp(phone_number, password, nickname)
-            return userService.findUserByPhone(phone_number)
+            return userService.signUp(phoneNumber, password, nickname)
         }
     }
 

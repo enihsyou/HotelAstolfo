@@ -21,8 +21,8 @@ class RoomController {
     fun listRoom(
         @RequestParam("from", required = false) from: LocalDateTime = LocalDateTime.now(),
         @RequestParam("to", required = false) to: LocalDateTime = LocalDateTime.MAX,
-        @RequestParam("type", required = false) type: Room.RoomType = Room.RoomType.Any,
-        @RequestParam("direction", required = false) direction: Room.RoomDirection = Room.RoomDirection.Any,
+        @RequestParam("type", required = false) type:String="",
+        @RequestParam("direction", required = false) direction: String="",
         @RequestParam("priceFrom", required = false) priceFrom: Int = Int.MIN_VALUE,
         @RequestParam("priceTo", required = false) priceTo: Int = Int.MAX_VALUE,
         pageable: Pageable) =

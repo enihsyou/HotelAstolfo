@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.PathVariable
 @RepositoryRestResource(collectionResourceRel = "users", path = "users")
 interface UserRepository : PagingAndSortingRepository<User, String> {
 
-    fun findByPhone_number(@PathVariable(name = "phoneNumber") phone_number: String): User?
+    fun findByPhoneNumber(@PathVariable(name = "phone_number") phone_number: String): User?
+
+    fun findByNickname(@PathVariable(name = "nickname") nickname: String): User?
+
+    fun findByRole(@PathVariable(name = "role") role: String): User?
 }
 
 
