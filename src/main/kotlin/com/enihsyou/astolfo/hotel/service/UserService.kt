@@ -8,6 +8,7 @@ import com.enihsyou.astolfo.hotel.exception.用户不存在
 import com.enihsyou.astolfo.hotel.exception.用户名和密码不匹配
 import com.enihsyou.astolfo.hotel.exception.相同身份证已存在
 import com.enihsyou.astolfo.hotel.repository.GuestRepository
+import com.enihsyou.astolfo.hotel.repository.TransactionRepository
 import com.enihsyou.astolfo.hotel.repository.UserRepository
 import com.google.common.hash.Hashing
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,57 +18,68 @@ import java.nio.charset.StandardCharsets
 
 
 interface UserService {
-    fun signUp(phoneNumber: String,
-               password: String,
-               nickname: String = ""): User
+    fun make(phoneNumber: String,
+             password: String,
+             nickname: String = ""): User
 
     fun login(phoneNumber: String,
-              password: String)
+              password: String): User
 
-    fun findByPhone(phone:String):User?
+    fun findByPhone(phone: String): User?
 
-    fun transactions(phone: String): List<Transaction>
+    fun findTransactions(phone: String,
+                         pageable: Pageable): List<Transaction>
 
-    fun listGuests(phone: String): List<Guest>
+    fun findGuests(phone: String,
+                   pageable: Pageable): List<Guest>
 
-    fun addGuest(phone: String, guest: Guest)
+    fun addGuest(phone: String,
+                 guest: Guest)
 }
 
 @Service(value = "用户层逻辑")
 class UserServiceImpl : UserService {
 
-    override fun findByPhone(phone: String): User? {
-        return userRepository.findByPhoneNumber(phone)
-    }
-
-    override fun transactions(phone: String): List<Transaction> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     @Autowired lateinit var userRepository: UserRepository
     @Autowired lateinit var guestRepository: GuestRepository
+
+    @Autowired lateinit var transactionRepository: TransactionRepository
+
+    private fun existUser(phone: String): User =
+        userRepository.findByPhoneNumber(phone)?.
+            let { return it }
+            ?: throw throw 用户不存在(phone)
+
+
+    override fun findByPhone(phone: String): User?
+        = existUser(phone)
+
+    override fun findTransactions(phone: String,
+                                  pageable: Pageable): List<Transaction>
+        = existUser(phone).let {
+        transactionRepository.findByUser(it, pageable)
+    }
+
+
     override fun addGuest(phone: String,
                           guest: Guest) {
-        val id = guest.identification
+        val iden = guest.identification
         existUser(phone).let {
-            val user = it
-            guestRepository.findByIdentification(id)?.let {
-                guestRepository.save(Guest(identification = id, name = guest.name, user = user))
-
-            } ?: throw 相同身份证已存在(id)
+            if (guestRepository.findByIdentification(guest.identification) == null)
+                guest.run {
+                    guestRepository.save(Guest(identification = iden, name = name, user = it))
+                }
+            else
+                throw 相同身份证已存在(iden)
         }
     }
 
-    override fun listGuests(phone: String): List<Guest> {
+    override fun findGuests(phone: String,
+                            pageable: Pageable): List<Guest> {
         existUser(phone).let {
-            return it.guests
+            return guestRepository.findByUser(it, pageable)
         }
     }
-
-    private fun existUser(phone: String): User = TODO()
-//        if (userRepository.exists(phone))
-//            userRepository.findOne(phone)
-//        else throw throw 用户不存在(phone)
 
     private fun getCheckedPassword(password: String): String {
         return if (password.length != 64)
@@ -76,48 +88,45 @@ class UserServiceImpl : UserService {
             password
     }
 
-    fun updateInformation(phone: String,
-                                   old_password: String,
-                                   new_password: String?,
-                                   nickname: String?): User {
-        existUser(phone).let {
-            if (it.password == getCheckedPassword(old_password))
-                new_password?.let { p -> it.password = getCheckedPassword(p) }
-            else throw 用户名和密码不匹配()
-            if (!nickname.isNullOrBlank())
-                nickname?.let { n -> it.nickname = nickname }
-            return it
-        }
-    }
-
-//
-//    private fun findUserByPhone(phone: String): User {
-//        return userRepository.findOne(phone) ?: throw 用户不存在(phone)
+//    fun updateInformation(phone: String,
+//                          old_password: String,
+//                          new_password: String?,
+//                          nickname: String?): User {
+//        existUser(phone).let {
+//            if (it.password == getCheckedPassword(old_password))
+//                new_password?.let { p -> it.password = getCheckedPassword(p) }
+//            else throw 用户名和密码不匹配()
+//            if (!nickname.isNullOrBlank())
+//                nickname?.let { n -> it.nickname = nickname }
+//            return it
+//        }
 //    }
 
-     fun listUsers(pageable: Pageable): List<User> {
-        return userRepository.findAll(pageable).toList()
-    }
-
-    override fun signUp(phoneNumber: String,
-                        password: String,
-                        nickname: String): User {
-        /*如果用户已经存在*/
-        userRepository.findByPhoneNumber(phoneNumber)?.let {
-            /*注册并返回*/
-            val user = User(
-                phoneNumber = phoneNumber,
-                nickname = nickname,
-                /*如果密码不是经过前端哈希的，这里进行哈希*/
-                password = getCheckedPassword(password)
-            )
-            userRepository.save(user)
-            return user
-        } ?: throw 注册时用户已存在(phoneNumber)
+    override fun make(phoneNumber: String,
+                      password: String,
+                      nickname: String): User {
+        /*注册并返回*/
+        if (userRepository.findByPhoneNumber(phoneNumber) != null)
+            throw 注册时用户已存在(phoneNumber)
+        val user = User(
+            phoneNumber = phoneNumber,
+            nickname = nickname,
+            /*如果密码不是经过前端哈希的，这里进行哈希*/
+            password = getCheckedPassword(password),
+            role = User.UserRole.注册用户
+        )
+        userRepository.save(user)
+        return user
     }
 
     override fun login(phoneNumber: String,
-                       password: String) {}
+                       password: String): User {
+        val user = existUser(phoneNumber)
+        if (user.password == getCheckedPassword(password)) {
+            return user
+        }
+        throw 用户名和密码不匹配()
+    }
 //    {
 //        val user = userRepository.findOne(phoneNumber) ?: throw 用户不存在(phoneNumber)
 //        return
