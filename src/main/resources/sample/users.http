@@ -52,3 +52,24 @@ Authorization:Basic dGVzdDoyMzMz
   "nickname": "abc"
 }
 ###
+
+
+
+
+###
+仅限于填充数据的测试API
+
+
+###
+POST http://localhost:10080/api/restful/users
+# 这里是完全的后台, 不应该被外部直接访问
+# 注意手机号的域名是phoneNumber
+Content-Type: application/json;charset=utf8
+
+{
+  "role": "注册用户",
+  "password": "2333",
+  "nickname": "的4rq34re",
+  "phoneNumber": "12345478911",
+  "register_date": "2016-03-16T13:56:39.492"
+}

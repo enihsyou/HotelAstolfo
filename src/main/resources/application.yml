@@ -28,7 +28,6 @@ spring:
         show_sql: true
         use_sql_comments: true
         format_sql: true
-
   session:
     store-type: hash_map
   jackson:
@@ -44,6 +43,10 @@ spring:
   data:
     rest:
       base-path: "/api/restful"
+endpoints:
+  loggers:
+    enabled: true
+
 server:
   address: localhost
   port: 10080
@@ -72,3 +75,4 @@ spring:
 server:
     address: localhost
     port: 8899
+

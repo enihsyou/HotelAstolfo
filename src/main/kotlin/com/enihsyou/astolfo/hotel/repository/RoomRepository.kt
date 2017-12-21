@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 
 @Repository("房间仓库")
 @RepositoryRestResource(path = "rooms")
-interface RoomRepository : PagingAndSortingRepository<Room, String> {
+interface RoomRepository : PagingAndSortingRepository<Room, Room.RoomNumber> {
 
     @Query(value = "SELECT R FROM Room R LEFT JOIN R.transactions T with T.activated=false or (T.date_to <?1 OR T.date_from >?2)")
     fun findByTimeBetweenQuery(@Param("from") from: LocalDateTime,
@@ -47,7 +47,7 @@ interface RoomRepository : PagingAndSortingRepository<Room, String> {
 
 @Repository("房间类型仓库")
 @RepositoryRestResource(path = "roomTypes")
-interface RoomTypeRepository : PagingAndSortingRepository<RoomTypeTable, String>
+interface RoomTypeRepository : PagingAndSortingRepository<RoomTypeTable, Int>
 @Repository("房间朝向仓库")
 @RepositoryRestResource(path = "roomDirections")
-interface RoomDirectionRepository : PagingAndSortingRepository<RoomDirectionTable, String>
+interface RoomDirectionRepository : PagingAndSortingRepository<RoomDirectionTable, Int>
