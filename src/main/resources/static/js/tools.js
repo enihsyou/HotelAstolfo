@@ -27,6 +27,27 @@ async function titleScroller() {
     setTimeout(titleScroller, 2000);
 }
 
+//请求登录的数据(promise)
+function reqLogin(username, password) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `/api/users/${username}`,
+            type: 'GET',
+            dataType: 'json',
+            contentType: "charset=UTF-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
+            },
+            success: function (data, textStatus, jqXHR) {
+                resolve(data)
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                reject(errorThrown)
+            }
+        });
+    });
+}
+
 //用于处理Cookie
 let Cookies = {
     getItem: function (sKey) {
@@ -50,7 +71,6 @@ let Cookies = {
                     break;
             }
         }
-        // console.log(encodeURIComponent(sKey) + "=" + encodeURIComponent(sValue) + sExpires + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : ""));
         document.cookie = encodeURIComponent(sKey) + "=" + encodeURIComponent(sValue) + sExpires + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : "");
         return true;
     },

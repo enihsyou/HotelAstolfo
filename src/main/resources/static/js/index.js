@@ -13,6 +13,18 @@ $('.login-btn').click((e) => {
     }
 });
 
+//登出按钮动作
+$('.user-btn').click((e) => {
+    location.href = 'management.html'
+});
+
+//登出按钮动作
+$('.logout-btn').click((e) => {
+    localStorage.clear();
+    sessionStorage.clear();
+    location.href = '/'
+});
+
 //登录界面注册按钮
 $('.login .window .loginFooter .signup-btn').click(function () {
     let signup = $('.signup');
@@ -44,12 +56,12 @@ $('.login .window .confirm').click(function () {
                 phone_number: username.val(),
                 password: sha256(password.val())
             }),
-            success: function () {
+            success: function (data, textStatus, jqXHR) {
                 isLogin = false;
                 //TODO dateStructure of callback
                 $(_this).children('.loading').remove();
             },
-            error: function (err) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 showMsg('网络错误！');
                 isLogin = false;
                 $(_this).children('.loading').remove();
@@ -86,12 +98,12 @@ $('.signup .window .confirm').click(function () {
                 nickname: nickname.val(),
                 password: sha256(password.val())
             }),
-            success: function () {
+            success: function (data, textStatus, jqXHR) {
                 isSignup = false;
                 //TODO dateStructure of callback
                 $(_this).children('.loading').remove();
             },
-            error: function (err) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 showMsg('网络错误！');
                 isSignup = false;
                 $(_this).children('.loading').remove();
@@ -134,12 +146,12 @@ $('.searchBox .confirm').click(function () {
                 searchEnd: searchEnd.val(),
                 searchType: $('#bookingType').val()
             }),
-            success: function () {
+            success: function (data, textStatus, jqXHR) {
                 isSignup = false;
                 //TODO dateStructure of callback
                 $(_this).children('.loading').remove();
             },
-            error: function (err) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 showMsg('网络错误！');
                 isSearch = false;
                 $(_this).children('.loading').remove();
@@ -151,23 +163,33 @@ $('.searchBox .confirm').click(function () {
 });
 
 //初始化
-(function init() {
-    //开始标题滚动
-    titleScroller();
-    //初始化首页搜索
-    $('#bookingStart').val(new Date().toLocaleDateString().replace(/\//g, '-'));
-    $('#bookingEnd').val(new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toLocaleDateString().replace(/\//g, '-'));
-    //初始化顶栏
-    let username = sessionStorage.username || localStorage.username;
-    if (username != null && username !== "") {
-        showMsg('欢迎回来~');
-        $('.user-info .user-btn').html(username);
-        $('.user-info ').show();
+$(function init() {
+        //开始标题滚动
+        titleScroller();
+        //初始化首页搜索
+        let time = new Date();
+        let year = time.getFullYear();
+        let month = time.getMonth();
+        let day = time.getDay() > 9 ? time.getDay() : '0' + time.getDay();
+        $('#bookingStart').val(`${year}-${month}-${day}`)
+            .attr('min', `${year}-${month}-${day}`)
+            .attr('max', `${year + 1}-${month}-${day}`);
+        let nday = (time.getDay() + 1) > 9 ? (time.getDay() + 1) : '0' + (time.getDay() + 1);
+        $('#bookingEnd').val(`${year}-${month}-${nday}`)
+            .attr('min', `${year}-${month}-${nday}`)
+            .attr('max', `${year + 1}-${month}-${nday}`);
+        //初始化顶栏
+        let nickname = sessionStorage.nickname || localStorage.nickname;
+        if (nickname != null && nickname.length > 0) {
+            showMsg('欢迎回来~');
+            $('.user-info .user-btn').html();
+            $('.user-info ').show();
+        }
+        else {
+            $('.login-btn').show();
+        }
     }
-    else {
-        $('.login-btn').show();
-    }
-})();
+);
 
 //未来重构
 let isLogin = false;//登录确认按钮状态
