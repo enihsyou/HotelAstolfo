@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我的阿福</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/management.css">
+</head>
+<body>
+<div class="top_banner">
+
+</div>
+<div class="main">
+    <div class="left-nav untouchable"></div>
+    <div class="container">
+        <table>
+            <tr>
+                <td>订单编号</td>
+                <td>房间类型</td>
+                <td>特殊服务</td>
+                <td>房价</td>
+                <td>状态</td>
+                <td><!--操作--></td>
+            </tr>
+            <!--例子-->
+            <tr>
+                <td>高端双床间</td>
+                <td>2</td>
+                <td>大保健</td>
+                <td>699</td>
+                <td>
+                    完成
+                </td>
+                <td>
+                    <div class="comm-btn btn-xs btn-default">评价</div>
+                </td>
+            </tr>
+
+            <tr v-cloak>
+                <td class="searchListItem" v-for="item in searchResults">
+                    {{item}}
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="footer">
+</div>
+<script>
+
+</script>
+</body>
+</html>

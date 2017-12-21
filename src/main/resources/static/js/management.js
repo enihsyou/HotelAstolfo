@@ -39,6 +39,9 @@ const left_nav = new Vue({
                 case '预订查询与修改':
                     check_all_booking();
                     break;
+                case '所有账户管理':
+                    modify_user_info();
+                    break;
                 case '销售月表':
                     sales_per_month();
                     break;
@@ -55,21 +58,47 @@ const left_nav = new Vue({
 
 let ordinary_user_items = ['查看我的订单', '查看我的预订', '修改个人信息', '登出'];
 let receptionist_user_items = ['当前所有客房状态', '查询预定客户信息', '预订客房', '客房维修登记', '登出'];
-let manager_user_items = ['客房类型设置', '可用客房设置', '当前所有客房状态', '预订客房', '预订查询与修改', '销售月表', '客户分析', '登出'];
+let manager_user_items = ['客房类型设置', '可用客房设置', '当前所有客房状态', '预订客房', '预订查询与修改', '所有账户管理', '销售月表', '客户分析', '登出'];
 
 //初始化
-$(async function init() {
+$(function init() {
     //获取用户信息
     let username = sessionStorage.username || localStorage.username;
     let password = sessionStorage.password || localStorage.password;
     let nickname = sessionStorage.nickname || localStorage.nickname;
     if (username == null || password == null) {
-        location.href = '/';
+        //未登录则返回主页
+        // location.href = '/';
     }
     else {
-        let data = await reqLogin(username, password);
-
+        reqLogin(username, password).then(
+            (data) => {
+                sessionStorage.nickname = data.nickname;
+                let userType = '';
+                switch (data.role) {
+                    case '管理员':
+                        userType = '经理：' + nickname;
+                        left_nav.items = manager_user_items;
+                        break;
+                    case '前台':
+                        userType = '前台：' + nickname;
+                        left_nav.items = receptionist_user_items;
+                        break;
+                    case '注册用户':
+                        userType = '欢迎您！' + nickname;
+                        left_nav.items = ordinary_user_items;
+                        break;
+                }
+            },
+            (errorThrown) => {
+                //报错信息未翻译
+                showMsg(errorThrown);
+                sleep(3000).then(
+                    () => {
+                        location.href = '/';
+                    }
+                )
+            }
+        );
     }
-    left_nav.userType = '普通用户';
-    left_nav.items = ordinary_user_items;
 });

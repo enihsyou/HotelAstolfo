@@ -35,14 +35,27 @@ function reqLogin(username, password) {
             return
         }
         $.ajax({
-            url: `/api/users/${username}`,
-            type: 'GET',
+            url: `/api/users/login`,
+            type: 'POST',
+            data: JSON.stringify({
+                phoneNumber: username,
+                password: sha256(password)
+            }),
             dataType: 'json',
             contentType: "charset=UTF-8",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
             },
             success: function (data, textStatus, jqXHR) {
+                /*{
+                    "id": 1,
+                    "phoneNumber": "18834321240",
+                    "nickname": "temp",
+                    "password": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+                    "register_date": "2017-12-21T22:40:24.289",
+                    "role": "注册用户",
+                    "guests": []
+                }*/
                 resolve(data)
             },
             error: function (jqXHR, textStatus, errorThrown) {

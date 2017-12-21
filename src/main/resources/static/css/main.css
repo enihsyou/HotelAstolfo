@@ -350,6 +350,7 @@ body {
 }
 
 .searchList table td .book-btn {
+    display: inline-block;
     margin: 0;
     text-align: center;
     cursor: pointer;

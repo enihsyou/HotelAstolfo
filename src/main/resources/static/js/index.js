@@ -52,15 +52,39 @@ $('.login .window .confirm').click(function () {
             type: 'POST',
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify({
-                phone_number: username.val(),
+                phoneNumber: username.val(),
                 password: sha256(password.val())
             }),
-            success: function (data, textStatus, jqXHR) {
-                //TODO dateStructure of callback
-                $(_this).children('.loading').remove();
+            success: function (Jdata, textStatus, jqXHR) {
+                /*{
+                    "id": 1,
+                    "phoneNumber": "18834321240",
+                    "nickname": "temp",
+                    "password": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+                    "register_date": "2017-12-21T22:40:24.289",
+                    "role": "注册用户",
+                    "guests": []
+                }*/
+                let data = JSON.parse(Jdata);
+                showMsg(`亲爱的${data.nickname},欢迎你回到阿福旅店！`);
+                if($(".checkbox input").prop('checked')){
+                    localStorage.username = data.phoneNumber;
+                    localStorage.password = data.password;
+                    localStorage.nickname = data.nickname;
+                }else {
+                    sessionStorage.username = data.phoneNumber;
+                    sessionStorage.password = data.password;
+                    sessionStorage.nickname = data.nickname;
+                }
+                sessionStorage.role = data.role;
+                sleep(3000).then(() => {
+                    location.href = '/';
+                })
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 showMsg('网络错误！');
+            },
+            complete: function () {
                 $(_this).children('.loading').remove();
             }
         });
@@ -86,20 +110,38 @@ $('.signup .window .confirm').click(function () {
         }
         $(_this).append('<span class="loading line"></span>');
         $.ajax({
-            url: '/api/users/signup',
+            url: '/api/users/make',
             type: 'POST',
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify({
-                phone_number: username.val(),
-                nickname: nickname.val(),
-                password: sha256(password.val())
+                phoneNumber: username.val(),
+                password: password.val(),
+                nickname: nickname.val()
             }),
             success: function (data, textStatus, jqXHR) {
-                //TODO dateStructure of callback
-                $(_this).children('.loading').remove();
+                /*{
+                    "id": 1,
+                    "phoneNumber": "18834321240",
+                    "nickname": "temp",
+                    "password": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+                    "register_date": "2017-12-21T22:40:24.289",
+                    "role": "注册用户",
+                    "guests": []
+                }*/
+                let data = JSON.parse(Jdata);
+                showMsg(`亲爱的${data.nickname},欢迎你来到阿福旅店！`);
+                sessionStorage.username = data.phoneNumber;
+                sessionStorage.password = data.password;
+                sessionStorage.nickname = data.nickname;
+                sessionStorage.role = data.role;
+                sleep(3000).then(() => {
+                    location.href = '/';
+                })
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 showMsg('网络错误！');
+            },
+            complete: function () {
                 $(_this).children('.loading').remove();
             }
         });

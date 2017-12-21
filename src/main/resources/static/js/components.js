@@ -1,7 +1,8 @@
 const NOTE = ['查看我的订单', '查看我的预订', '修改个人信息',
     '预订客房', '当前所有客房状态', '查询预定客户信息',
     '客房维修登记', '客房类型设置', '可用客房设置',
-    '预订查询与修改', '销售月表', '客户分析', '登出'];
+    '预订查询与修改', '所有账户管理', '销售月表',
+    '客户分析', '登出'];
 
 function render_Container(template) {
     return new Promise((resolve) => {
@@ -13,20 +14,37 @@ function render_Container(template) {
 }
 
 async function check_my_order() {
-    //身份验证
-    //获取订单
-    let resStrBuilder = [];
-    resStrBuilder.push(`
-        <h1>假装打印出所有订单</h1>
-        `);
-    //生成html
-    await render_Container(resStrBuilder.toString());
-    //addListeners
-    $('.container h1').click(function () {
-        showMsg('测试一下')
+    //身份验证&获取数据
+    $.ajax({
+        url: `/api/`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            //获取订单
+            let resStrBuilder = [];
+            resStrBuilder.push(`
+            <h1>假装打印出所有订单</h1>
+            `);
+            //生成html
+            render_Container(resStrBuilder.toString());
+            //关闭动画？
+            stopCatLoading();
+            //script
+            $('.container h1').click(function () {
+                showMsg('测试一下')
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        },
+        complete: function () {
+
+        }
     });
-    //关闭动画？
-    stopCatLoading();
 }
 
 async function check_my_booking() {
@@ -102,6 +120,16 @@ async function modify_rooms_type() {
 }
 
 async function set_rooms_avail() {
+    //身份验证
+    //获取订单
+    let resStrBuilder = [];
+    resStrBuilder.push();
+    //生成html
+    await render_Container(resStrBuilder.toString());
+    //addListeners
+}
+
+async function modify_user_info() {
     //身份验证
     //获取订单
     let resStrBuilder = [];
