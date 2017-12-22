@@ -9,7 +9,6 @@ import com.enihsyou.astolfo.hotel.repository.RoomRepository
 import com.enihsyou.astolfo.hotel.repository.RoomTypeRepository
 import com.enihsyou.astolfo.hotel.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -42,8 +41,8 @@ interface RoomService {
 
     fun addRoom(room: Room)
 
-    fun listRoomByParameter(from: LocalDateTime,
-                            to: LocalDateTime,
+    fun listRoomByParameter(from: LocalDateTime?,
+                            to: LocalDateTime?,
                             type: String?,
                             direction: String?,
                             priceFrom: Int?,
@@ -75,8 +74,8 @@ class RoomServiceImpl : RoomService {
     @Autowired lateinit var roomTypeRepository: RoomTypeRepository
     @Autowired lateinit var roomDirectionRepository: RoomDirectionRepository
     @Autowired lateinit var guestRepository: GuestRepository
-    override fun listRoomByParameter(from: LocalDateTime,
-                                     to: LocalDateTime,
+    override fun listRoomByParameter(from: LocalDateTime?,
+                                     to: LocalDateTime?,
                                      type: String?,
                                      direction: String?,
                                      priceFrom: Int?,
@@ -102,7 +101,9 @@ class RoomServiceImpl : RoomService {
         if (priceTo != null) {
             result = result.filter { it.price < priceTo }
         }
-        result = result.filter { it in roomRepository.findByDateBetween(from, to) }
+        if (from != null && to != null) {
+            result = result.filter { it in roomRepository.findByDateBetween(from, to) }
+        }
 
         return result.toList()
     }

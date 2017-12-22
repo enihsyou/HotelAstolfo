@@ -26,8 +26,8 @@ class RoomController {
 
     @GetMapping("/list")
     fun listRoom(
-        @RequestParam("from", required = true) from: LocalDateTime,
-        @RequestParam("to", required = true) to: LocalDateTime,
+        @RequestParam("from", required = false) from: LocalDateTime? = LocalDateTime.now(),
+        @RequestParam("to", required = false) to: LocalDateTime? = LocalDateTime.MAX,
         @RequestParam("type", required = false) type: String? = null,
         @RequestParam("direction", required = false) direction: String? = null,
         @RequestParam("priceFrom", required = false) priceFrom: Int? = null,
@@ -61,14 +61,14 @@ class RoomController {
         addRoom(Room(roomNumber = Room.RoomNumber(1, 1), type = type, direction = direction, specialty = "141234", price = 101))
         addRoom(Room(roomNumber = Room.RoomNumber(1, 2), type = type, direction = direction, specialty = "efw", price = 99))
         addRoom(Room(roomNumber = Room.RoomNumber(1, 3), type = type, direction = direction, specialty = "kutuiyr", price = 100))
-
     }
+
     @GetMapping("/dummyD")
     fun dummyDirection() {
         addDirection(RoomDirection(type = "东", description = "面朝大海"))
         addDirection(RoomDirection(type = "南", description = "春暖花开"))
-
     }
+
     @GetMapping("/dummyT")
     fun dummyType() {
         addType(RoomType(type = "大床房", description = "EMMC"))

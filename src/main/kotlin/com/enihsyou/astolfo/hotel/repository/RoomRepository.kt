@@ -40,10 +40,10 @@ interface RoomRepository : PagingAndSortingRepository<Room, Int> {
 //    fun findByNumber(@Param("index") index: Int,
 //                                pageable: Pageable): List<Room>
 
-    fun findByDirection(@Param("direction") direction: String,
+    fun findByDirection_Type(@Param("direction") direction: String,
                         pageable: Pageable): List<Room>
 
-    fun findByType(@Param("type") type: String,
+    fun findByType_Type(@Param("type") type: String,
                    pageable: Pageable): List<Room>
 
     @Query(value = "SELECT R FROM Room R LEFT JOIN R.transactions T with T.activated=?1")

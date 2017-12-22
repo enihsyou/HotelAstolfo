@@ -33,6 +33,8 @@ Content-Type: application/json;charset=utf8
   "register_date": "2016-03-16T13:56:39.492"
 }
 
+##### 房间操作
+
 ###
 POST http://localhost:10080/api/restful/roomTypes/
 Content-Type: application/json
@@ -63,4 +65,14 @@ GET http://localhost:10080/api/rooms/dummy/
 GET http://localhost:10080/api/restful/rooms
 # 可以在这里看到结果
 # 或者http://localhost:10080/actuator/index.html#http://localhost:10080/api/restful/rooms
+###
+GET http://localhost:10080/api/rooms/list?from=2012-04-23T18:25:43.511Z&to=2018-04-23T18:25:43.511Z
+
+###
+GET http://localhost:10080/api/restful/rooms/search/findByType_Type?type=大床房
+# 房型搜索的一种方式,比如这是大床房
+
+###
+GET http://localhost:10080/api/rooms/list?type=大床房
+# 另一种方式是这样
 ###
