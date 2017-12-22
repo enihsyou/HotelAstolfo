@@ -1,35 +1,51 @@
-POST http://localhost:10080/api/users/signup
+###
+POST http://localhost:10080/api/users/make
 Content-Type: application/json;charset=utf8
 Authorization:Basic dGVzdDoyMzMz
+# 注册必须提供手机号phoneNumber和密码password,默认权限为注册用户,
+# 注册管理员 投到/api/users/make/admin下面
+# 注册前台 投到/api/users/make/employee下面
 
 {
-  "role": "注册用户",
+  "phoneNumber": "12311111111",
   "password": "2333",
-  "nickname": "的4rq34re",
-  "phone_number": "12345478911",
+  "nickname": "45",
   "register_date": "2016-03-16T13:56:39.492"
 }
 ###
-POST http://localhost:10080/api/users/signup
+POST http://localhost:10080/api/users/make
 Content-Type: application/json;charset=utf8
 Authorization:Basic dGVzdDoyMzMz
 
 {
-  "password": "54",
-  "role": "管理员",
-  "nickname": "45",
+  "phoneNumber": "12345478912",
+  "password": "2333",
+  "nickname": "的4rq34re",
   "register_date": "2016-03-16T13:56:39.492"
 }
 ###
 POST http://localhost:10080/api/restful/users
 Content-Type: application/json;charset=utf8
 #Authorization:Basic dGVzdDoyMzMz
+# 这是注册的后台接口,以后会关闭,注意使用phoneNumber
 
 {
   "role": "注册用户",
   "password": "2333",
   "nickname": "的4rq34re",
   "phoneNumber": "12345478911",
+  "register_date": "2016-03-16T13:56:39.492"
+}
+
+###
+POST http://localhost:10080/api/users/login
+Content-Type: application/json;charset=utf8
+Authorization:Basic dGVzdDoyMzMz
+# 注册必须提供手机号phone_number和密码password,默认权限为注册用户
+
+{
+  "password": "54",
+  "nickname": "45",
   "register_date": "2016-03-16T13:56:39.492"
 }
 

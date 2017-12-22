@@ -27,9 +27,23 @@ class UserController {
 
     @PostMapping("/make")
     @ResponseStatus(HttpStatus.CREATED)
-    fun signUp(@RequestBody user: User): User {
+    fun make(@RequestBody user: User): User {
         user.run {
             return userService.make(phoneNumber, password, nickname)
+        }
+    }
+    @PostMapping("/make/admin")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun makeAdmin(@RequestBody user: User): User {
+        user.run {
+            return userService.make(phoneNumber, password, nickname,role = User.UserRole.管理员)
+        }
+    }
+    @PostMapping("/make/employee")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun makeEmployee(@RequestBody user: User): User {
+        user.run {
+            return userService.make(phoneNumber, password, nickname, role = User.UserRole.前台)
         }
     }
 
