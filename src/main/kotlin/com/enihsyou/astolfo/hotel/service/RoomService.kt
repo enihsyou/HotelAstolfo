@@ -9,8 +9,11 @@ import com.enihsyou.astolfo.hotel.repository.RoomRepository
 import com.enihsyou.astolfo.hotel.repository.RoomTypeRepository
 import com.enihsyou.astolfo.hotel.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+
 
 interface RoomService {
 //    fun listRoomByDateBetween(
@@ -39,7 +42,7 @@ interface RoomService {
 //                         number: Int,
 //                         pageable: Pageable): List<Room>
 
-    fun addRoom(room: Room)
+    fun addRoom(room: Room): ResponseEntity.BodyBuilder?
 
     fun listRoomByParameter(from: LocalDateTime?,
                             to: LocalDateTime?,
@@ -50,23 +53,36 @@ interface RoomService {
                             floor: Int?,
                             number: Int?): List<Room>
 
-    fun addRoomDirection(direction: RoomDirection)
-    fun addType(type: RoomType)
+    fun addRoomDirection(direction: RoomDirection): ResponseEntity.BodyBuilder
+    fun addType(type: RoomType): ResponseEntity.BodyBuilder
 }
 
 @Service(value = "房间层逻辑")
 class RoomServiceImpl : RoomService {
 
-    override fun addRoomDirection(direction: RoomDirection) {
-        roomDirectionRepository.save(direction)
+    override fun addRoomDirection(direction: RoomDirection): ResponseEntity.BodyBuilder {
+        return if (roomDirectionRepository.findByType(direction.type) != null) {
+            roomDirectionRepository.save(direction)
+            ResponseEntity.ok()
+        } else
+            ResponseEntity.status(HttpStatus.CONFLICT)
     }
 
-    override fun addType(type: RoomType) {
-        roomTypeRepository.save(type)
+    override fun addType(type: RoomType): ResponseEntity.BodyBuilder {
+        return if (roomTypeRepository.findByType(type.type) != null) {
+            roomTypeRepository.save(type)
+            ResponseEntity.ok()
+        } else
+            ResponseEntity.status(HttpStatus.CONFLICT)
     }
 
-    override fun addRoom(room: Room) {
-        roomRepository.save(room)
+    override fun addRoom(room: Room): ResponseEntity.BodyBuilder {
+        return if (roomRepository.findByRoomNumber(room.roomNumber.floor, room.roomNumber.number) != null) {
+            roomRepository.save(room)
+            ResponseEntity.ok()
+        } else
+            ResponseEntity.status(HttpStatus.CONFLICT)
+
     }
 
     @Autowired lateinit var userRepository: UserRepository

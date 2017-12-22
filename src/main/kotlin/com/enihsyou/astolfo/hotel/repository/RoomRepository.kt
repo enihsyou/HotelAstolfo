@@ -30,9 +30,8 @@ interface RoomRepository : PagingAndSortingRepository<Room, Int> {
                            @Param("to") to: Int,
                            pageable: Pageable): List<Room>
 
-//    fun findByRnumber(@Param("floor") floor: Int,
-//                         @Param("index") index: Int,
-//                         pageable: Pageable): List<Room>
+    fun findByRoomNumber(@Param("floor") floor: Int,
+                         @Param("index") index: Int): Room?
 //
 //    fun findByFloor(@Param("floor") floor: Int,
 //                               pageable: Pageable): List<Room>
@@ -54,12 +53,12 @@ interface RoomRepository : PagingAndSortingRepository<Room, Int> {
 @RepositoryRestResource(path = "roomTypes")
 interface RoomTypeRepository : PagingAndSortingRepository<RoomType, Int>{
 
-    fun findByType(type: String):RoomType
+    fun findByType(type: String):RoomType?
 }
 
 @Repository("房间朝向仓库")
 @RepositoryRestResource(path = "roomDirections")
 interface RoomDirectionRepository : PagingAndSortingRepository<RoomDirection, Int>{
 
-    fun findByType(type: String):RoomDirection
+    fun findByType(type: String):RoomDirection?
 }

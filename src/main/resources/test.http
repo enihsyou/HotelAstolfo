@@ -1,3 +1,6 @@
+####### 用户操作
+
+
 ###
 POST http://localhost:10080/api/users/make
 Content-Type: application/json;charset=utf8
@@ -41,22 +44,49 @@ Content-Type: application/json;charset=utf8
 POST http://localhost:10080/api/users/login
 Content-Type: application/json;charset=utf8
 Authorization:Basic dGVzdDoyMzMz
-# 注册必须提供手机号phone_number和密码password,默认权限为注册用户
+# 登录提供手机号和密码,返回用户信息
 
 {
-  "password": "54",
-  "nickname": "45",
-  "register_date": "2016-03-16T13:56:39.492"
+  "phoneNumber": "12311111111",
+  "password": "2333"
+}
+###
+GET http://localhost:10080/api/users/dummy
+
+###
+GET http://localhost:10080/api/users/guests?phone=12345678888
+# 找出用户绑定的身份证
+
+###
+POST http://localhost:10080/api/users/guests?phone=12345678888
+Content-Type: application/json
+
+{
+    "identification": "3789248923042543252X",
+    "name": "这里是个名字"
 }
 
-##### 房间操作
+
+
+
+###### 房间操作
 
 ###
 POST http://localhost:10080/api/restful/roomTypes/
 Content-Type: application/json
+# 添加房间类型的后台接口 不推荐使用,重复返回409
 
 {
   "type": "官方",
+  "description": "估读法"
+}
+###
+POST http://localhost:10080/api/rooms/addType/
+Content-Type: application/json
+# 添加房间类型的正式接口,重复返回409
+
+{
+  "type": "官方2",
   "description": "估读法"
 }
 

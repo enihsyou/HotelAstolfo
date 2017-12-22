@@ -54,9 +54,9 @@ class RoomController {
 
     @GetMapping("/dummy")
     fun dummy() {
-        val type = roomTypeRepository.findByType("大床房")
+        val type = roomTypeRepository.findByType("大床房")!!
 
-        val direction = roomDirectionRepository.findByType("东")
+        val direction = roomDirectionRepository.findByType("东")!!
 
         addRoom(Room(roomNumber = Room.RoomNumber(1, 1), type = type, direction = direction, specialty = "141234", price = 101))
         addRoom(Room(roomNumber = Room.RoomNumber(1, 2), type = type, direction = direction, specialty = "efw", price = 99))

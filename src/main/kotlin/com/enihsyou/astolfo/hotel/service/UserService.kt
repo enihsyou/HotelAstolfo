@@ -78,7 +78,7 @@ class UserServiceImpl : UserService {
     override fun findGuests(phone: String,
                             pageable: Pageable): List<Guest> {
         existUser(phone).let {
-            return guestRepository.findByUser(it, pageable)
+            return guestRepository.findByUserId(it.id, pageable)
         }
     }
 

@@ -65,6 +65,7 @@ class UserController {
     @GetMapping("/guests")
     fun guests(@RequestParam("phone") phone: String, pageable: Pageable): List<Guest>
         = userService.findGuests(phone, pageable)
+
     @PostMapping("/guests")
     fun addGuest(@RequestParam("phone") phone: String, @RequestBody guest: Guest)
         = userService.addGuest(phone, guest)
