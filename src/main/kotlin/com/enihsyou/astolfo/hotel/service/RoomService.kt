@@ -16,42 +16,16 @@ import java.time.LocalDateTime
 
 
 interface RoomService {
-//    fun listRoomByDateBetween(
-//        from: LocalDateTime,
-//        to: LocalDateTime,
-//        pageable: Pageable
-//    ): List<Room>
-//
-//    fun listRoomByPriceBetween(
-//        priceFrom: Int,
-//        priceTo: Int,
-//        pageable: Pageable
-//    ): List<Room>
-//
-//    fun listRoomByDirection(
-//        direction: String,
-//        pageable: Pageable
-//    ): List<Room>
-//
-//    fun listRoomByType(
-//        type: String,
-//        pageable: Pageable
-//    ): List<Room>
-//
-//    fun listByRoomNumber(floor: Int,
-//                         number: Int,
-//                         pageable: Pageable): List<Room>
-
     fun addRoom(room: Room): ResponseEntity.BodyBuilder?
 
-    fun listRoomByParameter(from: LocalDateTime?,
-                            to: LocalDateTime?,
-                            type: String?,
-                            direction: String?,
-                            priceFrom: Int?,
-                            priceTo: Int?,
-                            floor: Int?,
-                            number: Int?): List<Room>
+    fun listRoomByParameter(from: LocalDateTime?=null,
+                            to: LocalDateTime?=null,
+                            type: String?=null,
+                            direction: String?=null,
+                            priceFrom: Int?=null,
+                            priceTo: Int?=null,
+                            floor: Int?=null,
+                            number: Int?=null): List<Room>
 
     fun addRoomDirection(direction: RoomDirection): ResponseEntity.BodyBuilder
     fun addType(type: RoomType): ResponseEntity.BodyBuilder
@@ -106,16 +80,16 @@ class RoomServiceImpl : RoomService {
             result = result.filter { it.direction.type == direction }
         }
         if (floor != null) {
-            result = result.filter { it.roomNumber.floor != floor }
+            result = result.filter { it.roomNumber.floor == floor }
         }
         if (number != null) {
-            result = result.filter { it.roomNumber.number != number }
+            result = result.filter { it.roomNumber.number == number }
         }
         if (priceFrom != null) {
-            result = result.filter { it.price < priceFrom }
+            result = result.filter{ it.price >= priceFrom }
         }
         if (priceTo != null) {
-            result = result.filter { it.price < priceTo }
+            result = result.filter { it.price <= priceTo }
         }
         if (from != null && to != null) {
             result = result.filter { it in roomRepository.findByDateBetween(from, to) }
@@ -123,28 +97,4 @@ class RoomServiceImpl : RoomService {
 
         return result.toList()
     }
-//
-//
-//    override fun listRoomByDateBetween(from: LocalDateTime,
-//                                       to: LocalDateTime,
-//                                       pageable: Pageable): List<Room>
-//        = roomRepository.findByDateBetween(from, to)
-//
-////    override fun listByRoomNumber(floor: Int,
-////                                  number: Int,
-////                                  pageable: Pageable): List<Room>
-////        = roomRepository.findByRnumber(floor, number, pageable)
-//
-//    override fun listRoomByPriceBetween(priceFrom: Int,
-//                                        priceTo: Int,
-//                                        pageable: Pageable): List<Room>
-//        = roomRepository.findByPriceBetween(priceFrom, priceTo, pageable)
-//
-//    override fun listRoomByDirection(direction: String,
-//                                     pageable: Pageable): List<Room>
-//        = roomRepository.findByDirection(direction, pageable)
-//
-//    override fun listRoomByType(type: String,
-//                                pageable: Pageable): List<Room>
-//        = roomRepository.findByType(type, pageable)
 }

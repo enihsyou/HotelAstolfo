@@ -28,8 +28,8 @@ class RoomController {
     /*根据条件搜索房间*/
     @GetMapping("/list")
     fun listRoom(
-        @RequestParam("from", required = false) from: LocalDateTime? = LocalDateTime.now(),
-        @RequestParam("to", required = false) to: LocalDateTime? = LocalDateTime.MAX,
+        @RequestParam("from", required = false) from: LocalDateTime? = null,
+        @RequestParam("to", required = false) to: LocalDateTime? = null,
         @RequestParam("type", required = false) type: String? = null,
         @RequestParam("direction", required = false) direction: String? = null,
         @RequestParam("priceFrom", required = false) priceFrom: Int? = null,
@@ -54,13 +54,11 @@ class RoomController {
     }
 
 
-
     /*添加房间朝向定义*/
     @PostMapping("/addDirection")
     fun addDirection(@RequestBody direction: RoomDirection) {
         roomService.addRoomDirection(direction)
     }
-
 
 
     /*填充数据*/
