@@ -1,5 +1,6 @@
 package com.enihsyou.astolfo.hotel.controller
 
+import com.enihsyou.astolfo.hotel.domain.Guest
 import com.enihsyou.astolfo.hotel.domain.Room
 import com.enihsyou.astolfo.hotel.domain.Transaction
 import com.enihsyou.astolfo.hotel.service.RoomService
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -36,9 +38,16 @@ class TransactionController {
         val byType = transactionService.listTransactionByType(type, pageable)
     }
 
+    class BookBody(
+        var userPhone: String,
+        var guests:List<String>,
+        var room:Room.RoomNumber,
+        var from: LocalDateTime,
+        var to: LocalDateTime
+    )
     @PostMapping("/make")
-    fun singleBook(){
-
+    fun singleBook(@RequestBody body: BookBody){
+        println(body)
     }
 }
 

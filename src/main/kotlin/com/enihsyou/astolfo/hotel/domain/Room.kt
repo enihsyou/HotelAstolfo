@@ -1,12 +1,13 @@
 package com.enihsyou.astolfo.hotel.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import org.hibernate.annotations.NaturalId
+import org.springframework.beans.factory.annotation.Autowired
 import java.io.Serializable
 import javax.persistence.Embeddable
 import javax.persistence.Embedded
 import javax.persistence.EmbeddedId
 import javax.persistence.Entity
-import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.ManyToOne
@@ -17,16 +18,20 @@ import javax.persistence.Table
 @Entity
 @Table(name = "ROOM")
 data class Room(
-    @EmbeddedId
-    var roomNumber: RoomNumber,
+    @Id @GeneratedValue
+    var id: Int = 0,
 
-    @ManyToOne(targetEntity = RoomTypeTable::class)
+//    @NaturalId
     @Embedded
-    var type: String = "",
+    var roomNumber: RoomNumber = RoomNumber(),
 
-    @ManyToOne(targetEntity = RoomDirectionTable::class)
+    @ManyToOne(targetEntity = RoomType::class)
     @Embedded
-    var direction: String = "",
+    var type: RoomType = RoomType(),
+
+    @ManyToOne(targetEntity = RoomDirection::class)
+    @Embedded
+    var direction: RoomDirection = RoomDirection(),
 
     /*简介信息*/
     var specialty: String = "",
@@ -37,6 +42,7 @@ data class Room(
     @OneToMany
     var transactions: MutableList<Transaction>? = null
 ) {
+
     @Embeddable
     data class RoomNumber(
         /*楼层*/
@@ -51,10 +57,11 @@ data class Room(
 @Entity
 @Table(name = "ROOM_TYPE")
 @Embeddable
-data class RoomTypeTable(
+data class RoomType(
     @Id @GeneratedValue
-    var id: Int = 1,
+    var id: Int=0,
 
+    @NaturalId
     /*类型名字*/
     var type: String = "Undefined",
 
@@ -69,11 +76,12 @@ data class RoomTypeTable(
 @Entity
 @Table(name = "ROOM_DIRECTION")
 @Embeddable
-data class RoomDirectionTable(
+data class RoomDirection(
     @Id @GeneratedValue
-    var id: Int = 1,
+    var id: Int=0,
 
     /*方向名字*/
+    @NaturalId
     var type: String = "Undefined",
 
     /*方向简介*/

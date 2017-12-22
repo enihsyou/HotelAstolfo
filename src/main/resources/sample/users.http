@@ -13,7 +13,8 @@ Authorization:Basic dGVzdDoyMzMz
 #    "message": "当前用户名未注册",
 #    "debugMessage": "手机号18834321239，用户不存在"
 #  }
-
+###
+GET http://localhost:10080/api/users/18834321240
 ###
 GET http://localhost:10080/api/users/13112602707
 Authorization:Basic dGVzdDoyMzMz
@@ -62,8 +63,8 @@ Authorization:Basic dGVzdDoyMzMz
 # 姓名从这里生成https://uinames.com/
 
 {
-  "identification":"130622199901017437",
-  "name":"宋娘"
+  "identification":"130622199901017537",
+  "name":"宋娘2"
 }
 ###
 PUT http://localhost:10080/api/users/18834321239
@@ -80,7 +81,11 @@ Authorization:Basic dGVzdDoyMzMz
   "nickname": "abc"
 }
 ###
-GET http://localhost:10080/api/users/transactions
+GET http://localhost:10080/api/users/transactions?phone=18834321240
+Authorization:Basic dGVzdDoyMzMz
+# 列出用户的所有订单记录，注意到需要认证
+###
+POST http://localhost:10080/api/users/transactions?phone=18834321240
 Authorization:Basic dGVzdDoyMzMz
 # 列出用户的所有订单记录，注意到需要认证
 
@@ -91,7 +96,7 @@ Authorization:Basic dGVzdDoyMzMz
 
 
 ###
-POST http://localhost:10080:10080/api/restful/users
+POST http://localhost:10080/api/restful/users
 # 这里是完全的后台, 不应该被外部直接访问
 # 注意手机号的域名是phoneNumber
 Content-Type: application/json;charset=utf8
@@ -103,3 +108,17 @@ Content-Type: application/json;charset=utf8
   "phoneNumber": "12345478911",
   "register_date": "2016-03-16T13:56:39.492"
 }
+
+###
+POST http://localhost:10080/api/restful/rooms
+Content-Type: application/json
+
+{
+  "type":"asd",
+  "direction":"abc",
+  "specialty":"dfd",
+  "price":"123",
+  "floor":"1",
+  "number":"2"
+}
+###

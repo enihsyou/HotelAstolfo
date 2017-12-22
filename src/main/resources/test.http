@@ -43,3 +43,24 @@ Content-Type: application/json
 }
 
 ###
+GET http://localhost:10080/api/rooms/dummyT/
+# 填充一些房间类型
+###
+GET http://localhost:10080/api/restful/roomTypes
+# 可以在这里看到结果
+
+###
+GET http://localhost:10080/api/rooms/dummyD/
+# 填充一些房间朝向
+###
+GET http://localhost:10080/api/restful/roomTypes
+# 可以在这里看到结果
+
+###
+GET http://localhost:10080/api/rooms/dummy/
+# 填充一些房间列表
+###
+GET http://localhost:10080/api/restful/rooms
+# 可以在这里看到结果
+# 或者http://localhost:10080/actuator/index.html#http://localhost:10080/api/restful/rooms
+###

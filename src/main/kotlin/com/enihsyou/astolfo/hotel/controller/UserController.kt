@@ -3,6 +3,7 @@ package com.enihsyou.astolfo.hotel.controller
 import com.enihsyou.astolfo.hotel.domain.Guest
 import com.enihsyou.astolfo.hotel.domain.Transaction
 import com.enihsyou.astolfo.hotel.domain.User
+import com.enihsyou.astolfo.hotel.repository.UserRepository
 import com.enihsyou.astolfo.hotel.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
@@ -43,10 +44,27 @@ class UserController {
     @GetMapping("/transactions")
     fun transactions(@RequestParam("phone") phone: String, pageable: Pageable): List<Transaction> = userService.findTransactions(phone, pageable)
 
+    @PostMapping("/transactions")
+    fun addTransactions(@RequestParam("phone") phone: String, @RequestBody guest: Guest)
+        = userService.addGuest(phone, guest)
+
     @GetMapping("/guests")
     fun guests(@RequestParam("phone") phone: String, pageable: Pageable): List<Guest>
         = userService.findGuests(phone, pageable)
     @PostMapping("/guests")
     fun addGuest(@RequestParam("phone") phone: String, @RequestBody guest: Guest)
         = userService.addGuest(phone, guest)
+
+    @GetMapping("/dummy")
+    fun dummy(){
+        val u = userService.make("12345678889", "2333")
+        userService.make("12345678888", "2333")
+        userService.make("12345678887", "2333")
+        userService.make("12345678886", "2333")
+        userService.make("12345678885", "2333")
+        userService.make("12345678884", "2333")
+        userService.addGuest("12345678888", Guest(user = u, identification = "436187943", name = "gdsgsdf"))
+        userService.addGuest("12345678888", Guest(user = u, identification = "4361879443", name = "gdsgsddfgf"))
+        userService.addGuest("12345678888", Guest(user = u, identification = "4361879443gfd", name = "gdsgsgfsddf"))
+    }
 }
