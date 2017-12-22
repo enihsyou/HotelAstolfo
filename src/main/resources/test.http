@@ -122,3 +122,6 @@ GET http://localhost:10080/api/restful/rooms/search/findByType_Type?type=大床�
 GET http://localhost:10080/api/rooms/list?type=大床房
 # 另一种方式是这样
 ###
+GET http://localhost:10080/api/rooms/list?priceFrom=100
+
+###

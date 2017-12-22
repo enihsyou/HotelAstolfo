@@ -24,6 +24,8 @@ class RoomController {
     @Autowired lateinit var roomTypeRepository: RoomTypeRepository
     @Autowired lateinit var roomDirectionRepository: RoomDirectionRepository
 
+
+    /*根据条件搜索房间*/
     @GetMapping("/list")
     fun listRoom(
         @RequestParam("from", required = false) from: LocalDateTime? = LocalDateTime.now(),
@@ -37,21 +39,31 @@ class RoomController {
         return roomService.listRoomByParameter(from, to, type, direction, priceFrom, priceTo, floor, number)
     }
 
+
+    /*管理员添加一个房间*/
     @PostMapping("/add")
     fun addRoom(@RequestBody room: Room) {
         roomService.addRoom(room)
     }
 
+
+    /*添加房间类型定义*/
     @PostMapping("/addType")
     fun addType(@RequestBody type: RoomType) {
         roomService.addType(type)
     }
 
+
+
+    /*添加房间朝向定义*/
     @PostMapping("/addDirection")
     fun addDirection(@RequestBody direction: RoomDirection) {
         roomService.addRoomDirection(direction)
     }
 
+
+
+    /*填充数据*/
     @GetMapping("/dummy")
     fun dummy() {
         val type = roomTypeRepository.findByType("大床房")!!

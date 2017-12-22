@@ -30,8 +30,7 @@ interface RoomRepository : PagingAndSortingRepository<Room, Int> {
                            @Param("to") to: Int,
                            pageable: Pageable): List<Room>
 
-    fun findByRoomNumber(@Param("floor") floor: Int,
-                         @Param("index") index: Int): Room?
+    fun findByRoomNumber(roomNumber: Room.RoomNumber): Room?
 //
 //    fun findByFloor(@Param("floor") floor: Int,
 //                               pageable: Pageable): List<Room>
