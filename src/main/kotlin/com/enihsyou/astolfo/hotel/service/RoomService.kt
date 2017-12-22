@@ -77,7 +77,7 @@ class RoomServiceImpl : RoomService {
     }
 
     override fun addRoom(room: Room): ResponseEntity.BodyBuilder {
-        return if (roomRepository.findByRoomNumber(room.roomNumber.floor, room.roomNumber.number) != null) {
+        return if (roomRepository.findByRoomNumber(room.roomNumber) != null) {
             roomRepository.save(room)
             ResponseEntity.ok()
         } else
