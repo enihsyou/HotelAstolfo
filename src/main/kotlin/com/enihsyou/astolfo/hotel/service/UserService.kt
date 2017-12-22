@@ -20,7 +20,8 @@ import java.nio.charset.StandardCharsets
 interface UserService {
     fun make(phoneNumber: String,
              password: String,
-             nickname: String = ""): User
+             nickname: String = "",
+             role:User.UserRole = User.UserRole.注册用户): User
 
     fun login(phoneNumber: String,
               password: String): User
@@ -77,7 +78,7 @@ class UserServiceImpl : UserService {
     override fun findGuests(phone: String,
                             pageable: Pageable): List<Guest> {
         existUser(phone).let {
-            return guestRepository.findByUser(it, pageable)
+            return guestRepository.findByUserId(it.id, pageable)
         }
     }
 
@@ -104,7 +105,8 @@ class UserServiceImpl : UserService {
 
     override fun make(phoneNumber: String,
                       password: String,
-                      nickname: String): User {
+                      nickname: String,
+                      role: User.UserRole): User {
         /*注册并返回*/
         if (userRepository.findByPhoneNumber(phoneNumber) != null)
             throw 注册时用户已存在(phoneNumber)
@@ -113,7 +115,7 @@ class UserServiceImpl : UserService {
             nickname = nickname,
             /*如果密码不是经过前端哈希的，这里进行哈希*/
             password = getCheckedPassword(password),
-            role = User.UserRole.注册用户
+            role = role
         )
         userRepository.save(user)
         return user

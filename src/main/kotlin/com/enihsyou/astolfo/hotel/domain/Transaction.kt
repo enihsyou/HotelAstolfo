@@ -41,11 +41,11 @@ data class Transaction(
 
     /*预定开始日期*/
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
-    var date_from: LocalDateTime,
+    var dateFrom: LocalDateTime,
 
     /*预定结束日期*/
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
-    var date_to: LocalDateTime,
+    var dateTo: LocalDateTime,
 
     /*订单还在有效期*/
     var activated: Boolean,

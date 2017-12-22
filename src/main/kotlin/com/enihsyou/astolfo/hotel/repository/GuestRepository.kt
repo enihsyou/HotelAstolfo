@@ -14,6 +14,6 @@ import org.springframework.stereotype.Repository
 interface GuestRepository : PagingAndSortingRepository<Guest, Int> {
     fun findByIdentification(identificationNumber: String):Guest?
     fun findByName(Name: String):Guest?
-    fun findByUser(user: User,
+    fun findByUserId(id: Int,
                    pageable: Pageable): List<Guest>
 }
