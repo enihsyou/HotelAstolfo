@@ -67,11 +67,11 @@ $('.login .window .confirm').click(function () {
                 }*/
                 let data = JSON.parse(Jdata);
                 showMsg(`亲爱的${data.nickname},欢迎你回到阿福旅店！`);
-                if($(".checkbox input").prop('checked')){
+                if ($(".checkbox input").prop('checked')) {
                     localStorage.username = data.phoneNumber;
                     localStorage.password = data.password;
                     localStorage.nickname = data.nickname;
-                }else {
+                } else {
                     sessionStorage.username = data.phoneNumber;
                     sessionStorage.password = data.password;
                     sessionStorage.nickname = data.nickname;
@@ -182,7 +182,6 @@ $('.searchBox .confirm').click(function () {
             }),
             success: function (data, textStatus, jqXHR) {
                 //TODO dateStructure of callback
-                $(_this).children('.loading').remove();
                 //显示右侧搜索列表
                 $('.slider_container').css('filter', 'blur(10px)');
                 $('.searchBox').css('left', '5%');
@@ -190,6 +189,8 @@ $('.searchBox .confirm').click(function () {
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 showMsg('网络错误！');
+            },
+            complete: function () {
                 $(_this).children('.loading').remove();
             }
         });

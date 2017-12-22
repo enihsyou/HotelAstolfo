@@ -26,6 +26,7 @@
     background: linear-gradient(to bottom, white 10%, #eff8ff);
 }
 
+/* check_my_order and check_my_booking*/
 .container table {
     position: absolute;
     left: 5%;
@@ -58,4 +59,18 @@
     text-align: center;
     cursor: pointer;
     width: 4em;
+}
+
+.container .modify_my_info dt {
+    font-weight: bold;
+    padding-bottom: .5em;
+}
+
+.container .modify_my_info dd label {
+    font-size: 12px;
+    width: 100%;
+}
+
+.container .book_a_room .resList {
+    margin: 2em;
 }

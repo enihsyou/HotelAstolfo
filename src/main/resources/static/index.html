@@ -116,23 +116,29 @@
     </div>
     <div class="searchBox">
         <div class="searchBoxContent untouchable">
-            <label for="bookingStart">入住日期:
-                <input type="date" id="bookingStart"></label>
-            <br>
-            <label for="bookingEnd">离店日期:
-                <input type="date" id="bookingEnd"></label>
-            <br>
-            <label for="bookingType">客房类型:
-                <select id="bookingType">
+            <label class="col-xs-12" for="bookingStart">入住日期：
+                <input type="date" id="bookingStart">
+                ~
+                <input type="date" id="bookingEnd">
+            </label>
+            <label class="col-xs-12" for="bookingPrice">价格区间：
+                <span id="bookingPrice">
+                    <input type="number" min="0" max="9999" placeholder="最低">
+                    ~
+                    <input min="0" max="9999" type="number" placeholder="最高">
+                </span>
+            </label>
+            <label class="col-xs-12" for="bookingType">客房类型：
+                <select class="form-control" id="bookingType">
                     <option value="std">高端双床间</option>
                     <option value="big">至尊大床房</option>
                     <option value="thr">激情三人房</option>
-                    <option value="suit" >奢华总统套房</option>
+                    <option value="suit">奢华总统套房</option>
                     <option value="" selected>任意</option>
                 </select>
             </label>
-            <label for="bookingType">房间朝向:
-                <select id="bookingDirection">
+            <label class="col-xs-12" for="bookingDirection">房间朝向：
+                <select class="form-control" id="bookingDirection">
                     <option value="east">东</option>
                     <option value="south">南</option>
                     <option value="west">西</option>
@@ -140,10 +146,22 @@
                     <option value="" selected>任意</option>
                 </select>
             </label>
-            <!--TODO-->
-            <!--价格范围，from，to-->
-            <!--楼层-->
-            <!--房号-->
+            <label class="col-xs-12" for="bookingFloor">楼层：
+                <select class="form-control" id="bookingFloor">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="4">3</option>
+                    <option value="5">4</option>
+                    <option value="5">5</option>
+                    <option value="" selected>任意</option>
+                </select>
+            </label>
+            <label class="col-xs-12" for="bookingNumber">房号：
+                <select class="form-control" id="bookingNumber" disabled>
+                    <option v-for="number in numbers" :value="value" v-cloak="">{{number}}</option>
+                    <option value="" selected>任意</option>
+                </select>
+            </label>
             <div class=" text-center">
                 <div type="submit" class="btn-default btn-lg confirm untouchable">搜索</div>
             </div>
@@ -160,13 +178,13 @@
                 <td><!--预定--></td>
             </tr>
             <!--<tr>-->
-                <!--<td>高端双床间</td>-->
-                <!--<td>2</td>-->
-                <!--<td>大保健</td>-->
-                <!--<td>699</td>-->
-                <!--<td>-->
-                    <!--<div class="book-btn btn-default btn-md">立即预定</div>-->
-                <!--</td>-->
+            <!--<td>高端双床间</td>-->
+            <!--<td>2</td>-->
+            <!--<td>大保健</td>-->
+            <!--<td>699</td>-->
+            <!--<td>-->
+            <!--<div class="book-btn btn-default btn-md">立即预定</div>-->
+            <!--</td>-->
             <!--</tr>-->
             <tr v-cloak>
                 <td class="searchListItem" v-for="item in searchResults">

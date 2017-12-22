@@ -27,7 +27,36 @@ async function check_my_order() {
             //获取订单
             let resStrBuilder = [];
             resStrBuilder.push(`
-            <h1>假装打印出所有订单</h1>
+            <div class="check_my_order">
+                <table>
+                    <tr>
+                        <td>订单编号</td>
+                        <td>房间类型</td>
+                        <td>特殊服务</td>
+                        <td>房价</td>
+                        <td>状态</td>
+                        <td><!--操作--></td>
+                    </tr>
+                    <!--例子-->
+                    <!--<tr>-->
+                        <!--<td>高端双床间</td>-->
+                        <!--<td>2</td>-->
+                        <!--<td>大保健</td>-->
+                        <!--<td>699</td>-->
+                        <!--<td>-->
+                            <!--完成-->
+                        <!--</td>-->
+                        <!--<td>-->
+                            <!--<div class="comm-btn btn-xs btn-default">评价</div>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <tr class="searchListItem" v-for="item in searchResults" v-cloak>
+                        <td>
+                            {{item}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
             `);
             //生成html
             render_Container(resStrBuilder.toString());
@@ -49,114 +78,515 @@ async function check_my_order() {
 
 async function check_my_booking() {
     //身份验证
-    //获取订单
-    let resStrBuilder = [];
-    resStrBuilder.push(`
-        <h1>假装打印出所有预订</h1>
-        `);
-    //生成html
-    await render_Container(resStrBuilder.toString());
-    //addListeners
+    $.ajax({
+        url: `/api/`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            //获取订单
+            let resStrBuilder = [];
+            resStrBuilder.push(`
+            <div class="check_my_booking">
+                <table>
+                    <tr>
+                        <td>订单编号</td>
+                        <td>房间类型</td>
+                        <td>特殊服务</td>
+                        <td>房价</td>
+                        <td>状态</td>
+                        <td><!--操作--></td>
+                    </tr>
+                    <!--例子-->
+                    <!--<tr>-->
+                        <!--<td>高端双床间</td>-->
+                        <!--<td>2</td>-->
+                        <!--<td>大保健</td>-->
+                        <!--<td>699</td>-->
+                        <!--<td>-->
+                            <!--完成-->
+                        <!--</td>-->
+                        <!--<td>-->
+                            <!--<div class="comm-btn btn-xs btn-default">取消订单</div>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <tr class="searchListItem" v-for="item in searchResults" v-cloak>
+                        <td>
+                            {{item}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            `);
+            //生成html
+            render_Container(resStrBuilder.toString());
+            //关闭动画？
+            stopCatLoading();
+            //script
+            $('.container h1').click(function () {
+                showMsg('测试一下')
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        },
+        complete: function () {
+
+        }
+    });
 }
 
 async function modify_my_info() {
     //身份验证
-    //获取订单
-    let resStrBuilder = [];
-    resStrBuilder.push();
-    //生成html
-    await render_Container(resStrBuilder.toString());
-    //addListeners
+    $.ajax({
+        url: `/api/`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            //获取订单
+            let resStrBuilder = [];
+            resStrBuilder.push(`
+            <div class="modify_my_info">
+                <dl>
+                    <dt>修改密码</dt>
+                    <dd>
+                        <label for="oldPWD">旧密码：
+                            <input type="password" id="oldPWD">
+                        </label>
+                        <label for="newPWD">新密码：
+                            <input type="password" id="newPWD">
+                        </label>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>更改身份证信息</dt>
+                    <dd>
+                        <label for="oldID">旧身份证：
+                            <input type="text" id="oldID" disabled>
+                        </label>
+                        <label for="newID">新身份证：
+                            <input type="text" id="newID">
+                        </label>
+                    </dd>
+                </dl>
+            </div>
+            `);
+            //生成html
+            render_Container(resStrBuilder.toString());
+            //关闭动画？
+            stopCatLoading();
+            //script
+            $('.container h1').click(function () {
+                showMsg('测试一下')
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        },
+        complete: function () {
+
+        }
+    });
+
 }
 
 async function book_a_room() {
     //身份验证
-    //获取订单
-    let resStrBuilder = [];
-    resStrBuilder.push();
-    //生成html
-    await render_Container(resStrBuilder.toString());
-    //addListeners
+    $.ajax({
+        url: `/api/`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            //获取订单
+            let resStrBuilder = [];
+            //类首页搜搜（简化）
+            resStrBuilder.push(`
+            <div class="book_a_room">
+                <div class="search">
+                    <label class="col-xs-6" for="bookingStart">入住日期：
+                        <input type="date" id="bookingStart">
+                        ~
+                        <input type="date" id="bookingEnd">
+                    </label>
+                    <label class="col-xs-6" for="bookingPrice">价格区间：
+                        <span id="bookingPrice">
+                        <input type="number" min="0" max="9999" placeholder="最低">
+                        ~
+                        <input min="0" max="9999" type="number" placeholder="最高">
+                    </span>
+                    </label>
+                    <label class="col-xs-12" for="bookingType">客房类型：
+                        <select class="form-control" id="bookingType">
+                            <option value="std">高端双床间</option>
+                            <option value="big">至尊大床房</option>
+                            <option value="thr">激情三人房</option>
+                            <option value="suit">奢华总统套房</option>
+                            <option value="" selected>任意</option>
+                        </select>
+                    </label>
+                    <label class="col-xs-12" for="bookingDirection">房间朝向：
+                        <select class="form-control" id="bookingDirection">
+                            <option value="east">东</option>
+                            <option value="south">南</option>
+                            <option value="west">西</option>
+                            <option value="north">北</option>
+                            <option value="" selected>任意</option>
+                        </select>
+                    </label>
+                    <label class="col-xs-12" for="bookingFloor">楼层：
+                        <select class="form-control" id="bookingFloor">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="4">3</option>
+                            <option value="5">4</option>
+                            <option value="5">5</option>
+                            <option value="" selected>任意</option>
+                        </select>
+                    </label>
+                    <label class="col-xs-12" for="bookingNumber">房号：
+                        <select class="form-control" id="bookingNumber" disabled>
+                            <option v-for="number in numbers" :value="value" v-cloak="">{{number}}</option>
+                            <option value="" selected>任意</option>
+                        </select>
+                    </label>
+                    <div class=" text-center">
+                        <div type="submit" class="btn btn-default confirm untouchable">搜索</div>
+                    </div>
+                </div>
+                <div class="resList">
+                    <table>
+                        <tr>
+                            <td>房型</td>
+                            <td>床型</td>
+                            <td>特殊服务</td>
+                            <td>房价</td>
+                            <td><!--预定--></td>
+                        </tr>
+                        <!--<tr>-->
+                        <!--<td>高端双床间</td>-->
+                        <!--<td>2</td>-->
+                        <!--<td>大保健</td>-->
+                        <!--<td>699</td>-->
+                        <!--<td>-->
+                        <!--<div class="book-btn btn-default btn-md">立即预定</div>-->
+                        <!--</td>-->
+                        <!--</tr>-->
+                        <tr v-cloak>
+                            <td class="searchListItem" v-for="item in searchResults">
+                                {{item}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            `);
+            //生成html
+            render_Container(resStrBuilder.toString());
+            //关闭动画？
+            stopCatLoading();
+            //script
+            $('.container h1').click(function () {
+                showMsg('测试一下')
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        },
+        complete: function () {
+
+        }
+    });
 }
 
 async function rooms_all_info() {
     //身份验证
-    //获取订单
-    let resStrBuilder = [];
-    resStrBuilder.push();
-    //生成html
-    await render_Container(resStrBuilder.toString());
-    //addListeners
+    $.ajax({
+        url: `/api/`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            //获取订单
+            let resStrBuilder = [];
+            resStrBuilder.push(`
+            <h1>假装打印出所有订单</h1>
+            `);
+            //生成html
+            render_Container(resStrBuilder.toString());
+            //关闭动画？
+            stopCatLoading();
+            //script
+            $('.container h1').click(function () {
+                showMsg('测试一下')
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        },
+        complete: function () {
+
+        }
+    });
+
 }
 
 async function check_all_booking() {
     //身份验证
-    //获取订单
-    let resStrBuilder = [];
-    resStrBuilder.push();
-    //生成html
-    await render_Container(resStrBuilder.toString());
-    //addListeners
+    $.ajax({
+        url: `/api/`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            //获取订单
+            let resStrBuilder = [];
+            resStrBuilder.push(`
+            <h1>假装打印出所有订单</h1>
+            `);
+            //生成html
+            render_Container(resStrBuilder.toString());
+            //关闭动画？
+            stopCatLoading();
+            //script
+            $('.container h1').click(function () {
+                showMsg('测试一下')
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        },
+        complete: function () {
+
+        }
+    });
+
 }
 
 async function fix_a_room() {
     //身份验证
-    //获取订单
-    let resStrBuilder = [];
-    resStrBuilder.push();
-    //生成html
-    await render_Container(resStrBuilder.toString());
-    //addListeners
+    $.ajax({
+        url: `/api/`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            //获取订单
+            let resStrBuilder = [];
+            resStrBuilder.push(`
+            <h1>假装打印出所有订单</h1>
+            `);
+            //生成html
+            render_Container(resStrBuilder.toString());
+            //关闭动画？
+            stopCatLoading();
+            //script
+            $('.container h1').click(function () {
+                showMsg('测试一下')
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        },
+        complete: function () {
+
+        }
+    });
+
 }
 
 async function modify_rooms_type() {
     //身份验证
-    //获取订单
-    let resStrBuilder = [];
-    resStrBuilder.push();
-    //生成html
-    await render_Container(resStrBuilder.toString());
-    //addListeners
+    $.ajax({
+        url: `/api/`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            //获取订单
+            let resStrBuilder = [];
+            resStrBuilder.push(`
+            <h1>假装打印出所有订单</h1>
+            `);
+            //生成html
+            render_Container(resStrBuilder.toString());
+            //关闭动画？
+            stopCatLoading();
+            //script
+            $('.container h1').click(function () {
+                showMsg('测试一下')
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        },
+        complete: function () {
+
+        }
+    });
+
 }
 
 async function set_rooms_avail() {
     //身份验证
-    //获取订单
-    let resStrBuilder = [];
-    resStrBuilder.push();
-    //生成html
-    await render_Container(resStrBuilder.toString());
-    //addListeners
+    $.ajax({
+        url: `/api/`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            //获取订单
+            let resStrBuilder = [];
+            resStrBuilder.push(`
+            <h1>假装打印出所有订单</h1>
+            `);
+            //生成html
+            render_Container(resStrBuilder.toString());
+            //关闭动画？
+            stopCatLoading();
+            //script
+            $('.container h1').click(function () {
+                showMsg('测试一下')
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        },
+        complete: function () {
+
+        }
+    });
+
 }
 
 async function modify_user_info() {
     //身份验证
-    //获取订单
-    let resStrBuilder = [];
-    resStrBuilder.push();
-    //生成html
-    await render_Container(resStrBuilder.toString());
-    //addListeners
+    $.ajax({
+        url: `/api/`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            //获取订单
+            let resStrBuilder = [];
+            resStrBuilder.push(`
+            <h1>假装打印出所有订单</h1>
+            `);
+            //生成html
+            render_Container(resStrBuilder.toString());
+            //关闭动画？
+            stopCatLoading();
+            //script
+            $('.container h1').click(function () {
+                showMsg('测试一下')
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        },
+        complete: function () {
+
+        }
+    });
+
 }
 
 async function sales_per_month() {
     //身份验证
-    //获取订单
-    let resStrBuilder = [];
-    resStrBuilder.push();
-    //生成html
-    await render_Container(resStrBuilder.toString());
-    //addListeners
+    $.ajax({
+        url: `/api/`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            //获取订单
+            let resStrBuilder = [];
+            resStrBuilder.push(`
+            <h1>假装打印出所有订单</h1>
+            `);
+            //生成html
+            render_Container(resStrBuilder.toString());
+            //关闭动画？
+            stopCatLoading();
+            //script
+            $('.container h1').click(function () {
+                showMsg('测试一下')
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        },
+        complete: function () {
+
+        }
+    });
+
 }
 
 async function client_analyze() {
     //身份验证
-    //获取订单
-    let resStrBuilder = [];
-    resStrBuilder.push();
-    //生成html
-    await render_Container(resStrBuilder.toString());
-    //addListeners
+    $.ajax({
+        url: `/api/`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            //获取订单
+            let resStrBuilder = [];
+            resStrBuilder.push(`
+            <h1>假装打印出所有订单</h1>
+            `);
+            //生成html
+            render_Container(resStrBuilder.toString());
+            //关闭动画？
+            stopCatLoading();
+            //script
+            $('.container h1').click(function () {
+                showMsg('测试一下')
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        },
+        complete: function () {
+
+        }
+    });
+
 }
 
 async function logout() {
