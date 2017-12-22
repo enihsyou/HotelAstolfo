@@ -3,16 +3,16 @@ spring:
     name: Hotel Astolfo
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://rm-uf6f1vb486241vmq86o.mysql.rds.aliyuncs.com/astolfo_hotel?verifyServerCertificate=false&useSSL=true
-    username: root
-    password: W78mnABYG$Is*N17
+#    url: jdbc:mysql://rm-uf6f1vb486241vmq86o.mysql.rds.aliyuncs.com/astolfo_hotel?verifyServerCertificate=false&useSSL=true
+#    username: root
+#    password: W78mnABYG$Is*N17
     schema: classpath*:hotel_schema.sql
     data: classpath*:hotel_data.sql
     initialize: false
     name: astolfo_hotel
-#    url: jdbc:mysql://localhost/astolfo_hotel?useSSL=false
-#    username: root
-#    password: 465458044
+    url: jdbc:mysql://localhost/astolfo_hotel?useSSL=false
+    username: root
+    password: enihsyou
   jpa:
     show-sql: true
     generate-ddl: true
@@ -68,11 +68,11 @@ security:
   user:
     name: test
     password: 2333
-  ignored: /api/users/login, /api/users/signup, /api/users/logout
+  ignored: /api/users/login, /api/users/make, /api/users/logout
 ---
 spring:
     profiles: production
 server:
-    address: localhost
+    address: 0.0.0.0
     port: 8899
 

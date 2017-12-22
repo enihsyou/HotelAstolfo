@@ -61,7 +61,7 @@ interface RoomService {
 class RoomServiceImpl : RoomService {
 
     override fun addRoomDirection(direction: RoomDirection): ResponseEntity.BodyBuilder {
-        return if (roomDirectionRepository.findByType(direction.type) != null) {
+        return if (roomDirectionRepository.findByType(direction.type) == null) {
             roomDirectionRepository.save(direction)
             ResponseEntity.ok()
         } else
@@ -69,7 +69,7 @@ class RoomServiceImpl : RoomService {
     }
 
     override fun addType(type: RoomType): ResponseEntity.BodyBuilder {
-        return if (roomTypeRepository.findByType(type.type) != null) {
+        return if (roomTypeRepository.findByType(type.type) == null) {
             roomTypeRepository.save(type)
             ResponseEntity.ok()
         } else
