@@ -287,16 +287,16 @@ body {
     transition: left 0.33s linear;
 }
 
+.searchBox label {
+    line-height: 1.8em;
+}
+
 .searchBox .searchBoxContent {
     position: absolute;
     width: 90%;
     height: 90%;
     top: 5%;
     left: 5%;
-}
-
-.searchBox .searchBoxContent * {
-    zoom: 1.2;
 }
 
 .searchBox .searchBoxContent .confirm {
@@ -350,6 +350,7 @@ body {
 }
 
 .searchList table td .book-btn {
+    display: inline-block;
     margin: 0;
     text-align: center;
     cursor: pointer;
