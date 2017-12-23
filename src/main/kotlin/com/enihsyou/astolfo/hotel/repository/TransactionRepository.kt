@@ -23,10 +23,10 @@ interface TransactionRepository : PagingAndSortingRepository<Transaction, Int> {
     @Query(value = "SELECT T FROM Transaction T where not (T.dateTo <?1 OR T.dateFrom >?2)")
     fun findByCreateDateBetween(from: LocalDateTime,
                                 to: LocalDateTime): List<Transaction>
-
-
-    @Language("HQL")
-    @Query(value = "SELECT T FROM Transaction T where T.activated and not (T.dateTo <?1 OR T.dateFrom >?2)")
-    fun findByValidBetween(from: LocalDateTime,
-                           to: LocalDateTime): List<Transaction>
+//
+//
+//    @Language("HQL")
+//    @Query(value = "SELECT T FROM Transaction T where T.activated and not (T.dateTo <?1 OR T.dateFrom >?2)")
+//    fun findByValidBetween(from: LocalDateTime,
+//                           to: LocalDateTime): List<Transaction>
 }

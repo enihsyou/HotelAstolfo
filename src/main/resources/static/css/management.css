@@ -71,6 +71,10 @@
     width: 100%;
 }
 
+.container .modify_my_info .btn {
+    zoom: .75;
+}
+
 .container .book_a_room .resList {
     margin: 2em;
 }
