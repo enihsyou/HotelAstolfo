@@ -72,8 +72,9 @@ Content-Type: application/json
   "role": "前台"
 }
 ----
+
 == 登录
-需要提供用户名和密码
+需要提供手机号和密码
 正确的话 200 并返回用户信息
 错误的话 400
 在这之后有权限的操作都需要加上HTTP Basic认证
@@ -141,27 +142,31 @@ Authorization:Basic dGVzdDoyMzMz
 
 === 添加房间类型
 
+添加房间类型定义,重复返回409。限制为只有管理员经理才能操作
 ----
 POST http://localhost:10080/api/rooms/addType
 Content-Type: application/json
 Authorization:Basic dGVzdDoyMzMz
 
 {
-  "password": "new_pass",
-  "nickname": "new_nick"
+  "type": "大床房",
+  "description": "足够两个人唑在一起的大小"
 }
+
 ----
 === 添加房间朝向
 
+添加房间朝向定义
 ----
-POST http://localhost:10080/api/rooms/addType
+POST http://localhost:10080/api/rooms/addDirection
 Content-Type: application/json
 Authorization:Basic dGVzdDoyMzMz
 
 {
-  "password": "new_pass",
-  "nickname": "new_nick"
+  "type": "东",
+  "description": "冬暖夏狼"
 }
+
 ----
 === 添加房间定义
 
@@ -170,9 +175,9 @@ POST http://localhost:10080/api/restful/rooms
 Content-Type: application/json
 
 {
-  "type":"asd",
-  "direction":"abc",
-  "specialty":"dfd",
+  "type":"大床房",
+  "direction":"东",
+  "specialty":"一个介绍",
   "price":"123",
   "floor":"1",
   "number":"2"
@@ -201,16 +206,33 @@ number 楼层内的第几个房间
 
 都是可选的，不传就是列出全部。不带分页
 
+----
+GET http://localhost:10080/api/rooms/list?type=大床房
+----
+房价大于等于100元的全部
+
+    GET http://localhost:10080/api/rooms/list?priceFrom=100
+
+[99, 100]元范围
+
+    GET http://localhost:10080/api/rooms/list?priceFrom=99&priceTo=100
+
 == 用户预订
 
+所有订单都是预定，区别在于activited（生效）属性和used（来店入住）属性
 
-.Optional Title
-[source,perl]
+
+这个还没完成
+
+.用户创建订单
+[source,http]
 ----
-# *Source* block
-# Use: highlight code listings
-# (require `source-highlight` or `pygmentize`)
-use DBI;
-my $dbh = DBI->connect('...',$u,$p)
-    or die "connect: $dbh->errstr";
+POST http://localhost:10080/api/transactions/make
+Content-Type: application/json
+
+{
+  "dateFrom": "2017-12-22T16:57:10",
+  "dateTo": "2017-12-23T16:57:10",
+  "user": "
+}
 ----
