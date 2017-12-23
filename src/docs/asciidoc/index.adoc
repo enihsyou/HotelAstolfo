@@ -35,3 +35,55 @@ http://brutusin.org/json-forms/[JSON Schema to HTML form生成工具]
 
 Usual
 paragraph.
+
+
+== 登录
+
+
+== 注册
+
+=== 注册管理员
+
+=== 注册前台
+
+=== 注册普通用户
+注册接口，昵称域是可选的。如果密码不是SHA256加密后的(256位长度)会在后台加密保存
+请求格式不正确就是400
+
+    POST http://localhost:10080/api/users/make
+    Content-Type: application/json
+
+    {
+      "phoneNumber": "18834321240",
+      "password": "abc",
+      "nickname": "temp"
+    }
+
+
+== 用户信息
+
+== 添加房间
+
+=== 添加房间类型
+
+=== 添加房间朝向
+
+=== 添加房间定义
+
+== 查询房间
+
+=== 按关键词搜索
+
+== 用户预订
+
+
+.Optional Title
+[source,perl]
+----
+# *Source* block
+# Use: highlight code listings
+# (require `source-highlight` or `pygmentize`)
+use DBI;
+my $dbh = DBI->connect('...',$u,$p)
+    or die "connect: $dbh->errstr";
+----
