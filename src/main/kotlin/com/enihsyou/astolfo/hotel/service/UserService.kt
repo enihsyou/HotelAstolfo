@@ -18,24 +18,48 @@ import java.nio.charset.StandardCharsets
 
 
 interface UserService {
-    fun make(phoneNumber: String,
-             password: String,
-             nickname: String = "",
-             role:User.UserRole = User.UserRole.注册用户): User
+    /**
+     * 根据想要的类型和信息创建用户
+     * @return 创建的用户
+     * */
+    fun make(
+        phoneNumber: String,
+        password: String,
+        nickname: String = "",
+        role: User.UserRole
+    ): User
 
-    fun login(phoneNumber: String,
-              password: String): User
+    /**
+     * 根据手机号和密码验证并登录
+     * 如果错误直接由异常处理跳出
+     * */
+    fun login(
+        phoneNumber: String,
+        password: String
+    ): User
 
-    fun findByPhone(phone: String): User?
+    /**根据手机号搜索用户,没找到直接抛出错误*/
+    fun findByPhone(phone: String): User
 
-    fun findTransactions(phone: String,
-                         pageable: Pageable): List<Transaction>
+    fun updateInformation(
+        phone: String,
+        user: User
+    ): User
 
-    fun findGuests(phone: String,
-                   pageable: Pageable): List<Guest>
+    fun findTransactions(
+        phone: String,
+        pageable: Pageable
+    ): List<Transaction>
 
-    fun addGuest(phone: String,
-                 guest: Guest)
+    fun findGuests(
+        phone: String,
+        pageable: Pageable
+    ): List<Guest>
+
+    fun addGuest(
+        phone: String,
+        guest: Guest
+    )
 }
 
 @Service(value = "用户层逻辑")
@@ -43,27 +67,39 @@ class UserServiceImpl : UserService {
 
     @Autowired lateinit var userRepository: UserRepository
     @Autowired lateinit var guestRepository: GuestRepository
-
     @Autowired lateinit var transactionRepository: TransactionRepository
+
+    override fun findByPhone(phone: String): User
+        = existUser(phone)
+
+    override fun updateInformation(phone: String, user: User): User {
+        val old_user = findByPhone(phone)
+        if (user.password.isNotEmpty())
+            old_user.password = getCheckedPassword(user.password)
+        if (user.nickname.isNotEmpty())
+            old_user.nickname = user.nickname
+        userRepository.save(old_user)
+        return old_user
+    }
 
     private fun existUser(phone: String): User =
         userRepository.findByPhoneNumber(phone)?.
             let { return it }
             ?: throw throw 用户不存在(phone)
 
-
-    override fun findByPhone(phone: String): User?
-        = existUser(phone)
-
-    override fun findTransactions(phone: String,
-                                  pageable: Pageable): List<Transaction>
+    override fun findTransactions(
+        phone: String,
+        pageable: Pageable
+    ): List<Transaction>
         = existUser(phone).let {
         transactionRepository.findByUser(it, pageable)
     }
 
 
-    override fun addGuest(phone: String,
-                          guest: Guest) {
+    override fun addGuest(
+        phone: String,
+        guest: Guest
+    ) {
         val iden = guest.identification
         existUser(phone).let {
             if (guestRepository.findByIdentification(guest.identification) == null)
@@ -75,8 +111,10 @@ class UserServiceImpl : UserService {
         }
     }
 
-    override fun findGuests(phone: String,
-                            pageable: Pageable): List<Guest> {
+    override fun findGuests(
+        phone: String,
+        pageable: Pageable
+    ): List<Guest> {
         existUser(phone).let {
             return guestRepository.findByUserId(it.id, pageable)
         }
@@ -103,10 +141,12 @@ class UserServiceImpl : UserService {
 //        }
 //    }
 
-    override fun make(phoneNumber: String,
-                      password: String,
-                      nickname: String,
-                      role: User.UserRole): User {
+    override fun make(
+        phoneNumber: String,
+        password: String,
+        nickname: String,
+        role: User.UserRole
+    ): User {
         /*注册并返回*/
         if (userRepository.findByPhoneNumber(phoneNumber) != null)
             throw 注册时用户已存在(phoneNumber)
@@ -121,8 +161,10 @@ class UserServiceImpl : UserService {
         return user
     }
 
-    override fun login(phoneNumber: String,
-                       password: String): User {
+    override fun login(
+        phoneNumber: String,
+        password: String
+    ): User {
         val user = existUser(phoneNumber)
         if (user.password == getCheckedPassword(password)) {
             return user
@@ -134,3 +176,6 @@ class UserServiceImpl : UserService {
 //        return
 //    }
 }
+
+
+

@@ -5,71 +5,77 @@
 :Date:      AlternativeWayToSetOptional date
 :Revision:  0.0.1
 
-阿福旅馆，默认运行在 +http://localhost:80+ 下
-
-
-Author is {myname}
-
-ifndef::snippets[]
-:snippets: ../../../target/snippets
-endif::[]
-
-.request
-include::{snippets}/home/http-request.adoc[]
-
-.response
-include::{snippets}/home/http-response.adoc[]
-
-As you can see the format is very simple, and in fact you always get the same message.
-
-include::{snippets}/home/http-request.adoc[]
-
+阿福旅馆，默认运行在 `http://localhost:80` 下
 
 https://jsonschema.net/[JSON to JSON Schema生成工具]
 
 http://brutusin.org/json-forms/[JSON Schema to HTML form生成工具]
 
-
-
-.Optional Title
-
-Usual
-paragraph.
-
-
-
 == 注册
 
-. 普通用户
+=== 普通用户
 
 昵称域是可选的。如果密码不是SHA256加密后的(256位长度)会在后台加密保存
-请求格式不正确就是400
+请求格式不正确就是400, 创建成功返回201, 返回内容是用户信息
+用这个接口注册的就是普通用户
 
 [source,http]
 ----
 POST http://localhost:10080/api/users/make
-Content-Type: application/json
+Content-Type: application/json // <1>
 
 {
-  "phoneNumber": "18834321240",
-  "password": "abc",
-  "nickname": "temp"
+  "phoneNumber": "18800000001", // <2>
+  "password": "2333",
+  "nickname": "昵称" // <3>
 }
 ----
+<1> 传送的内容类型
+<2> phoneNumber, 不是phone_number
+<3> 昵称是可选的,默认为空
 
-. 前台、管理员
+返回结果示例如下
+[source,json]
+{
+  "id": 32,
+  "phoneNumber": "18800000001",
+  "nickname": "昵称",
+  "password": "124640bf2792a0cdce2c04e13326d67bf013bac6ce546616b04888e7c4e68631",
+  "register_date": "2017-12-24T00:52:05.836",
+  "role": "注册用户",
+  "guests": []
+}
 
-只要修改role就能控制用户权限
+
+=== 前台、管理员
+
+从 `/users/make/admin` 注册的就是管理员
+
+从 `/users/make/employee` 注册的就是前台
+
 [source,http]
 ----
-POST http://localhost:10080/api/users/make
+POST http://localhost:10080/api/users/make/employee
 Content-Type: application/json
 
 {
   "phoneNumber": "18811111111",
   "password": "2333",
   "nickname": "我是前台",
-  "role": "前台"
+}
+----
+
+返回示例
+[source, json]
+----
+{
+  "id": 37,
+  "phoneNumber": "18811111111",
+  "nickname": "我是前台",
+  "password": "124640bf2792a0cdce2c04e13326d67bf013bac6ce546616b04888e7c4e68631",
+  "register_date": "2017-12-24T01:13:14.647",
+  "role": "前台",
+  "guests": []
 }
 ----
 
@@ -84,28 +90,61 @@ POST http://localhost:10080/api/users/login
 Content-Type: application/json
 
 {
-  "phoneNumber": "18834321240",
-  "password": "abc"
+  "phoneNumber": "18800000001",
+  "password": "2333"
 }
 ----
+
+返回示例, 和登录返回的结果一致
+[source,json]
+{
+  "id": 32,
+  "phoneNumber": "18800000001",
+  "nickname": "昵称",
+  "password": "124640bf2792a0cdce2c04e13326d67bf013bac6ce546616b04888e7c4e68631",
+  "register_date": "2017-12-24T00:42:17",
+  "role": "注册用户",
+  "guests": []
+}
+
+=== 登出
+不提供登出功能
+不妨尝试一下 POST `/api/users/logout`
+
 
 
 == 用户信息
 
-. 查询绑定的身份证
+=== 获取用户信息
 
+当然要有验证,以后省略
+[source, http]
+GET http://localhost:10080/api/users?phone=18800000001
+
+=== 更新用户信息
+支持昵称和密码修改,密码的验证由HTTP头部完成
+[source, http]
 ----
-GET http://localhost:10080/api/users/guests?phone=18834321240
-Authorization:Basic dGVzdDoyMzMz
+PUT http://localhost:10080/api/users?phone=18800000001
+Content-Type: application/json
+
+{
+  "nickname": "新昵称",
+  "password": "23333"
+}
 ----
 
-. 添加身份证
+
+
+=== 添加身份证
 
 身份证从这生成 http://www.welefen.com/lab/identify/
 
 姓名从这里生成 https://uinames.com/
+
+[source, http]
 ----
-POST http://localhost:10080/api/users/guests?phone=18834321240
+POST http://localhost:10080/api/users/guests?phone=18800000001
 Content-Type: application/json
 Authorization:Basic dGVzdDoyMzMz
 
@@ -114,21 +153,67 @@ Authorization:Basic dGVzdDoyMzMz
   "name":"宋娘"
 }
 ----
-. 用户的订单
+
+运行结果是这样,空结果201
+[source, http]
+----
+POST http://localhost:10080/api/users/guests?phone=18800000001
+
+HTTP/1.1 201
+X-Application-Context: Hotel Astolfo:10080
+Content-Length: 0
+Date: Sat, 23 Dec 2017 16:57:18 GMT
+
+<Response body is empty>
+
+Response code: 200; Time: 95ms; Content length: 0 bytes
+----
+
+=== 查询绑定的身份证
+如果有的话,其实在登录信息返回的时候就会包含
+
+[source, http]
+GET http://localhost:10080/api/users/guests?phone=18800000001
+Authorization:Basic dGVzdDoyMzMz
+
+返回如下
+[source,json]
+[
+  {
+    "id": 34,
+    "identification": "130622199901017537",
+    "name": "宋娘"
+  },
+  {
+    "id": 35,
+    "identification": "130622199901017538",
+    "name": "宋二娘"
+  },
+  {
+    "id": 36,
+    "identification": "130622199901017338",
+    "name": "宋三娘"
+  }
+]
+
+=== 获取用户的订单
 
 使用手机号参数
-----
-GET http://localhost:10080/api/users/transactions?phone=18834321240
+[source, http]
+GET http://localhost:10080/api/users/transactions?phone=18800000001
 Authorization:Basic dGVzdDoyMzMz
-----
 
-. 更新用户信息
+//todo
+
+=== 更新用户信息
 
 修改密码，修改昵称什么的。因为有Authorization Header，不需要提供原始密码
 
 不过如果头部密码不正确 返回422
+
+[source,http]
 ----
-PUT http://localhost:10080/api/users/18834321239
+PUT http://localhost:10080/api/users/18834321239 // <1>
 Content-Type: application/json
 Authorization:Basic dGVzdDoyMzMz
 
@@ -137,6 +222,9 @@ Authorization:Basic dGVzdDoyMzMz
   "nickname": "new_nick"
 }
 ----
+<1> PUT Method
+<2> URL mapping
+<3> Content for response
 
 == 添加房间
 

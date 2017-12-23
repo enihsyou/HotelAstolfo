@@ -10,10 +10,9 @@ Authorization:Basic dGVzdDoyMzMz
 # 注册前台 投到/api/users/make/employee下面
 
 {
-  "phoneNumber": "12311111111",
+  "phoneNumber": "18800000001",
   "password": "2333",
-  "nickname": "45",
-  "register_date": "2016-03-16T13:56:39.492"
+  "nickname": "昵称"
 }
 ###
 POST http://localhost:10080/api/users/make
@@ -47,7 +46,7 @@ Authorization:Basic dGVzdDoyMzMz
 # 登录提供手机号和密码,返回用户信息
 
 {
-  "phoneNumber": "12311111111",
+  "phoneNumber": "18800000001",
   "password": "2333"
 }
 ###
@@ -143,5 +142,29 @@ GET http://localhost:10080/api/transactions/dummy
 
 ###
 GET http://localhost:10080/api/transactions/list
+
+###
+POST http://localhost:10080/api/users/guests?phone=18800000001
+Content-Type: application/json
+Authorization:Basic dGVzdDoyMzMz
+
+{
+  "identification":"130622199901017338",
+  "name":"宋三娘"
+}
+
+###
+POST http://localhost:10080/api/users/transactions?phone=18800000001
+
+###
+PUT http://localhost:10080/api/users?phone=18800000001
+Content-Type: application/json
+
+{
+  "nickname": "新昵称",
+  "password": "23333"
+}
+###
+GET http://localhost:10080/api/users?phone=18800000001
 
 ###
