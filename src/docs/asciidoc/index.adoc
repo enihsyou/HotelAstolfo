@@ -37,42 +37,169 @@ Usual
 paragraph.
 
 
-== 登录
-
 
 == 注册
 
-=== 注册管理员
+. 普通用户
 
-=== 注册前台
-
-=== 注册普通用户
-注册接口，昵称域是可选的。如果密码不是SHA256加密后的(256位长度)会在后台加密保存
+昵称域是可选的。如果密码不是SHA256加密后的(256位长度)会在后台加密保存
 请求格式不正确就是400
 
-    POST http://localhost:10080/api/users/make
-    Content-Type: application/json
+[source,http]
+----
+POST http://localhost:10080/api/users/make
+Content-Type: application/json
 
-    {
-      "phoneNumber": "18834321240",
-      "password": "abc",
-      "nickname": "temp"
-    }
+{
+  "phoneNumber": "18834321240",
+  "password": "abc",
+  "nickname": "temp"
+}
+----
+
+. 前台、管理员
+
+只要修改role就能控制用户权限
+[source,http]
+----
+POST http://localhost:10080/api/users/make
+Content-Type: application/json
+
+{
+  "phoneNumber": "18811111111",
+  "password": "2333",
+  "nickname": "我是前台",
+  "role": "前台"
+}
+----
+== 登录
+需要提供用户名和密码
+正确的话 200 并返回用户信息
+错误的话 400
+在这之后有权限的操作都需要加上HTTP Basic认证
+[source,http]
+----
+POST http://localhost:10080/api/users/login
+Content-Type: application/json
+
+{
+  "phoneNumber": "18834321240",
+  "password": "abc"
+}
+----
 
 
 == 用户信息
+
+. 查询绑定的身份证
+
+----
+GET http://localhost:10080/api/users/guests?phone=18834321240
+Authorization:Basic dGVzdDoyMzMz
+----
+
+. 添加身份证
+
+身份证从这生成 http://www.welefen.com/lab/identify/
+
+姓名从这里生成 https://uinames.com/
+----
+POST http://localhost:10080/api/users/guests?phone=18834321240
+Content-Type: application/json
+Authorization:Basic dGVzdDoyMzMz
+
+{
+  "identification":"130622199901017537",
+  "name":"宋娘"
+}
+----
+. 用户的订单
+
+使用手机号参数
+----
+GET http://localhost:10080/api/users/transactions?phone=18834321240
+Authorization:Basic dGVzdDoyMzMz
+----
+
+. 更新用户信息
+
+修改密码，修改昵称什么的。因为有Authorization Header，不需要提供原始密码
+
+不过如果头部密码不正确 返回422
+----
+PUT http://localhost:10080/api/users/18834321239
+Content-Type: application/json
+Authorization:Basic dGVzdDoyMzMz
+
+{
+  "password": "new_pass",
+  "nickname": "new_nick"
+}
+----
 
 == 添加房间
 
 === 添加房间类型
 
+----
+POST http://localhost:10080/api/rooms/addType
+Content-Type: application/json
+Authorization:Basic dGVzdDoyMzMz
+
+{
+  "password": "new_pass",
+  "nickname": "new_nick"
+}
+----
 === 添加房间朝向
 
+----
+POST http://localhost:10080/api/rooms/addType
+Content-Type: application/json
+Authorization:Basic dGVzdDoyMzMz
+
+{
+  "password": "new_pass",
+  "nickname": "new_nick"
+}
+----
 === 添加房间定义
+
+----
+POST http://localhost:10080/api/restful/rooms
+Content-Type: application/json
+
+{
+  "type":"asd",
+  "direction":"abc",
+  "specialty":"dfd",
+  "price":"123",
+  "floor":"1",
+  "number":"2"
+}
+----
 
 == 查询房间
 
-=== 按关键词搜索
+提供的关键词有
+
+from 何时入住
+
+to 何时离店
+
+type 房间类型
+
+direction 房间朝向
+
+priceFrom 价格起点，包含
+
+priceTo [priceFrom, priceTo]区间
+
+floor 房间楼层
+
+number 楼层内的第几个房间
+
+都是可选的，不传就是列出全部。不带分页
 
 == 用户预订
 
