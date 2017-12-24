@@ -29,7 +29,7 @@ class TransactionController {
     @Autowired lateinit var roomDirectionRepository: RoomDirectionRepository
     @GetMapping("/list")
     fun listByDate(
-        @RequestParam("userPhone", required = false) userPhone: String? = null,
+        @RequestParam("phone", required = false) userPhone: String? = null,
         @RequestParam("createFrom", required = false) createFrom: LocalDateTime? = null,
         @RequestParam("createTo", required = false) createTo: LocalDateTime? = null,
         @RequestParam("validFrom", required = false) validFrom: LocalDateTime? = null,
@@ -44,21 +44,21 @@ class TransactionController {
     }
 
     class BookBody(
-        var userPhone: String,
-        var guests: List<String>,
-        var room: Room.RoomNumber,
-        var from: LocalDateTime,
-        var to: LocalDateTime
+        var phone: String = "",
+        var guests: List<String> = emptyList(),
+        var room: Room.RoomNumber = Room.RoomNumber(),
+        var from: LocalDateTime = LocalDateTime.now(),
+        var to: LocalDateTime = LocalDateTime.now()
     )
 
     @PostMapping("/make")
     fun singleBook(@RequestBody body: BookBody) {
-        println(body)
+        transactionService.singleBook(body)
     }
 
     @GetMapping("/dummy")
     fun dummy() {
-        val user = userService.findByPhone("12345678888")!!
+        val user = userService.findByPhone("12345678888")
         val room = roomService.listRoomByParameter(priceFrom = 99).first()
         transactionService.addTransactions(Transaction(user = user, room = room, dateFrom = LocalDateTime.now(), dateTo = LocalDateTime.now().plusDays(1)))
     }

@@ -21,16 +21,13 @@ data class Room(
     @Id @GeneratedValue
     var id: Int = 0,
 
-//    @NaturalId
     @Embedded
     var roomNumber: RoomNumber = RoomNumber(),
 
     @ManyToOne(targetEntity = RoomType::class)
-    @Embedded
     var type: RoomType = RoomType(),
 
     @ManyToOne(targetEntity = RoomDirection::class)
-    @Embedded
     var direction: RoomDirection = RoomDirection(),
 
     /*简介信息*/
@@ -40,6 +37,7 @@ data class Room(
     var price: Int = 0,
 
     @OneToMany
+    @JsonIgnore
     var transactions: MutableList<Transaction>? = null
 ) {
 
@@ -66,12 +64,12 @@ data class RoomType(
     var type: String = "Undefined",
 
     /*房型简介*/
-    var description: String = "",
-
-    @OneToMany
-    @JsonIgnore
-    var room: List<Room> = emptyList()
-)
+    var description: String = ""
+){
+    constructor(type: String) : this(){
+        this.type = type
+    }
+}
 
 @Entity
 @Table(name = "ROOM_DIRECTION")
@@ -85,8 +83,9 @@ data class RoomDirection(
     var type: String = "Undefined",
 
     /*方向简介*/
-    var description: String = "",
-
-    @OneToMany
-    var room: List<Room> = emptyList()
-)
+    var description: String = ""
+) {
+    constructor(type: String) : this() {
+        this.type = type
+    }
+}

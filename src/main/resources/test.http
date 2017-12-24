@@ -10,10 +10,9 @@ Authorization:Basic dGVzdDoyMzMz
 # 注册前台 投到/api/users/make/employee下面
 
 {
-  "phoneNumber": "12311111111",
+  "phoneNumber": "18800000001",
   "password": "2333",
-  "nickname": "45",
-  "register_date": "2016-03-16T13:56:39.492"
+  "nickname": "昵称"
 }
 ###
 POST http://localhost:10080/api/users/make
@@ -47,7 +46,7 @@ Authorization:Basic dGVzdDoyMzMz
 # 登录提供手机号和密码,返回用户信息
 
 {
-  "phoneNumber": "12311111111",
+  "phoneNumber": "18800000001",
   "password": "2333"
 }
 ###
@@ -58,14 +57,14 @@ GET http://localhost:10080/api/users/guests?phone=12345678888
 # 找出用户绑定的身份证
 
 ###
-POST http://localhost:10080/api/users/guests?phone=12345678888
+GET http://localhost:10080/api/users/transactions?phone=18800000001
 Content-Type: application/json
+Authorization:Basic dGVzdDoyMzMz
 
 {
-    "identification": "3789248923042543252X",
-    "name": "这里是个名字"
+  "identification":"130622199901017537",
+  "name":"宋娘"
 }
-
 
 
 
@@ -112,15 +111,26 @@ GET http://localhost:10080/api/restful/rooms
 # 可以在这里看到结果
 # 或者http://localhost:10080/actuator/index.html#http://localhost:10080/api/restful/rooms
 ###
-GET http://localhost:10080/api/rooms/list?from=2012-04-23T18:25:43.511Z&to=2018-04-23T18:25:43.511Z
+GET http://localhost:10080/api/rooms/list?from=2012-04-23T18:25:43.511&to=2018-04-23T18:25:43.511
 
 ###
-GET http://localhost:10080/api/restful/rooms/search/findByType_Type?type=大床房
-# 房型搜索的一种方式,比如这是大床房
+POST http://localhost:10080/api/transactions/make
+Content-Type: application/json
 
+{
+  "dateFrom": "2017-12-22T16:57:10",
+  "dateTo": "2017-12-23T16:57:10",
+  "phone": "18800000001",
+  "guests": [
+    "130622199901017537"
+  ],
+  "room": {
+    "floor": 1,
+    "number": 1
+  }
+}
 ###
-GET http://localhost:10080/api/rooms/list?type=大床房
-# 另一种方式是这样
+GET http://localhost:10080/api/transactions/list
 ###
 GET http://localhost:10080/api/rooms/list?priceFrom=100
 ###
@@ -137,11 +147,100 @@ Content-Type: application/json
   "activated": false,
   "used": false
 }
-
 ###
-GET http://localhost:10080/api/transactions/dummy
+POST http://localhost:10080/api/users/make
+Content-Type: application/json // <1>
+
+{
+  "phoneNumber": "18800000001",
+  "password": "2333",
+  "nickname": "昵称"
+}
+###
+POST http://localhost:10080/api/users/guests?phone=18800000001
+Content-Type: application/json
+Authorization:Basic dGVzdDoyMzMz
+
+{
+  "identification":"130622199901017537",
+  "name":"宋娘"
+}
 
 ###
 GET http://localhost:10080/api/transactions/list
+
+###
+POST http://localhost:10080/api/users/guests?phone=18800000001
+Content-Type: application/json
+Authorization:Basic dGVzdDoyMzMz
+
+{
+  "identification":"130622199901017338",
+  "name":"宋三娘"
+}
+
+###
+POST http://localhost:10080/api/users/transactions?phone=18800000001
+
+###
+PUT http://localhost:10080/api/users?phone=18800000001
+Content-Type: application/json
+
+{
+  "nickname": "新昵称",
+  "password": "23333"
+}
+###
+GET http://localhost:10080/api/users?phone=18800000001
+
+###
+POST http://localhost:10080/api/rooms/add
+Content-Type: application/json
+
+{
+  "type":"大床房",
+  "direction":"东",
+  "specialty":"一个介绍",
+  "price":"1233",
+  "roomNumber": {
+        "floor": 1,
+        "number": 45
+      }
+}
+
+###
+POST http://localhost:10080/api/rooms/add
+Content-Type: application/json
+
+{
+    "roomNumber": {
+      "floor": 3,
+      "number": 1
+    },
+    "type":"http://localhost:10080/api/restful/roomTypes/3",
+    "direction": "http://localhost:10080/api/restful/roomDirections/2",
+    "specialty": "141234",
+    "price": 101
+ }
+###
+POST http://localhost:10080/api/rooms/add
+Content-Type: application/json
+
+{
+  "type": "大床房",
+  "direction": "东",
+  "specialty": "一个介绍",
+  "price": "143",
+  "roomNumber": {
+    "floor": 3,
+    "number": 1
+  }
+}
+
+###
+GET http://localhost:10080/api/rooms/list?priceFrom=100&type=大床房&direction=东&from=2017-12-27T16:57:10
+
+###
+GET http://localhost:10080/api/users/transactions?phone=18800000001
 
 ###

@@ -5,75 +5,81 @@
 :Date:      AlternativeWayToSetOptional date
 :Revision:  0.0.1
 
-阿福旅馆，默认运行在 +http://localhost:80+ 下
-
-
-Author is {myname}
-
-ifndef::snippets[]
-:snippets: ../../../target/snippets
-endif::[]
-
-.request
-include::{snippets}/home/http-request.adoc[]
-
-.response
-include::{snippets}/home/http-response.adoc[]
-
-As you can see the format is very simple, and in fact you always get the same message.
-
-include::{snippets}/home/http-request.adoc[]
-
+阿福旅馆，默认运行在 `http://localhost:80` 下
 
 https://jsonschema.net/[JSON to JSON Schema生成工具]
 
 http://brutusin.org/json-forms/[JSON Schema to HTML form生成工具]
 
-
-
-.Optional Title
-
-Usual
-paragraph.
-
-
-
 == 注册
 
-. 普通用户
+=== 普通用户
 
 昵称域是可选的。如果密码不是SHA256加密后的(256位长度)会在后台加密保存
-请求格式不正确就是400
+请求格式不正确就是400, 创建成功返回201, 返回内容是用户信息
+用这个接口注册的就是普通用户
 
 [source,http]
 ----
 POST http://localhost:10080/api/users/make
-Content-Type: application/json
+Content-Type: application/json // <1>
 
 {
-  "phoneNumber": "18834321240",
-  "password": "abc",
-  "nickname": "temp"
+  "phoneNumber": "18800000001", // <2>
+  "password": "2333",
+  "nickname": "昵称" // <3>
 }
 ----
+<1> 传送的内容类型
+<2> phoneNumber, 不是phone_number
+<3> 昵称是可选的,默认为空
 
-. 前台、管理员
+返回结果示例如下
+[source,json]
+{
+  "id": 32,
+  "phoneNumber": "18800000001",
+  "nickname": "昵称",
+  "password": "124640bf2792a0cdce2c04e13326d67bf013bac6ce546616b04888e7c4e68631",
+  "register_date": "2017-12-24T00:52:05.836",
+  "role": "注册用户",
+  "guests": []
+}
 
-只要修改role就能控制用户权限
+=== 前台、管理员
+
+从 `/users/make/admin` 注册的就是管理员
+
+从 `/users/make/employee` 注册的就是前台
+
 [source,http]
 ----
-POST http://localhost:10080/api/users/make
+POST http://localhost:10080/api/users/make/employee
 Content-Type: application/json
 
 {
   "phoneNumber": "18811111111",
   "password": "2333",
   "nickname": "我是前台",
-  "role": "前台"
 }
 ----
+
+返回示例
+[source, json]
+----
+{
+  "id": 37,
+  "phoneNumber": "18811111111",
+  "nickname": "我是前台",
+  "password": "124640bf2792a0cdce2c04e13326d67bf013bac6ce546616b04888e7c4e68631",
+  "register_date": "2017-12-24T01:13:14.647",
+  "role": "前台",
+  "guests": []
+}
+----
+
 == 登录
-需要提供用户名和密码
+需要提供手机号和密码
 正确的话 200 并返回用户信息
 错误的话 400
 在这之后有权限的操作都需要加上HTTP Basic认证
@@ -83,28 +89,61 @@ POST http://localhost:10080/api/users/login
 Content-Type: application/json
 
 {
-  "phoneNumber": "18834321240",
-  "password": "abc"
+  "phoneNumber": "18800000001",
+  "password": "2333"
 }
 ----
+
+返回示例, 和登录返回的结果一致
+[source,json]
+{
+  "id": 32,
+  "phoneNumber": "18800000001",
+  "nickname": "昵称",
+  "password": "124640bf2792a0cdce2c04e13326d67bf013bac6ce546616b04888e7c4e68631",
+  "register_date": "2017-12-24T00:42:17",
+  "role": "注册用户",
+  "guests": []
+}
+
+=== 登出
+不提供登出功能
+不妨尝试一下 POST `/api/users/logout`
+
 
 
 == 用户信息
 
-. 查询绑定的身份证
+=== 获取用户信息
 
+当然要有验证,以后的示例中省略
+[source, http]
+GET http://localhost:10080/api/users?phone=18800000001
+
+=== 更新用户信息
+支持昵称和密码修改,密码的验证由HTTP头部完成
+[source, http]
 ----
-GET http://localhost:10080/api/users/guests?phone=18834321240
-Authorization:Basic dGVzdDoyMzMz
+PUT http://localhost:10080/api/users?phone=18800000001
+Content-Type: application/json
+
+{
+  "nickname": "新昵称",
+  "password": "23333"
+}
 ----
 
-. 添加身份证
+
+
+=== 添加身份证
 
 身份证从这生成 http://www.welefen.com/lab/identify/
 
 姓名从这里生成 https://uinames.com/
+
+[source, http]
 ----
-POST http://localhost:10080/api/users/guests?phone=18834321240
+POST http://localhost:10080/api/users/guests?phone=18800000001
 Content-Type: application/json
 Authorization:Basic dGVzdDoyMzMz
 
@@ -113,79 +152,203 @@ Authorization:Basic dGVzdDoyMzMz
   "name":"宋娘"
 }
 ----
-. 用户的订单
+
+运行结果是这样,空结果201
+[source, http]
+----
+POST http://localhost:10080/api/users/guests?phone=18800000001
+
+HTTP/1.1 201
+X-Application-Context: Hotel Astolfo:10080
+Content-Length: 0
+Date: Sat, 23 Dec 2017 16:57:18 GMT
+
+<Response body is empty>
+
+Response code: 200; Time: 95ms; Content length: 0 bytes
+----
+
+=== 查询绑定的身份证
+如果有的话,其实在登录信息返回的时候就会包含
+
+[source, http]
+GET http://localhost:10080/api/users/guests?phone=18800000001
+
+返回如下
+[source,json]
+[
+  {
+    "id": 34,
+    "identification": "130622199901017537",
+    "name": "宋娘"
+  },
+  {
+    "id": 35,
+    "identification": "130622199901017538",
+    "name": "宋二娘"
+  },
+  {
+    "id": 36,
+    "identification": "130622199901017338",
+    "name": "宋三娘"
+  }
+]
+
+=== 获取用户的订单
 
 使用手机号参数
-----
-GET http://localhost:10080/api/users/transactions?phone=18834321240
-Authorization:Basic dGVzdDoyMzMz
-----
+[source, http]
+GET http://localhost:10080/api/users/transactions?phone=18800000001
 
-. 更新用户信息
+//todo
+
+=== 更新用户信息
 
 修改密码，修改昵称什么的。因为有Authorization Header，不需要提供原始密码
 
 不过如果头部密码不正确 返回422
+
+[source,http]
 ----
-PUT http://localhost:10080/api/users/18834321239
+PUT http://localhost:10080/api/users/18834321239 // <1>
 Content-Type: application/json
 Authorization:Basic dGVzdDoyMzMz
 
 {
-  "password": "new_pass",
-  "nickname": "new_nick"
+  "password": "new_pass", // <2>
+  "nickname": "new_nick" // <2>
 }
 ----
+<1> PUT Method
+<2> 新的密码
+<3> 新的昵称, 这两个都可以有 也可以只有其一
 
 == 添加房间
 
 === 添加房间类型
 
+添加房间类型定义,重复返回409。限制为只有管理员经理才能操作
+[source, http]
 ----
 POST http://localhost:10080/api/rooms/addType
 Content-Type: application/json
 Authorization:Basic dGVzdDoyMzMz
 
 {
-  "password": "new_pass",
-  "nickname": "new_nick"
+  "type": "大床房",
+  "description": "足够两个人唑在一起的大小"
 }
+
 ----
 === 添加房间朝向
 
+添加房间朝向定义
+[source, http]
 ----
-POST http://localhost:10080/api/rooms/addType
+POST http://localhost:10080/api/rooms/addDirection
 Content-Type: application/json
 Authorization:Basic dGVzdDoyMzMz
 
 {
-  "password": "new_pass",
-  "nickname": "new_nick"
+  "type": "东",
+  "description": "冬暖夏狼"
 }
+
 ----
 === 添加房间定义
-
+[source, http]
 ----
-POST http://localhost:10080/api/restful/rooms
-Content-Type: application/json
-
 {
-  "type":"asd",
-  "direction":"abc",
-  "specialty":"dfd",
-  "price":"123",
-  "floor":"1",
-  "number":"2"
+  "type": "大床房",
+  "direction": "东",
+  "specialty": "一个介绍",
+  "price": "143",
+  "roomNumber": {
+    "floor": 3,
+    "number": 1
+  }
 }
 ----
 
 == 查询房间
 
+列出所有房间
+[source,http]
+----
+GET http://localhost:10080/api/rooms/list
+----
+结果大概这样
+[source, json]
+----
+[
+  {
+    "id": 4,
+    "roomNumber": {
+      "floor": 1,
+      "number": 1
+    },
+    "type": {
+      "id": 3,
+      "type": "大床房",
+      "description": "足够两个人唑在一起的大小"
+    },
+    "direction": {
+      "id": 2,
+      "type": "东",
+      "description": "冬暖夏狼",
+      "room": []
+    },
+    "specialty": "141234",
+    "price": 101
+  },
+  {
+    "id": 11,
+    "roomNumber": {
+      "floor": 0,
+      "number": 0
+    },
+    "type": {
+      "id": 3,
+      "type": "大床房",
+      "description": "足够两个人唑在一起的大小"
+    },
+    "direction": {
+      "id": 2,
+      "type": "东",
+      "description": "冬暖夏狼",
+      "room": []
+    },
+    "specialty": "一个介绍",
+    "price": 123
+  },
+  {
+    "id": 12,
+    "roomNumber": {
+      "floor": 3,
+      "number": 1
+    },
+    "type": {
+      "id": 3,
+      "type": "大床房",
+      "description": "足够两个人唑在一起的大小"
+    },
+    "direction": {
+      "id": 2,
+      "type": "东",
+      "description": "冬暖夏狼",
+      "room": []
+    },
+    "specialty": "一个介绍",
+    "price": 143
+  }
+]
+----
+
 提供的关键词有
 
 from 何时入住
 
-to 何时离店
+to 何时离店 这两个必须同时存在
 
 type 房间类型
 
@@ -201,16 +364,110 @@ number 楼层内的第几个房间
 
 都是可选的，不传就是列出全部。不带分页
 
+
+----
+GET http://localhost:10080/api/rooms/list?type=大床房
+----
+房价大于等于100元的全部
+
+    GET http://localhost:10080/api/rooms/list?priceFrom=100
+
+[99, 100]元范围
+
+    GET http://localhost:10080/api/rooms/list?priceFrom=99&priceTo=100
+
+查询2018-04-22入住 2018-04-23离开的话 可用的房间列表
+
+    GET http://localhost:10080/api/rooms/list?from=2018-04-22T18:25:43.511&to=2018-04-23T18:25:43.511
+
 == 用户预订
 
+所有订单都是预定，区别在于activited（生效）属性和used（来店入住）属性
 
-.Optional Title
-[source,perl]
+
+这个还没完成
+
+.用户创建订单
+[source,http]
 ----
-# *Source* block
-# Use: highlight code listings
-# (require `source-highlight` or `pygmentize`)
-use DBI;
-my $dbh = DBI->connect('...',$u,$p)
-    or die "connect: $dbh->errstr";
+POST http://localhost:10080/api/transactions/make
+Content-Type: application/json
+
+{
+  "dateFrom": "2017-12-22T16:57:10",
+  "dateTo": "2017-12-23T16:57:10",
+  "user": "
+}
 ----
+
+== 订单管理
+
+=== 新增订单
+[source, http]
+----
+POST http://localhost:10080/api/transactions/make
+Content-Type: application/json
+
+{
+  "dateFrom": "2017-12-22T16:57:10",
+  "dateTo": "2017-12-23T16:57:10",
+  "phone": "18800000001",
+  "guests": [
+    "130622199901017537"
+  ],
+  "room": {
+    "floor": 1,
+    "number": 1
+  }
+}
+----
+
+=== 列出订单
+
+[source, http]
+----
+GET http://localhost:10080/api/transactions/list
+----
+
+[source, json]
+----
+[
+  {
+    "id": 20,
+    "createDate": "2017-12-24T14:44:09",
+    "room": {
+      "id": 4,
+      "roomNumber": {
+        "floor": 1,
+        "number": 1
+      },
+      "type": {
+        "id": 3,
+        "type": "大床房",
+        "description": "足够两个人唑在一起的大小"
+      },
+      "direction": {
+        "id": 2,
+        "type": "东",
+        "description": "冬暖夏狼"
+      },
+      "specialty": "141234",
+      "price": 101
+    },
+    "guests": [
+      {
+        "id": 14,
+        "identification": "130622199901017537",
+        "name": "宋娘"
+      }
+    ],
+    "dateFrom": "2017-12-24T14:44:03",
+    "dateTo": "2017-12-24T14:44:03",
+    "activated": false,
+    "used": false
+  }
+]
+----
+
+
+
