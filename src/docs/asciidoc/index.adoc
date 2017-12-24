@@ -46,7 +46,6 @@ Content-Type: application/json // <1>
   "guests": []
 }
 
-
 === 前台、管理员
 
 从 `/users/make/admin` 注册的就是管理员
@@ -117,7 +116,7 @@ Content-Type: application/json
 
 === 获取用户信息
 
-当然要有验证,以后省略
+当然要有验证,以后的示例中省略
 [source, http]
 GET http://localhost:10080/api/users?phone=18800000001
 
@@ -174,7 +173,6 @@ Response code: 200; Time: 95ms; Content length: 0 bytes
 
 [source, http]
 GET http://localhost:10080/api/users/guests?phone=18800000001
-Authorization:Basic dGVzdDoyMzMz
 
 返回如下
 [source,json]
@@ -201,7 +199,6 @@ Authorization:Basic dGVzdDoyMzMz
 使用手机号参数
 [source, http]
 GET http://localhost:10080/api/users/transactions?phone=18800000001
-Authorization:Basic dGVzdDoyMzMz
 
 //todo
 
@@ -218,19 +215,20 @@ Content-Type: application/json
 Authorization:Basic dGVzdDoyMzMz
 
 {
-  "password": "new_pass",
-  "nickname": "new_nick"
+  "password": "new_pass", // <2>
+  "nickname": "new_nick" // <2>
 }
 ----
 <1> PUT Method
-<2> URL mapping
-<3> Content for response
+<2> 新的密码
+<3> 新的昵称, 这两个都可以有 也可以只有其一
 
 == 添加房间
 
 === 添加房间类型
 
 添加房间类型定义,重复返回409。限制为只有管理员经理才能操作
+[source, http]
 ----
 POST http://localhost:10080/api/rooms/addType
 Content-Type: application/json
@@ -245,6 +243,7 @@ Authorization:Basic dGVzdDoyMzMz
 === 添加房间朝向
 
 添加房间朝向定义
+[source, http]
 ----
 POST http://localhost:10080/api/rooms/addDirection
 Content-Type: application/json
@@ -257,28 +256,99 @@ Authorization:Basic dGVzdDoyMzMz
 
 ----
 === 添加房间定义
-
+[source, http]
 ----
-POST http://localhost:10080/api/restful/rooms
-Content-Type: application/json
-
 {
-  "type":"大床房",
-  "direction":"东",
-  "specialty":"一个介绍",
-  "price":"123",
-  "floor":"1",
-  "number":"2"
+  "type": "大床房",
+  "direction": "东",
+  "specialty": "一个介绍",
+  "price": "143",
+  "roomNumber": {
+    "floor": 3,
+    "number": 1
+  }
 }
 ----
 
 == 查询房间
 
+列出所有房间
+[source,http]
+----
+GET http://localhost:10080/api/rooms/list
+----
+结果大概这样
+[source, json]
+----
+[
+  {
+    "id": 4,
+    "roomNumber": {
+      "floor": 1,
+      "number": 1
+    },
+    "type": {
+      "id": 3,
+      "type": "大床房",
+      "description": "足够两个人唑在一起的大小"
+    },
+    "direction": {
+      "id": 2,
+      "type": "东",
+      "description": "冬暖夏狼",
+      "room": []
+    },
+    "specialty": "141234",
+    "price": 101
+  },
+  {
+    "id": 11,
+    "roomNumber": {
+      "floor": 0,
+      "number": 0
+    },
+    "type": {
+      "id": 3,
+      "type": "大床房",
+      "description": "足够两个人唑在一起的大小"
+    },
+    "direction": {
+      "id": 2,
+      "type": "东",
+      "description": "冬暖夏狼",
+      "room": []
+    },
+    "specialty": "一个介绍",
+    "price": 123
+  },
+  {
+    "id": 12,
+    "roomNumber": {
+      "floor": 3,
+      "number": 1
+    },
+    "type": {
+      "id": 3,
+      "type": "大床房",
+      "description": "足够两个人唑在一起的大小"
+    },
+    "direction": {
+      "id": 2,
+      "type": "东",
+      "description": "冬暖夏狼",
+      "room": []
+    },
+    "specialty": "一个介绍",
+    "price": 143
+  }
+]
+----
+
 提供的关键词有
 
 from 何时入住
 
-to 何时离店
+to 何时离店 这两个必须同时存在
 
 type 房间类型
 
@@ -294,6 +364,7 @@ number 楼层内的第几个房间
 
 都是可选的，不传就是列出全部。不带分页
 
+
 ----
 GET http://localhost:10080/api/rooms/list?type=大床房
 ----
@@ -304,6 +375,10 @@ GET http://localhost:10080/api/rooms/list?type=大床房
 [99, 100]元范围
 
     GET http://localhost:10080/api/rooms/list?priceFrom=99&priceTo=100
+
+查询2018-04-22入住 2018-04-23离开的话 可用的房间列表
+
+    GET http://localhost:10080/api/rooms/list?from=2018-04-22T18:25:43.511&to=2018-04-23T18:25:43.511
 
 == 用户预订
 
@@ -324,3 +399,75 @@ Content-Type: application/json
   "user": "
 }
 ----
+
+== 订单管理
+
+=== 新增订单
+[source, http]
+----
+POST http://localhost:10080/api/transactions/make
+Content-Type: application/json
+
+{
+  "dateFrom": "2017-12-22T16:57:10",
+  "dateTo": "2017-12-23T16:57:10",
+  "phone": "18800000001",
+  "guests": [
+    "130622199901017537"
+  ],
+  "room": {
+    "floor": 1,
+    "number": 1
+  }
+}
+----
+
+=== 列出订单
+
+[source, http]
+----
+GET http://localhost:10080/api/transactions/list
+----
+
+[source, json]
+----
+[
+  {
+    "id": 20,
+    "createDate": "2017-12-24T14:44:09",
+    "room": {
+      "id": 4,
+      "roomNumber": {
+        "floor": 1,
+        "number": 1
+      },
+      "type": {
+        "id": 3,
+        "type": "大床房",
+        "description": "足够两个人唑在一起的大小"
+      },
+      "direction": {
+        "id": 2,
+        "type": "东",
+        "description": "冬暖夏狼"
+      },
+      "specialty": "141234",
+      "price": 101
+    },
+    "guests": [
+      {
+        "id": 14,
+        "identification": "130622199901017537",
+        "name": "宋娘"
+      }
+    ],
+    "dateFrom": "2017-12-24T14:44:03",
+    "dateTo": "2017-12-24T14:44:03",
+    "activated": false,
+    "used": false
+  }
+]
+----
+
+
+

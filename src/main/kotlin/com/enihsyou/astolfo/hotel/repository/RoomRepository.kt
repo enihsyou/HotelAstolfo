@@ -3,6 +3,7 @@ package com.enihsyou.astolfo.hotel.repository
 import com.enihsyou.astolfo.hotel.domain.Room
 import com.enihsyou.astolfo.hotel.domain.RoomDirection
 import com.enihsyou.astolfo.hotel.domain.RoomType
+import org.intellij.lang.annotations.Language
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.PagingAndSortingRepository
@@ -29,7 +30,8 @@ interface RoomRepository : PagingAndSortingRepository<Room, Int> {
                            @Param("to") to: Int,
                            pageable: Pageable): List<Room>
 
-    fun findByRoomNumber(roomNumber: Room.RoomNumber): Room?
+    @Query(value = "SELECT R FROM Room R where R.roomNumber.floor=?1 and R.roomNumber.number=?2")
+    fun findByRoomNumber(@Param("floor") floor: Int, @Param("number") index: Int): Room?
 //
 //    fun findByFloor(@Param("floor") floor: Int,
 //                               pageable: Pageable): List<Room>

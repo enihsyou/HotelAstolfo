@@ -127,20 +127,6 @@ class UserServiceImpl : UserService {
             password
     }
 
-//    fun updateInformation(phone: String,
-//                          old_password: String,
-//                          new_password: String?,
-//                          nickname: String?): User {
-//        existUser(phone).let {
-//            if (it.password == getCheckedPassword(old_password))
-//                new_password?.let { p -> it.password = getCheckedPassword(p) }
-//            else throw 用户名和密码不匹配()
-//            if (!nickname.isNullOrBlank())
-//                nickname?.let { n -> it.nickname = nickname }
-//            return it
-//        }
-//    }
-
     override fun make(
         phoneNumber: String,
         password: String,
@@ -171,10 +157,6 @@ class UserServiceImpl : UserService {
         }
         throw 用户名和密码不匹配()
     }
-//    {
-//        val user = userRepository.findOne(phoneNumber) ?: throw 用户不存在(phoneNumber)
-//        return
-//    }
 }
 
 
