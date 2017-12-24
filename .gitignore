@@ -20,7 +20,8 @@
 ### NetBeans ###
 nbproject/private/
 build/
-nbbuild/
+nbbuild/ pull
+fdfd
 dist/
 nbdist/
 .nb-gradle/

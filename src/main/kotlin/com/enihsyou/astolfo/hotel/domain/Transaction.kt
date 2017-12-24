@@ -18,38 +18,38 @@ import javax.persistence.Table
 @Table(name = "TRANSACTION")
 data class Transaction(
     @Id @GeneratedValue
-    var id: Int,
+    var id: Int = 0,
 
     @CreatedDate
     @CreationTimestamp
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
-    var create_date: LocalDateTime,
+    var createDate: LocalDateTime = LocalDateTime.now(),
 
     @ManyToOne
     @CreatedBy
     @JsonIgnore
     /*这个用户创建的订单*/
-    var user: User,
+    var user: User = User(),
 
     @ManyToOne
     /*预定的这个房间*/  //现在只支持单个房间
-    var room: Room,
+    var room: Room = Room(),
 
     @OneToMany
     /*入住这些旅客*/
-    var guests: List<Guest>,
+    var guests: List<Guest> = emptyList(),
 
     /*预定开始日期*/
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
-    var dateFrom: LocalDateTime,
+    var dateFrom: LocalDateTime = LocalDateTime.now(),
 
     /*预定结束日期*/
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
-    var dateTo: LocalDateTime,
+    var dateTo: LocalDateTime = LocalDateTime.MAX,
 
     /*订单还在有效期*/
-    var activated: Boolean,
+    var activated: Boolean = false,
 
     /*旅客是否来入住了*/
-    var used: Boolean
+    var used: Boolean = false
 )

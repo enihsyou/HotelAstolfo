@@ -122,3 +122,26 @@ GET http://localhost:10080/api/restful/rooms/search/findByType_Type?type=大床�
 GET http://localhost:10080/api/rooms/list?type=大床房
 # 另一种方式是这样
 ###
+GET http://localhost:10080/api/rooms/list?priceFrom=100
+###
+GET http://localhost:10080/api/rooms/list?priceFrom=99&priceTo=100
+# [99, 100]
+###
+POST http://localhost:10080/api/transactions/make
+Content-Type: application/json
+
+{
+  "create_date": "2017-12-22T16:57:10",
+  "dateFrom": "2017-12-22T16:57:10",
+  "dateTo": "2017-12-23T16:57:10",
+  "activated": false,
+  "used": false
+}
+
+###
+GET http://localhost:10080/api/transactions/dummy
+
+###
+GET http://localhost:10080/api/transactions/list
+
+###

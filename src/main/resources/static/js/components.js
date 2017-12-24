@@ -1,4 +1,4 @@
-const NOTE = ['查看我的订单', '查看我的预订', '修改个人信息',
+const NOTE = ['查看我的订单', '修改个人信息',
     '预订客房', '当前所有客房状态', '查询预定客户信息',
     '客房维修登记', '客房类型设置', '可用客房设置',
     '预订查询与修改', '所有账户管理', '销售月表',
@@ -16,7 +16,7 @@ function render_Container(template) {
 async function check_my_order() {
     //身份验证&获取数据
     $.ajax({
-        url: `/api/`,
+        url: `/api/users/transactions?phone=${sessionStorage.username || localStorage.username}`,
         type: 'GET',
         dataType: 'json',
         contentType: "charset=UTF-8",
@@ -31,28 +31,22 @@ async function check_my_order() {
                 <table>
                     <tr>
                         <td>订单编号</td>
-                        <td>房间类型</td>
-                        <td>特殊服务</td>
-                        <td>房价</td>
-                        <td>状态</td>
+                        <td>身份证号</td>
+                        <td>姓名</td>
                         <td><!--操作--></td>
                     </tr>
-                    <!--例子-->
-                    <!--<tr>-->
-                        <!--<td>高端双床间</td>-->
-                        <!--<td>2</td>-->
-                        <!--<td>大保健</td>-->
-                        <!--<td>699</td>-->
-                        <!--<td>-->
-                            <!--完成-->
-                        <!--</td>-->
-                        <!--<td>-->
-                            <!--<div class="comm-btn btn-xs btn-default">评价</div>-->
-                        <!--</td>-->
-                    <!--</tr>-->
-                    <tr class="searchListItem" v-for="item in searchResults" v-cloak>
+                    <tr class="oderList" v-for="item in orders" v-cloak>
                         <td>
-                            {{item}}
+                            {{item.id}}
+                        </td>
+                        <td>
+                            {{item.identification}}
+                        </td>
+                        <td>
+                            {{item.name}}
+                        </td>
+                        <td>
+                            <div class="comm-btn btn-xs btn-default" v-if="isOver">评价</div>
                         </td>
                     </tr>
                 </table>
@@ -60,87 +54,26 @@ async function check_my_order() {
             `);
             //生成html
             render_Container(resStrBuilder.toString());
-            //关闭动画？
-            stopCatLoading();
             //script
-            $('.container h1').click(function () {
-                showMsg('测试一下')
-            });
+            let app = new Vue({
+                el: '.check_my_order',
+                data: {
+                    orders: data
+                }
+            })
         },
         error: function (jqXHR, textStatus, errorThrown) {
-
+            showMsg(errorThrown)
         },
         complete: function () {
-
-        }
-    });
-}
-
-async function check_my_booking() {
-    //身份验证
-    $.ajax({
-        url: `/api/`,
-        type: 'GET',
-        dataType: 'json',
-        contentType: "charset=UTF-8",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
-        },
-        success: function (data, textStatus, jqXHR) {
-            //获取订单
-            let resStrBuilder = [];
-            resStrBuilder.push(`
-            <div class="check_my_booking">
-                <table>
-                    <tr>
-                        <td>订单编号</td>
-                        <td>房间类型</td>
-                        <td>特殊服务</td>
-                        <td>房价</td>
-                        <td>状态</td>
-                        <td><!--操作--></td>
-                    </tr>
-                    <!--例子-->
-                    <!--<tr>-->
-                        <!--<td>高端双床间</td>-->
-                        <!--<td>2</td>-->
-                        <!--<td>大保健</td>-->
-                        <!--<td>699</td>-->
-                        <!--<td>-->
-                            <!--完成-->
-                        <!--</td>-->
-                        <!--<td>-->
-                            <!--<div class="comm-btn btn-xs btn-default">取消订单</div>-->
-                        <!--</td>-->
-                    <!--</tr>-->
-                    <tr class="searchListItem" v-for="item in searchResults" v-cloak>
-                        <td>
-                            {{item}}
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            `);
-            //生成html
-            render_Container(resStrBuilder.toString());
             //关闭动画？
             stopCatLoading();
-            //script
-            $('.container h1').click(function () {
-                showMsg('测试一下')
-            });
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-
-        },
-        complete: function () {
-
         }
     });
 }
 
 async function modify_my_info() {
-    //身份验证
+    //身份验证&获取数据
     $.ajax({
         url: `/api/`,
         type: 'GET',
@@ -154,51 +87,78 @@ async function modify_my_info() {
             let resStrBuilder = [];
             resStrBuilder.push(`
             <div class="modify_my_info">
-                <dl>
-                    <dt>修改密码</dt>
-                    <dd>
-                        <label for="oldPWD">旧密码：
-                            <input type="password" id="oldPWD">
-                        </label>
-                        <label for="newPWD">新密码：
-                            <input type="password" id="newPWD">
-                        </label>
-                    </dd>
-                </dl>
-                <dl>
-                    <dt>更改身份证信息</dt>
-                    <dd>
-                        <label for="oldID">旧身份证：
-                            <input type="text" id="oldID" disabled>
-                        </label>
-                        <label for="newID">新身份证：
-                            <input type="text" id="newID">
-                        </label>
-                    </dd>
-                </dl>
-            </div>
+            <dl>
+                <dt>修改昵称</dt>
+                <dd>
+                    <input type="text" title="nickname" :value="nickname">
+                    <div class="btn btn-default">确认修改</div>
+                </dd>
+            </dl>
+            <dl>
+                <dt>修改密码</dt>
+                <dd>
+                    </label>
+                    <label for="newPWD">新密码：
+                        <input type="password" id="newPWD">
+                    </label>
+                    <div class="btn btn-default">确认修改</div>
+                </dd>
+            </dl>
+            <dl>
+                <dt>已有身份证信息</dt>
+                <dd>
+                    <table>
+                        <tr>
+                            <td>姓名</td>
+                            <td>身份证</td>
+                            <td></td>
+                        </tr>
+                        <!--<tr>-->
+                        <!--<td>李狗蛋</td>-->
+                        <!--<td>22222</td>-->
+                        <!--<td>-->
+                        <!--<div class="comfirm btn btn-default">删除</div>-->
+                        <!--</td>-->
+                        <!--</tr>-->
+                        <tr v-for="guest in guests" v-cloak>
+                            <td>{{guest.name}}</td>
+                            <td>{{guest.id}}</td>
+                            <td>
+                                <div class="comfirm btn btn-default" :name="guest.name">删除</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" title="name"></td>
+                            <td><input type="text" title="ID"></td>
+                            <td>
+                                <div class="btn btn-default">添加</div>
+                            </td>
+                        </tr>
+                    </table>
+                </dd>
+            </dl>
+        </div>
             `);
             //生成html
             render_Container(resStrBuilder.toString());
-            //关闭动画？
-            stopCatLoading();
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-
+            showMsg(errorThrown)
         },
         complete: function () {
-
+            //关闭动画？
+            stopCatLoading();
         }
     });
 
 }
 
 async function book_a_room() {
-    //身份验证
+    //身份验证&获取数据
     $.ajax({
         url: `/api/`,
         type: 'GET',
@@ -293,24 +253,23 @@ async function book_a_room() {
             `);
             //生成html
             render_Container(resStrBuilder.toString());
-            //关闭动画？
-            stopCatLoading();
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-
+            showMsg(errorThrown)
         },
         complete: function () {
-
+            //关闭动画？
+            stopCatLoading();
         }
     });
 }
 
 async function rooms_all_info() {
-    //身份验证
+    //身份验证&获取数据
     $.ajax({
         url: `/api/`,
         type: 'GET',
@@ -327,25 +286,24 @@ async function rooms_all_info() {
             `);
             //生成html
             render_Container(resStrBuilder.toString());
-            //关闭动画？
-            stopCatLoading();
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-
+            showMsg(errorThrown)
         },
         complete: function () {
-
+            //关闭动画？
+            stopCatLoading();
         }
     });
 
 }
 
 async function check_all_booking() {
-    //身份验证
+    //身份验证&获取数据
     $.ajax({
         url: `/api/`,
         type: 'GET',
@@ -362,25 +320,24 @@ async function check_all_booking() {
             `);
             //生成html
             render_Container(resStrBuilder.toString());
-            //关闭动画？
-            stopCatLoading();
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-
+            showMsg(errorThrown)
         },
         complete: function () {
-
+            //关闭动画？
+            stopCatLoading();
         }
     });
 
 }
 
 async function fix_a_room() {
-    //身份验证
+    //身份验证&获取数据
     $.ajax({
         url: `/api/`,
         type: 'GET',
@@ -397,25 +354,24 @@ async function fix_a_room() {
             `);
             //生成html
             render_Container(resStrBuilder.toString());
-            //关闭动画？
-            stopCatLoading();
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-
+            showMsg(errorThrown)
         },
         complete: function () {
-
+            //关闭动画？
+            stopCatLoading();
         }
     });
 
 }
 
 async function modify_rooms_type() {
-    //身份验证
+    //身份验证&获取数据
     $.ajax({
         url: `/api/`,
         type: 'GET',
@@ -432,25 +388,24 @@ async function modify_rooms_type() {
             `);
             //生成html
             render_Container(resStrBuilder.toString());
-            //关闭动画？
-            stopCatLoading();
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-
+            showMsg(errorThrown)
         },
         complete: function () {
-
+            //关闭动画？
+            stopCatLoading();
         }
     });
 
 }
 
 async function set_rooms_avail() {
-    //身份验证
+    //身份验证&获取数据
     $.ajax({
         url: `/api/`,
         type: 'GET',
@@ -467,25 +422,24 @@ async function set_rooms_avail() {
             `);
             //生成html
             render_Container(resStrBuilder.toString());
-            //关闭动画？
-            stopCatLoading();
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-
+            showMsg(errorThrown)
         },
         complete: function () {
-
+            //关闭动画？
+            stopCatLoading();
         }
     });
 
 }
 
 async function modify_user_info() {
-    //身份验证
+    //身份验证&获取数据
     $.ajax({
         url: `/api/`,
         type: 'GET',
@@ -502,25 +456,24 @@ async function modify_user_info() {
             `);
             //生成html
             render_Container(resStrBuilder.toString());
-            //关闭动画？
-            stopCatLoading();
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-
+            showMsg(errorThrown)
         },
         complete: function () {
-
+            //关闭动画？
+            stopCatLoading();
         }
     });
 
 }
 
 async function sales_per_month() {
-    //身份验证
+    //身份验证&获取数据
     $.ajax({
         url: `/api/`,
         type: 'GET',
@@ -537,25 +490,24 @@ async function sales_per_month() {
             `);
             //生成html
             render_Container(resStrBuilder.toString());
-            //关闭动画？
-            stopCatLoading();
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-
+            showMsg(errorThrown)
         },
         complete: function () {
-
+            //关闭动画？
+            stopCatLoading();
         }
     });
 
 }
 
 async function client_analyze() {
-    //身份验证
+    //身份验证&获取数据
     $.ajax({
         url: `/api/`,
         type: 'GET',
@@ -572,21 +524,19 @@ async function client_analyze() {
             `);
             //生成html
             render_Container(resStrBuilder.toString());
-            //关闭动画？
-            stopCatLoading();
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-
+            showMsg(errorThrown)
         },
         complete: function () {
-
+            //关闭动画？
+            stopCatLoading();
         }
     });
-
 }
 
 async function logout() {
