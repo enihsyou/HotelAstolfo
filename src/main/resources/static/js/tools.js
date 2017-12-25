@@ -1,3 +1,6 @@
+//服务器地址
+let serverHost = 'http://47.100.117.174:8899';
+
 //封装消息提示
 async function showMsg(msg) {
     let newMsg = $(`<div class="msg untouchable"><span>${msg}</span></div>`);
@@ -35,7 +38,7 @@ function reqLogin(username, password) {
             return
         }
         $.ajax({
-            url: `http://47.100.117.174:8899/api/users/login`,
+            url: `${serverHost}/api/users/login`,
             type: 'POST',
             data: JSON.stringify({
                 phoneNumber: username,
@@ -59,7 +62,9 @@ function reqLogin(username, password) {
                 resolve(data)
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                reject(textStatus)
+                reject(jqXHR.status)
+            },
+            complete: function () {
             }
         });
     });

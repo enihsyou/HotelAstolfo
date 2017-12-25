@@ -16,57 +16,13 @@
 <div class="main">
     <div class="left-nav untouchable"></div>
     <div class="container">
-        <div class="modify_my_info">
-            <dl>
-                <dt>修改昵称</dt>
-                <dd>
-                    <input type="text" title="nickname" :value="nickname">
-                </dd>
-            </dl>
-            <dl>
-                <dt>修改密码</dt>
-                <dd>
-                    </label>
-                    <label for="newPWD">新密码：
-                        <input type="password" id="newPWD">
-                    </label>
-                    <label for="newPWDR">确认新密码：
-                        <input type="password" id="newPWDR">
-                    </label>
-                    <div class="btn btn-default">确认修改</div>
-                </dd>
-            </dl>
-            <dl>
-                <dt>已有身份证信息</dt>
-                <dd>
-                    <table>
-                        <tr>
-                            <td>姓名</td>
-                            <td>身份证</td>
-                            <td></td>
-                        </tr>
-                        <tr v-for="guest in guests" v-cloak>
-                            <td>{{guest.name}}</td>
-                            <td>{{guest.id}}</td>
-                            <td>
-                                <div class="comfirm btn btn-default" :name="guest.name">删除</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" title="name"></td>
-                            <td><input type="text" title="ID"></td>
-                            <td>
-                                <div class="btn btn-default">添加</div>
-                            </td>
-                        </tr>
-                    </table>
-                </dd>
-            </dl>
-        </div>
     </div>
 </div>
 <div class="footer">
 </div>
+<script src="js/vue.js"></script>
+<script src="js/jquery-3.2.1.js"></script>
+<script src="js/tools.js"></script>
 <script>
 
 </script>

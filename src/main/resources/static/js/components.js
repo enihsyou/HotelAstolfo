@@ -2,7 +2,7 @@ const NOTE = ['查看我的订单', '修改个人信息',
     '预订客房', '当前所有客房状态', '查询预定客户信息',
     '客房维修登记', '客房类型设置', '可用客房设置',
     '预订查询与修改', '所有账户管理', '销售月表',
-    '客户分析', '登出'];
+    '客户分析', '返回主页', '登出'];
 
 function render_Container(template) {
     return new Promise((resolve) => {
@@ -17,7 +17,7 @@ function render_Container(template) {
 async function check_my_order() {
     //身份验证&获取数据
     $.ajax({
-        url: `http://47.100.117.174:8899/api/users/transactions?phone=${sessionStorage.username || localStorage.username}`,
+        url: `${serverHost}/api/users/transactions?phone=${sessionStorage.username || localStorage.username}`,
         type: 'GET',
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
@@ -26,8 +26,7 @@ async function check_my_order() {
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
-            let resStrBuilder = [];
-            resStrBuilder.push(`
+            let resStr = `
             <div class="check_my_order">
                 <table>
                     <tr>
@@ -52,9 +51,9 @@ async function check_my_order() {
                     </tr>
                 </table>
             </div>
-            `);
+            `;
             //生成html
-            render_Container(resStrBuilder.toString());
+            render_Container(resStr);
             //script
             let app = new Vue({
                 el: '.check_my_order',
@@ -64,7 +63,7 @@ async function check_my_order() {
             })
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(errorThrown)
+            showMsg(jqXHR.status)
         },
         complete: function () {
             //关闭动画？
@@ -73,11 +72,11 @@ async function check_my_order() {
     });
 }
 
-
+//done
 async function modify_my_info() {
     //身份验证&获取数据
     $.ajax({
-        url: `http://47.100.117.174:8899/api/`,
+        url: `${serverHost}/api/users/guests?phone=${sessionStorage.username || localStorage.username}`,
         type: 'GET',
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
@@ -85,79 +84,176 @@ async function modify_my_info() {
             xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
-            //获取订单
-            let resStrBuilder = [];
-            resStrBuilder.push(`
+            let resStr = `
             <div class="modify_my_info">
-                <dl>
-                    <dt>修改昵称</dt>
-                    <dd>
-                        <input type="text" title="nickname" :value="nickname">
-                    </dd>
-                </dl>
-                <dl>
-                    <dt>修改密码</dt>
-                    <dd>
-                        </label>
-                        <label for="newPWD">新密码：
-                            <input type="password" id="newPWD">
-                        </label>
-                        <label for="newPWDR">确认新密码：
-                            <input type="password" id="newPWDR">
-                        </label>
-                        <div class="btn btn-default">确认修改</div>
-                    </dd>
-                </dl>
-                <dl>
-                    <dt>已有身份证信息</dt>
-                    <dd>
-                        <table>
-                            <tr>
-                                <td>姓名</td>
-                                <td>身份证</td>
-                                <td></td>
-                            </tr>
-                            <tr v-for="guest in guests" v-cloak>
-                                <td>{{guest.name}}</td>
-                                <td>{{guest.id}}</td>
-                                <td>
-                                    <div class="comfirm btn btn-default" :name="guest.name">删除</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><input type="text" title="name"></td>
-                                <td><input type="text" title="ID"></td>
-                                <td>
-                                    <div class="btn btn-default">添加</div>
-                                </td>
-                            </tr>
-                        </table>
-                    </dd>
-                </dl>
-            </div>
-            `);
+            <dl>
+                <dt>修改个人资料</dt>
+                <dd>
+                    <table class="info">
+                        <tr>
+                            <td>昵称：</td>
+                            <td>
+                                <input type="text" id="nickname" title="nickname" placeholder="请输入你要更改的昵称" :value="nickname" >
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>新密码：</td>
+                            <td>
+                                <input type="password" id="newPWD" title="password" placeholder="********">
+                            </td>
+                            <td><p>*不填写则不修改</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>确认新密码：</td>
+                            <td>
+                                <input type="password" id="newPWDR" title="passwordR" placeholder="********">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="btn btn-default">确认修改</div>
+                            </td>
+                            <td>
+                        </tr>
+                    </table>
+                </dd>
+            </dl>
+            <dl>
+                <dt>常用旅客</dt>
+                <dd>
+                    <table class="id">
+                        <tr>
+                            <td>姓名</td>
+                            <td>身份证</td>
+                            <td></td>
+                        </tr>
+                        <tr v-for="guest in guests" v-cloak>
+                            <td>{{guest.name}}</td>
+                            <td>{{guest.identification}}</td>
+                            <td>
+                                <div class="comfirm btn btn-default" :name="guest.name">删除</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" id="newG" title="name" placeholder="新旅客姓名"></td>
+                            <td><input type="text" id="newID" title="ID" placeholder="新旅客身份证"></td>
+                            <td>
+                                <div class="btn btn-default confirm">添加</div>
+                            </td>
+                        </tr>
+                    </table>
+                </dd>
+            </dl>
+        </div>
+            `;
             //生成html
-            render_Container(resStrBuilder.toString());
+            render_Container(resStr);
             //script
-            $('.container h1').click(function () {
-                showMsg('测试一下')
+            //初始化界面
+            const app = new Vue({
+                el: '.modify_my_info',
+                data: {
+                    nickname: sessionStorage.nickname || localStorage.nickname,
+                    guests: data
+                }
             });
+            //修改个人资料
+            $('.container .info .btn').click(function () {
+                let newPassword = $('#newPWD').val();
+                let oldNickname = sessionStorage.nickname || localStorage.nickname;
+                let newNickname = $('#nickname').val();
+                if (newPassword !== $('#newPWDR').val()) {
+                    showMsg('两次输入的密码不相符！');
+                    return;
+                }
+                startCatLoading();
+                $.ajax({
+                    url: `${serverHost}/api/users?phone=${sessionStorage.username || localStorage.username}`,
+                    type: 'PUT',
+                    data: JSON.stringify({
+                        nickname: newNickname,
+                        password: newPassword.length > 0 ? newPassword : undefined
+                    }),
+                    dataType: 'json',
+                    contentType: "application/json; charset=UTF-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        sessionStorage.nickname = newNickname;
+                        left_nav.userType = left_nav.userType.replace(oldNickname, newNickname);
+                        showMsg('修改成功！');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        showMsg('修改失败！');
+                    },
+                    complete: function () {
+                        stopCatLoading();
+                    }
+                })
+            });
+            //添加身份证信息
+            $('.container .id .confirm').click(function () {
+                let newG = $('#newG').val();
+                let newID = $('#newID').val();
+                if (newG == null || newID == null) {
+                    showMsg('请完整填写新旅客信息');
+                    return;
+                }
+                startCatLoading();
+                $.ajax({
+                    url: `${serverHost}/api/users/guests?phone=${sessionStorage.username || localStorage.username}`,
+                    type: 'POST',
+                    data: JSON.stringify({
+                        name: newG,
+                        identification: newID,
+                    }),
+                    contentType: "application/json; charset=UTF-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        showMsg(`添加新旅客${newG}成功！`);
+                        app.guests.push({
+                            id: -1,
+                            identification: newID,
+                            name: newG
+                        })
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        let msg = '添加新旅客失败';
+                        switch (jqXHR.status) {
+                            case 409:
+                                msg += ',已存在该旅客';
+                                break;
+                        }
+                        console.log(jqXHR);
+                        showMsg(msg);
+                    },
+                    complete: function () {
+                        stopCatLoading();
+                    }
+                })
+            })
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(errorThrown)
+            showMsg(jqXHR.status)
         },
         complete: function () {
             //关闭动画？
             stopCatLoading();
         }
     });
-
 }
+
 
 async function book_a_room() {
     //身份验证&获取数据
     $.ajax({
-        url: `http://47.100.117.174:8899/api/`,
+        url: `${serverHost}/api/`,
         type: 'GET',
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
@@ -166,9 +262,7 @@ async function book_a_room() {
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
-            let resStrBuilder = [];
-            //类首页搜搜（简化）
-            resStrBuilder.push(`
+            let resStr = `
             <div class="book_a_room">
                 <div class="search">
                     <label class="col-xs-6" for="bookingStart">入住日期：
@@ -247,16 +341,16 @@ async function book_a_room() {
                     </table>
                 </div>
             </div>
-            `);
+            `;
             //生成html
-            render_Container(resStrBuilder.toString());
+            render_Container(resStr);
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(errorThrown)
+            showMsg(jqXHR.status)
         },
         complete: function () {
             //关闭动画？
@@ -265,10 +359,11 @@ async function book_a_room() {
     });
 }
 
+//done
 async function rooms_all_info() {
     //身份验证&获取数据
     $.ajax({
-        url: `http://47.100.117.174:8899/api/`,
+        url: `${serverHost}/api/rooms/list`,
         type: 'GET',
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
@@ -277,32 +372,60 @@ async function rooms_all_info() {
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
-            let resStrBuilder = [];
-            resStrBuilder.push(`
-            <h1>假装打印出所有订单</h1>
-            `);
+            let resStr = `
+            <div class="rooms_all_info">
+                <dl>
+                    <dt>所有房间信息：</dt>
+                    <dd>
+                        <table>
+                            <tr>
+                                <td>楼层</td>
+                                <td>房号</td>
+                                <td>朝向</td>
+                                <td>房间类型</td>
+                                <td>特色</td>
+                                <td>价格</td>
+                                <td><!--操作--></td>
+                            </tr>
+                            <tr v-for="room in rooms" v-cloak>
+                                <td>{{room.roomNumber.floor}}</td>
+                                <td>{{room.roomNumber.number}}</td>
+                                <td :title="room.direction.description">{{room.direction.type}}</td>
+                                <td :title="room.type.description">{{room.type.type}}</td>
+                                <td>{{room.specialty}}</td>
+                                <td>{{room.price}}</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </dd>
+                </dl>
+            </div>
+            `;
             //生成html
-            render_Container(resStrBuilder.toString());
+            render_Container(resStr);
             //script
-            $('.container h1').click(function () {
-                showMsg('测试一下')
+            const app = new Vue({
+                el: '.rooms_all_info',
+                data: {
+                    rooms: data
+                }
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(errorThrown)
+            showMsg(jqXHR.status)
         },
         complete: function () {
             //关闭动画？
             stopCatLoading();
         }
     });
-
 }
 
+//done
 async function check_all_booking() {
     //身份验证&获取数据
     $.ajax({
-        url: `http://47.100.117.174:8899/api/`,
+        url: `${serverHost}/api/transactions/list`,
         type: 'GET',
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
@@ -311,19 +434,68 @@ async function check_all_booking() {
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
-            let resStrBuilder = [];
-            resStrBuilder.push(`
-            <h1>假装打印出所有订单</h1>
-            `);
+            let resStr = `
+            <div class="check_all_booking">
+            <dl>
+                <dt>所有订单：</dt>
+                <dd>
+                    <table>
+                        <tr>
+                            <td>订单编号</td>
+                            <td>创建时间</td>
+                            <td>房间楼层与房间号</td>
+                            <td>入住人</td>
+                            <td>入住时间</td>
+                            <td>退房时间</td>
+                            <td>订单有效性</td>
+                            <td>是否入住</td>
+                            <td><!--操作--></td>
+                        </tr>
+                        <tr v-for="order in orders" v-cloak>
+                            <td>{{order.id}}</td>
+                            <td>{{timeFormat(order.createDate)}}</td>
+                            <td :title="order.room.type.type">
+                                {{order.room.roomNumber.floor}}-{{order.room.roomNumber.number}}
+                            </td>
+                            <td><span v-for="guest in order.guests">{{guest.name}}:{{guest.identification}}</span>
+                            </td>
+                            <td>{{timeFormat(order.dateFrom)}}</td>
+                            <td>{{timeFormat(order.dateTo)}}</td>
+                            <td>{{orderActivated}}</td>
+                            <td>{{orderUsed}}</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </dd>
+            </dl>
+        </div>
+            `;
             //生成html
-            render_Container(resStrBuilder.toString());
+            render_Container(resStr);
             //script
-            $('.container h1').click(function () {
-                showMsg('测试一下')
+            const app = new Vue({
+                el: '.check_all_booking',
+                data: {
+                    orders: data
+                },
+                methods: {
+                    timeFormat: function (time) {
+                        return new Date(time).toLocaleString();
+                    }
+                },
+                computed: {
+                    orderActivated: function () {
+                        return data.activated ? '有效' : '已失效'
+                    },
+                    orderUsed: function () {
+                        return data.used ? '已入住' : '未入住'
+                    }
+
+                }
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(errorThrown)
+            showMsg(jqXHR.status)
         },
         complete: function () {
             //关闭动画？
@@ -336,7 +508,7 @@ async function check_all_booking() {
 async function fix_a_room() {
     //身份验证&获取数据
     $.ajax({
-        url: `http://47.100.117.174:8899/api/`,
+        url: `${serverHost}/api/`,
         type: 'GET',
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
@@ -345,19 +517,18 @@ async function fix_a_room() {
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
-            let resStrBuilder = [];
-            resStrBuilder.push(`
+            let resStr = `
             <h1>假装打印出所有订单</h1>
-            `);
+            `;
             //生成html
-            render_Container(resStrBuilder.toString());
+            render_Container(resStr);
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(errorThrown)
+            showMsg(jqXHR.status)
         },
         complete: function () {
             //关闭动画？
@@ -370,7 +541,7 @@ async function fix_a_room() {
 async function modify_rooms_type() {
     //身份验证&获取数据
     $.ajax({
-        url: `http://47.100.117.174:8899/api/`,
+        url: `${serverHost}/api/`,
         type: 'GET',
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
@@ -379,19 +550,18 @@ async function modify_rooms_type() {
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
-            let resStrBuilder = [];
-            resStrBuilder.push(`
+            let resStr = `
             <h1>假装打印出所有订单</h1>
-            `);
+            `;
             //生成html
-            render_Container(resStrBuilder.toString());
+            render_Container(resStr);
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(errorThrown)
+            showMsg(jqXHR.status)
         },
         complete: function () {
             //关闭动画？
@@ -404,7 +574,7 @@ async function modify_rooms_type() {
 async function set_rooms_avail() {
     //身份验证&获取数据
     $.ajax({
-        url: `http://47.100.117.174:8899/api/`,
+        url: `${serverHost}/api/`,
         type: 'GET',
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
@@ -413,19 +583,18 @@ async function set_rooms_avail() {
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
-            let resStrBuilder = [];
-            resStrBuilder.push(`
+            let resStr = `
             <h1>假装打印出所有订单</h1>
-            `);
+            `;
             //生成html
-            render_Container(resStrBuilder.toString());
+            render_Container(resStr);
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(errorThrown)
+            showMsg(jqXHR.status)
         },
         complete: function () {
             //关闭动画？
@@ -438,7 +607,7 @@ async function set_rooms_avail() {
 async function modify_user_info() {
     //身份验证&获取数据
     $.ajax({
-        url: `http://47.100.117.174:8899/api/`,
+        url: `${serverHost}/api/`,
         type: 'GET',
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
@@ -447,19 +616,18 @@ async function modify_user_info() {
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
-            let resStrBuilder = [];
-            resStrBuilder.push(`
+            let resStr = `
             <h1>假装打印出所有订单</h1>
-            `);
+            `;
             //生成html
-            render_Container(resStrBuilder.toString());
+            render_Container(resStr);
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(errorThrown)
+            showMsg(jqXHR.status)
         },
         complete: function () {
             //关闭动画？
@@ -472,7 +640,7 @@ async function modify_user_info() {
 async function sales_per_month() {
     //身份验证&获取数据
     $.ajax({
-        url: `http://47.100.117.174:8899/api/`,
+        url: `${serverHost}/api/`,
         type: 'GET',
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
@@ -481,19 +649,18 @@ async function sales_per_month() {
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
-            let resStrBuilder = [];
-            resStrBuilder.push(`
+            let resStr = `
             <h1>假装打印出所有订单</h1>
-            `);
+            `;
             //生成html
-            render_Container(resStrBuilder.toString());
+            render_Container(resStr);
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(errorThrown)
+            showMsg(jqXHR.status)
         },
         complete: function () {
             //关闭动画？
@@ -506,7 +673,7 @@ async function sales_per_month() {
 async function client_analyze() {
     //身份验证&获取数据
     $.ajax({
-        url: `http://47.100.117.174:8899/api/`,
+        url: `${serverHost}/api/`,
         type: 'GET',
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
@@ -515,25 +682,28 @@ async function client_analyze() {
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
-            let resStrBuilder = [];
-            resStrBuilder.push(`
+            let resStr = `
             <h1>假装打印出所有订单</h1>
-            `);
+            `;
             //生成html
-            render_Container(resStrBuilder.toString());
+            render_Container(resStr);
             //script
             $('.container h1').click(function () {
                 showMsg('测试一下')
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(errorThrown)
+            showMsg(jqXHR.status)
         },
         complete: function () {
             //关闭动画？
             stopCatLoading();
         }
     });
+}
+
+async function backHome() {
+    location.href = '/';
 }
 
 async function logout() {

@@ -48,7 +48,7 @@ $('.login .window .confirm').click(function () {
     if (username.val().length > 0 && password.val().length > 0) {
         $(_this).append('<span class="loading line"></span>');
         $.ajax({
-            url: 'http://47.100.117.174:8899/api/users/login',
+            url: `${serverHost}/api/users/login`,
             type: 'POST',
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify({
@@ -65,20 +65,19 @@ $('.login .window .confirm').click(function () {
                     "role": "注册用户",
                     "guests": []
                 }*/
-                showMsg(`亲爱的${data.nickname},欢迎你回到阿福旅店！`);
-                if ($(".checkbox input").prop('checked')) {
-                    localStorage.username = data.phoneNumber;
-                    localStorage.password = data.password;
-                    localStorage.nickname = data.nickname;
-                } else {
-                    sessionStorage.username = data.phoneNumber;
-                    sessionStorage.password = data.password;
-                    sessionStorage.nickname = data.nickname;
-                }
-                sessionStorage.role = data.role;
-                sleep(3000).then(() => {
+                showMsg(`亲爱的${data.nickname},欢迎你回到阿福旅店！`).then(() => {
+                    if ($(".checkbox input").prop('checked')) {
+                        localStorage.username = data.phoneNumber;
+                        localStorage.password = data.password;
+                        localStorage.nickname = data.nickname;
+                    } else {
+                        sessionStorage.username = data.phoneNumber;
+                        sessionStorage.password = data.password;
+                        sessionStorage.nickname = data.nickname;
+                    }
+                    sessionStorage.role = data.role;
                     location.href = '/';
-                })
+                });
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 let msg;
@@ -120,7 +119,7 @@ $('.signup .window .confirm').click(function () {
         }
         $(_this).append('<span class="loading line"></span>');
         $.ajax({
-            url: 'http://47.100.117.174:8899/api/users/make',
+            url: `${serverHost}/api/users/make`,
             type: 'POST',
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify({
@@ -138,17 +137,24 @@ $('.signup .window .confirm').click(function () {
                     "role": "注册用户",
                     "guests": []
                 }*/
-                showMsg(`亲爱的${data.nickname},欢迎你来到阿福旅店！`);
-                sessionStorage.username = data.phoneNumber;
-                sessionStorage.password = data.password;
-                sessionStorage.nickname = data.nickname;
-                sessionStorage.role = data.role;
-                sleep(3000).then(() => {
+                showMsg(`亲爱的${data.nickname},欢迎你来到阿福旅店！`).then(() => {
+                    sessionStorage.username = data.phoneNumber;
+                    sessionStorage.password = data.password;
+                    sessionStorage.nickname = data.nickname;
+                    sessionStorage.role = data.role;
                     location.href = '/';
-                })
+                });
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                showMsg('网络错误！');
+                let msg;
+                switch (jqXHR.status) {
+                    case 409:
+                        msg = '用户已存在';
+                        break;
+                    default:
+                        msg = '网络错误'
+                }
+                showMsg(msg);
             },
             complete: function () {
                 $(_this).children('.loading').remove();
@@ -172,40 +178,51 @@ $('.searchBox .confirm').click(function () {
         return;
     }
     let _this = this;
-    let searchStart = $('#bookingStart');
-    let searchEnd = $('#bookingEnd');
-    if (searchStart.val().length > 0 && searchEnd.val().length > 0) {
-        if (new Date(searchStart.val()) >= new Date(searchEnd.val())) {
-            showMsg('离店时间必须晚于预定时间');
-            return;
-        }
-        $(_this).append('<span class="loading line"></span>');
-        $.ajax({
-            url: 'http://47.100.117.174:8899/api/search',
-            type: 'POST',
-            contentType: "application/json; charset=UTF-8",
-            data: JSON.stringify({
-                searchStart: searchStart.val(),
-                searchEnd: searchEnd.val(),
-                searchType: $('#bookingType').val()
-            }),
-            success: function (data, textStatus, jqXHR) {
-                //TODO dateStructure of callback
-                //显示右侧搜索列表
-                $('.slider_container').css('filter', 'blur(10px)');
-                $('.searchBox').css('left', '5%');
-                $('.searchList').slideDown(333);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                showMsg('网络错误！');
-            },
-            complete: function () {
-                $(_this).children('.loading').remove();
-            }
-        });
-    } else {
-        showMsg('请输入完整的入住日期和离店日期');
+    let from = $('#bookingStart').val();
+    let to = $('#bookingEnd').val();
+    let type = $('#bookingType').val();
+    let priceFrom = $('#priceFrom').val();
+    let priceTo = $('#priceTo').val();
+    let direction = $('#bookingDirection').val();
+    let floor = $('#bookingFloor').val();
+    let number = $('#bookingNumber').val();
+    if (new Date(from) >= new Date(to)) {
+        showMsg('离店时间必须晚于预定时间');
+        return;
     }
+    if (priceFrom > priceTo) {
+        showMsg('最高价格必须高于最低价格');
+        return;
+    }
+    $(_this).append('<span class="loading line"></span>');
+    $.ajax({
+        url: `${serverHost}/api/rooms/list`,
+        type: 'GET',
+        contentType: "application/json; charset=UTF-8",
+        data: {
+            from: from.length > 0 && to.length > 0 ? new Date(from).toISOString().replace('Z','') : undefined,
+            to: from.length > 0 && to.length > 0 ? new Date(to).toISOString().replace('Z','') : undefined,
+            type: type.length > 0 ? type : undefined,
+            priceFrom: priceFrom > 0 && priceTo > 0 ? priceFrom : undefined,
+            priceTo: priceFrom > 0 && priceTo > 0 ? priceTo : undefined,
+            direction: direction.length > 0 ? direction : undefined,
+            floor: floor > 0 ? floor : undefined,
+            number: number > 0 ? number : undefined
+        },
+        success: function (data, textStatus, jqXHR) {
+            //TODO dateStructure of callback
+            //显示右侧搜索列表
+            $('.slider_container').css('filter', 'blur(10px)');
+            $('.searchBox').css('left', '5%');
+            $('.searchList').slideDown(333);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            showMsg('网络错误！');
+        },
+        complete: function () {
+            $(_this).children('.loading').remove();
+        }
+    });
 });
 
 //搜索框关闭图标动作
