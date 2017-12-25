@@ -7,15 +7,15 @@ import com.enihsyou.astolfo.hotel.repository.RoomDirectionRepository
 import com.enihsyou.astolfo.hotel.repository.RoomTypeRepository
 import com.enihsyou.astolfo.hotel.service.RoomService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.time.LocalDateTime
 
-
+@CrossOrigin
 @RestController("房间接口控制器")
 @RequestMapping("/api/rooms")
 class RoomController {
@@ -39,22 +39,48 @@ class RoomController {
     )
         = roomService.listRoomByParameter(from, to, type, direction, priceFrom, priceTo, floor, number)
 
-
     /*管理员添加一个房间*/
     @PostMapping("/add")
     fun addRoom(@RequestBody room: Room)
         = roomService.addRoom(room)
 
+    /*列出房间类型*/
+    @GetMapping("/types")
+    fun listTypes()
+        = roomService.listTypes()
 
     /*添加房间类型定义*/
-    @PostMapping("/addType")
+    @PostMapping("/types")
     fun addType(@RequestBody type: RoomType)
         = roomService.addType(type)
 
+    /*添加房间朝向*/
+    @GetMapping("/directions")
+    fun listDirections()
+        = roomService.listDirections()
 
     /*添加房间朝向定义*/
-    @PostMapping("/addDirection")
+    @PostMapping("/directions")
     fun addDirection(@RequestBody direction: RoomDirection)
         = roomService.addRoomDirection(direction)
+
+    @GetMapping("/floors")
+    fun listFloors()
+        = roomService.listFloors()
+    @PostMapping("/control")
+    fun controlRoom(
+        @RequestParam("floor") floor: Int,
+        @RequestParam("number") number: Int,
+        @RequestBody payload: Map<String, String>)
+        = roomService.controlRoom(floor, number, payload)
+
+    @GetMapping("/load")
+    fun load(): MutableMap<String, Any> {
+        val result = mutableMapOf<String, Any>()
+        result.put("types", listTypes())
+        result.put("directions", listDirections())
+        result.put("rooms", listRoom())
+        return result
+    }
 }
 

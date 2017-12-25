@@ -60,10 +60,16 @@ interface UserService {
         phone: String,
         guest: Guest
     )
+
+    fun deleteGuest(phone: String, guest: Guest)
 }
 
 @Service(value = "用户层逻辑")
 class UserServiceImpl : UserService {
+
+    override fun deleteGuest(phone: String, guest: Guest) {
+        guestRepository.delete(guest)
+    }
 
     @Autowired lateinit var userRepository: UserRepository
     @Autowired lateinit var guestRepository: GuestRepository

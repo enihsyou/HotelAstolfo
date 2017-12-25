@@ -162,7 +162,7 @@ Content-Type: application/json
 Authorization:Basic dGVzdDoyMzMz
 
 {
-  "identification":"130622199901017537",
+  "identification":"130622199901017538",
   "name":"宋娘"
 }
 
@@ -192,7 +192,8 @@ Content-Type: application/json
 }
 ###
 GET http://localhost:10080/api/users?phone=18800000001
-
+###
+GET http://localhost:10080/api/users/guests?phone=18800000001
 ###
 POST http://localhost:10080/api/rooms/add
 Content-Type: application/json
@@ -242,5 +243,42 @@ GET http://localhost:10080/api/rooms/list?priceFrom=100&type=大床房&direction
 
 ###
 GET http://localhost:10080/api/users/transactions?phone=18800000001
+
+###
+POST http://localhost:10080/api/rooms/types
+Content-Type: application/json
+Authorization:Basic dGVzdDoyMzMz
+
+{
+  "type": "大床房",
+  "description": "冬暖夏狼"
+}
+
+
+###
+POST http://localhost:10080/api/rooms/control?floor=1&number=3
+Content-Type: application/json
+
+{
+  "type": "东2",
+  "description": "冬暖夏狼"
+}
+
+###
+POST http://localhost:10080/api/rooms/control?floor=5&number=1
+Content-Type: application/json
+
+{
+  "type": "东2",
+  "description": "冬暖夏狼"
+}
+###
+GET http://localhost:10080/api/rooms/load
+Content-Type: application/json
+
+{
+  "type": "东2",
+  "description": "冬暖夏狼"
+}
 
 ###

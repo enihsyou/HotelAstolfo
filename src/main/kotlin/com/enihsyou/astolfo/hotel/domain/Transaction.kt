@@ -33,7 +33,7 @@ data class Transaction(
 
     @ManyToOne
     /*预定的这个房间*/  //现在只支持单个房间
-    var room: Room = Room(),
+    var room: Room = Room(broken = false),
 
     @OneToMany
     /*入住这些旅客*/
@@ -48,7 +48,7 @@ data class Transaction(
     var dateTo: LocalDateTime = LocalDateTime.MAX,
 
     /*订单还在有效期*/
-    var activated: Boolean = false,
+    var activated: Boolean = true,
 
     /*旅客是否来入住了*/
     var used: Boolean = false
