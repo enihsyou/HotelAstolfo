@@ -66,7 +66,7 @@ $(function init() {
     //正式使用
     if (username == null || password == null) {
         //未登录则返回主页
-        // location.href = '/';
+        location.href = '/';
     }
     else {
         reqLogin(username, password).then(

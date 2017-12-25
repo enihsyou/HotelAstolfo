@@ -48,14 +48,14 @@ $('.login .window .confirm').click(function () {
     if (username.val().length > 0 && password.val().length > 0) {
         $(_this).append('<span class="loading line"></span>');
         $.ajax({
-            url: '/api/users/login',
+            url: 'http://47.100.117.174:8899/api/users/login',
             type: 'POST',
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify({
                 phoneNumber: username.val(),
                 password: sha256(password.val())
             }),
-            success: function (Jdata, textStatus, jqXHR) {
+            success: function (data, textStatus, jqXHR) {
                 /*{
                     "id": 1,
                     "phoneNumber": "18834321240",
@@ -65,7 +65,6 @@ $('.login .window .confirm').click(function () {
                     "role": "注册用户",
                     "guests": []
                 }*/
-                let data = JSON.parse(Jdata);
                 showMsg(`亲爱的${data.nickname},欢迎你回到阿福旅店！`);
                 if ($(".checkbox input").prop('checked')) {
                     localStorage.username = data.phoneNumber;
@@ -82,7 +81,18 @@ $('.login .window .confirm').click(function () {
                 })
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                showMsg('网络错误！');
+                let msg;
+                switch (jqXHR.status) {
+                    case 404:
+                        msg = '当前用户不存在';
+                        break;
+                    case 400:
+                        msg = '密码错误';
+                        break;
+                    default:
+                        msg = '网络错误'
+                }
+                showMsg(msg);
             },
             complete: function () {
                 $(_this).children('.loading').remove();
@@ -110,7 +120,7 @@ $('.signup .window .confirm').click(function () {
         }
         $(_this).append('<span class="loading line"></span>');
         $.ajax({
-            url: '/api/users/make',
+            url: 'http://47.100.117.174:8899/api/users/make',
             type: 'POST',
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify({
@@ -128,7 +138,6 @@ $('.signup .window .confirm').click(function () {
                     "role": "注册用户",
                     "guests": []
                 }*/
-                let data = JSON.parse(Jdata);
                 showMsg(`亲爱的${data.nickname},欢迎你来到阿福旅店！`);
                 sessionStorage.username = data.phoneNumber;
                 sessionStorage.password = data.password;
@@ -172,7 +181,7 @@ $('.searchBox .confirm').click(function () {
         }
         $(_this).append('<span class="loading line"></span>');
         $.ajax({
-            url: '/api/search',
+            url: 'http://47.100.117.174:8899/api/search',
             type: 'POST',
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify({
@@ -208,35 +217,33 @@ $('.searchList .close').click(function () {
 
 //初始化
 $(function init() {
-        //开始标题滚动
-        titleScroller();
-        //初始化首页搜索
-        let time = new Date();
-        let year = time.getFullYear();
-        let month = time.getMonth();
-        let day = time.getDay() > 9 ? time.getDay() : '0' + time.getDay();
-        $('#bookingStart').val(`${year}-${month}-${day}`)
-            .attr('min', `${year}-${month}-${day}`)
-            .attr('max', `${year + 1}-${month}-${day}`);
-        let nday = (time.getDay() + 1) > 9 ? (time.getDay() + 1) : '0' + (time.getDay() + 1);
-        $('#bookingEnd').val(`${year}-${month}-${nday}`)
-            .attr('min', `${year}-${month}-${nday}`)
-            .attr('max', `${year + 1}-${month}-${nday}`);
-        //初始化顶栏
-        reqLogin(sessionStorage.username || localStorage.username, sessionStorage.password || localStorage.password)
-            .then((data) => {
-                //将接受到的数据解析
-                //...
-                showMsg('欢迎回来~');
-                $('.user-info .user-btn').html(sessionStorage.nickname || localStorage.nickname);
-                $('.user-info ').show();
-            }, (error) => {
-                if (error !== 'EMPTY_USERNAME_OR_PASSWORD') {
-                    console.error('autoLogin:', error);
-                    showMsg(error)
-                }
-                $('.login-btn').show();
-            });
-    }
-);
+    //开始标题滚动
+    titleScroller();
+    //初始化首页搜索
+    let time = new Date();
+    let year = time.getFullYear();
+    let month = time.getMonth();
+    let day = time.getDay() > 9 ? time.getDay() : '0' + time.getDay();
+    $('#bookingStart').val(`${year}-${month}-${day}`)
+        .attr('min', `${year}-${month}-${day}`)
+        .attr('max', `${year + 1}-${month}-${day}`);
+    let nday = (time.getDay() + 1) > 9 ? (time.getDay() + 1) : '0' + (time.getDay() + 1);
+    $('#bookingEnd').val(`${year}-${month}-${nday}`)
+        .attr('min', `${year}-${month}-${nday}`)
+        .attr('max', `${year + 1}-${month}-${nday}`);
+    //初始化顶栏
+    reqLogin(sessionStorage.username || localStorage.username, sessionStorage.password || localStorage.password)
+        .then((data) => {
+            //将接受到的数据解析
+            sessionStorage.nickname = data.nickname;
+            $('.user-info .user-btn').html(sessionStorage.nickname || localStorage.nickname);
+            $('.user-info ').show();
+        }, (error) => {
+            if (error !== 'EMPTY_USERNAME_OR_PASSWORD') {
+                console.error('autoLogin:', error);
+                showMsg(error)
+            }
+            $('.login-btn').show();
+        });
+});
 

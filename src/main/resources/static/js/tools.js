@@ -35,14 +35,14 @@ function reqLogin(username, password) {
             return
         }
         $.ajax({
-            url: `/api/users/login`,
+            url: `http://47.100.117.174:8899/api/users/login`,
             type: 'POST',
             data: JSON.stringify({
                 phoneNumber: username,
-                password: sha256(password)
+                password: password
             }),
             dataType: 'json',
-            contentType: "charset=UTF-8",
+            contentType: "application/json; charset=UTF-8",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
             },
@@ -59,7 +59,7 @@ function reqLogin(username, password) {
                 resolve(data)
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                reject(errorThrown)
+                reject(textStatus)
             }
         });
     });

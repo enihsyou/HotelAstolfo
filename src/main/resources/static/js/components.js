@@ -13,13 +13,14 @@ function render_Container(template) {
     })
 }
 
+//done
 async function check_my_order() {
     //身份验证&获取数据
     $.ajax({
-        url: `/api/users/transactions?phone=${sessionStorage.username || localStorage.username}`,
+        url: `http://47.100.117.174:8899/api/users/transactions?phone=${sessionStorage.username || localStorage.username}`,
         type: 'GET',
         dataType: 'json',
-        contentType: "charset=UTF-8",
+        contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
         },
@@ -72,13 +73,14 @@ async function check_my_order() {
     });
 }
 
+
 async function modify_my_info() {
     //身份验证&获取数据
     $.ajax({
-        url: `/api/`,
+        url: `http://47.100.117.174:8899/api/`,
         type: 'GET',
         dataType: 'json',
-        contentType: "charset=UTF-8",
+        contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
         },
@@ -87,57 +89,52 @@ async function modify_my_info() {
             let resStrBuilder = [];
             resStrBuilder.push(`
             <div class="modify_my_info">
-            <dl>
-                <dt>修改昵称</dt>
-                <dd>
-                    <input type="text" title="nickname" :value="nickname">
-                    <div class="btn btn-default">确认修改</div>
-                </dd>
-            </dl>
-            <dl>
-                <dt>修改密码</dt>
-                <dd>
-                    </label>
-                    <label for="newPWD">新密码：
-                        <input type="password" id="newPWD">
-                    </label>
-                    <div class="btn btn-default">确认修改</div>
-                </dd>
-            </dl>
-            <dl>
-                <dt>已有身份证信息</dt>
-                <dd>
-                    <table>
-                        <tr>
-                            <td>姓名</td>
-                            <td>身份证</td>
-                            <td></td>
-                        </tr>
-                        <!--<tr>-->
-                        <!--<td>李狗蛋</td>-->
-                        <!--<td>22222</td>-->
-                        <!--<td>-->
-                        <!--<div class="comfirm btn btn-default">删除</div>-->
-                        <!--</td>-->
-                        <!--</tr>-->
-                        <tr v-for="guest in guests" v-cloak>
-                            <td>{{guest.name}}</td>
-                            <td>{{guest.id}}</td>
-                            <td>
-                                <div class="comfirm btn btn-default" :name="guest.name">删除</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" title="name"></td>
-                            <td><input type="text" title="ID"></td>
-                            <td>
-                                <div class="btn btn-default">添加</div>
-                            </td>
-                        </tr>
-                    </table>
-                </dd>
-            </dl>
-        </div>
+                <dl>
+                    <dt>修改昵称</dt>
+                    <dd>
+                        <input type="text" title="nickname" :value="nickname">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>修改密码</dt>
+                    <dd>
+                        </label>
+                        <label for="newPWD">新密码：
+                            <input type="password" id="newPWD">
+                        </label>
+                        <label for="newPWDR">确认新密码：
+                            <input type="password" id="newPWDR">
+                        </label>
+                        <div class="btn btn-default">确认修改</div>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>已有身份证信息</dt>
+                    <dd>
+                        <table>
+                            <tr>
+                                <td>姓名</td>
+                                <td>身份证</td>
+                                <td></td>
+                            </tr>
+                            <tr v-for="guest in guests" v-cloak>
+                                <td>{{guest.name}}</td>
+                                <td>{{guest.id}}</td>
+                                <td>
+                                    <div class="comfirm btn btn-default" :name="guest.name">删除</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" title="name"></td>
+                                <td><input type="text" title="ID"></td>
+                                <td>
+                                    <div class="btn btn-default">添加</div>
+                                </td>
+                            </tr>
+                        </table>
+                    </dd>
+                </dl>
+            </div>
             `);
             //生成html
             render_Container(resStrBuilder.toString());
@@ -160,10 +157,10 @@ async function modify_my_info() {
 async function book_a_room() {
     //身份验证&获取数据
     $.ajax({
-        url: `/api/`,
+        url: `http://47.100.117.174:8899/api/`,
         type: 'GET',
         dataType: 'json',
-        contentType: "charset=UTF-8",
+        contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
         },
@@ -271,10 +268,10 @@ async function book_a_room() {
 async function rooms_all_info() {
     //身份验证&获取数据
     $.ajax({
-        url: `/api/`,
+        url: `http://47.100.117.174:8899/api/`,
         type: 'GET',
         dataType: 'json',
-        contentType: "charset=UTF-8",
+        contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
         },
@@ -305,10 +302,10 @@ async function rooms_all_info() {
 async function check_all_booking() {
     //身份验证&获取数据
     $.ajax({
-        url: `/api/`,
+        url: `http://47.100.117.174:8899/api/`,
         type: 'GET',
         dataType: 'json',
-        contentType: "charset=UTF-8",
+        contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
         },
@@ -339,10 +336,10 @@ async function check_all_booking() {
 async function fix_a_room() {
     //身份验证&获取数据
     $.ajax({
-        url: `/api/`,
+        url: `http://47.100.117.174:8899/api/`,
         type: 'GET',
         dataType: 'json',
-        contentType: "charset=UTF-8",
+        contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
         },
@@ -373,10 +370,10 @@ async function fix_a_room() {
 async function modify_rooms_type() {
     //身份验证&获取数据
     $.ajax({
-        url: `/api/`,
+        url: `http://47.100.117.174:8899/api/`,
         type: 'GET',
         dataType: 'json',
-        contentType: "charset=UTF-8",
+        contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
         },
@@ -407,10 +404,10 @@ async function modify_rooms_type() {
 async function set_rooms_avail() {
     //身份验证&获取数据
     $.ajax({
-        url: `/api/`,
+        url: `http://47.100.117.174:8899/api/`,
         type: 'GET',
         dataType: 'json',
-        contentType: "charset=UTF-8",
+        contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
         },
@@ -441,10 +438,10 @@ async function set_rooms_avail() {
 async function modify_user_info() {
     //身份验证&获取数据
     $.ajax({
-        url: `/api/`,
+        url: `http://47.100.117.174:8899/api/`,
         type: 'GET',
         dataType: 'json',
-        contentType: "charset=UTF-8",
+        contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
         },
@@ -475,10 +472,10 @@ async function modify_user_info() {
 async function sales_per_month() {
     //身份验证&获取数据
     $.ajax({
-        url: `/api/`,
+        url: `http://47.100.117.174:8899/api/`,
         type: 'GET',
         dataType: 'json',
-        contentType: "charset=UTF-8",
+        contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
         },
@@ -509,10 +506,10 @@ async function sales_per_month() {
 async function client_analyze() {
     //身份验证&获取数据
     $.ajax({
-        url: `/api/`,
+        url: `http://47.100.117.174:8899/api/`,
         type: 'GET',
         dataType: 'json',
-        contentType: "charset=UTF-8",
+        contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
         },
