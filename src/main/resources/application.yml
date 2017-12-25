@@ -12,12 +12,12 @@ spring:
     name: astolfo_hotel
     url: jdbc:mysql://localhost/astolfo_hotel?useSSL=false
     username: root
-    password: 465458044
+    password: enihsyou
   jpa:
     show-sql: true
     generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       use-new-id-generator-mappings: true
