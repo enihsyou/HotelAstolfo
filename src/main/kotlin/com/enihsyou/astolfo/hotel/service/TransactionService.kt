@@ -59,7 +59,12 @@ class TransactionServiceImpl : TransactionService {
         floor: Int?,
         number: Int?
     ): List<Transaction> {
-
+        val lists = listOf(listOf(1, 2, 3, 4, 5), listOf(6, 7, 8, 9, 10))
+        for (list in lists) {
+            for (i in list) {
+                println(i)
+            }
+        }
         var result = transactionRepository.findAll()
         if (user_phone != null) {
             result = result.filter { it.user.phoneNumber == user_phone }

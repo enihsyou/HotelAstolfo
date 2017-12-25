@@ -3,6 +3,7 @@ package com.enihsyou.astolfo.hotel.service
 import com.enihsyou.astolfo.hotel.domain.Room
 import com.enihsyou.astolfo.hotel.domain.RoomDirection
 import com.enihsyou.astolfo.hotel.domain.RoomType
+import com.enihsyou.astolfo.hotel.exception.房号不存在
 import com.enihsyou.astolfo.hotel.repository.GuestRepository
 import com.enihsyou.astolfo.hotel.repository.RoomDirectionRepository
 import com.enihsyou.astolfo.hotel.repository.RoomRepository
@@ -32,10 +33,46 @@ interface RoomService {
 
     fun addRoomDirection(direction: RoomDirection): ResponseEntity<Unit>
     fun addType(type: RoomType): ResponseEntity<Unit>
+    fun listTypes(): List<RoomType>
+    fun listDirections(): List<RoomDirection>
+    fun listFloors(): List<Room.RoomNumber>
+    fun controlRoom(floor: Int, number: Int, payload: Map<String, String>)
+    fun findByRoomNumber(floor: Int, number: Int): Room
 }
 
 @Service(value = "房间层逻辑")
 class RoomServiceImpl : RoomService {
+
+    override fun controlRoom(floor: Int, number: Int, payload: Map<String, String>) {
+        val room = findByRoomNumber(floor, number)
+
+        for ((key, value) in payload) {
+            if (key == "broken" && value in arrayOf("true", "false"))
+                room.broken = value.toBoolean()
+            println("$key: $value")
+        }
+    }
+
+    override fun findByRoomNumber(floor: Int, number: Int): Room
+        = existRoom(floor, number)
+
+    private fun existRoom(floor: Int, number: Int): Room {
+        roomRepository.findByRoomNumber(floor, number)?.
+            let { return it }
+            ?: throw throw 房号不存在(floor, number)
+    }
+
+    override fun listTypes(): List<RoomType> {
+        return roomTypeRepository.findAll().toList()
+    }
+
+    override fun listDirections(): List<RoomDirection> {
+        return roomDirectionRepository.findAll().toList()
+    }
+
+    override fun listFloors(): List<Room.RoomNumber> {
+        return roomRepository.listFloor()
+    }
 
     override fun addRoomDirection(direction: RoomDirection): ResponseEntity<Unit> {
         return if (roomDirectionRepository.findByType(direction.type) == null) {

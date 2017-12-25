@@ -2,11 +2,9 @@ package com.enihsyou.astolfo.hotel.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.NaturalId
-import org.springframework.beans.factory.annotation.Autowired
 import java.io.Serializable
 import javax.persistence.Embeddable
 import javax.persistence.Embedded
-import javax.persistence.EmbeddedId
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
@@ -38,7 +36,9 @@ data class Room(
 
     @OneToMany
     @JsonIgnore
-    var transactions: MutableList<Transaction>? = null
+    var transactions: MutableList<Transaction>? = null,
+
+    var broken: Boolean = false
 ) {
 
     @Embeddable

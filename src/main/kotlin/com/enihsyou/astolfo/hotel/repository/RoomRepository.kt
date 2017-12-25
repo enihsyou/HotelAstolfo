@@ -32,12 +32,9 @@ interface RoomRepository : PagingAndSortingRepository<Room, Int> {
 
     @Query(value = "SELECT R FROM Room R where R.roomNumber.floor=?1 and R.roomNumber.number=?2")
     fun findByRoomNumber(@Param("floor") floor: Int, @Param("number") index: Int): Room?
-//
-//    fun findByFloor(@Param("floor") floor: Int,
-//                               pageable: Pageable): List<Room>
-//
-//    fun findByNumber(@Param("index") index: Int,
-//                                pageable: Pageable): List<Room>
+
+    @Query(value = "SELECT R.roomNumber FROM Room R")
+    fun listFloor(): List<Room.RoomNumber>
 
     fun findByDirection_Type(@Param("direction") direction: String,
                              pageable: Pageable): List<Room>

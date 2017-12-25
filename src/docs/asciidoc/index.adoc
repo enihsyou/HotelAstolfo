@@ -129,10 +129,9 @@ Content-Type: application/json
 
 {
   "nickname": "新昵称",
-  "password": "23333"
+  "password": "new_password"
 }
 ----
-
 
 
 === 添加身份证
@@ -223,14 +222,147 @@ Authorization:Basic dGVzdDoyMzMz
 <2> 新的密码
 <3> 新的昵称, 这两个都可以有 也可以只有其一
 
-== 添加房间
+== 房间管理
 
-=== 添加房间类型
+=== 获取初始化信息
+一行代码 获取显示首页需要的内容
+[source, http]
+----
+GET http://localhost:10080/api/rooms/load
+Content-Type: application/json
+----
+返回三块
+第一块types 类型
+第二块directions 朝向
+第三块rooms 所有房间
+[source, json]
+----
+{
+  "types": [
+    {
+      "id": 3,
+      "type": "东",
+      "description": "冬暖夏狼"
+    },
+    {
+      "id": 4,
+      "type": "东2",
+      "description": "冬暖夏狼"
+    },
+    {
+      "id": 5,
+      "type": "大床房",
+      "description": "冬暖夏狼"
+    }
+  ],
+  "directions": [
+    {
+      "id": 1,
+      "type": "东2",
+      "description": "冬暖夏狼"
+    },
+    {
+      "id": 2,
+      "type": "东",
+      "description": "冬暖夏狼"
+    }
+  ],
+  "rooms": [
+    {
+      "id": 6,
+      "roomNumber": {
+        "floor": 5,
+        "number": 1
+      },
+      "type": {
+        "id": 5,
+        "type": "大床房",
+        "description": "冬暖夏狼"
+      },
+      "direction": {
+        "id": 2,
+        "type": "东",
+        "description": "冬暖夏狼"
+      },
+      "specialty": "一个介绍",
+      "price": 143,
+      "broken": false
+    },
+    {
+      "id": 7,
+      "roomNumber": {
+        "floor": 2,
+        "number": 1
+      },
+      "type": {
+        "id": 5,
+        "type": "大床房",
+        "description": "冬暖夏狼"
+      },
+      "direction": {
+        "id": 2,
+        "type": "东",
+        "description": "冬暖夏狼"
+      },
+      "specialty": "一个介绍",
+      "price": 143,
+      "broken": false
+    },
+    {
+      "id": 8,
+      "roomNumber": {
+        "floor": 3,
+        "number": 1
+      },
+      "type": {
+        "id": 5,
+        "type": "大床房",
+        "description": "冬暖夏狼"
+      },
+      "direction": {
+        "id": 2,
+        "type": "东",
+        "description": "冬暖夏狼"
+      },
+      "specialty": "一个介绍",
+      "price": 143,
+      "broken": false
+    }
+  ]
+}
+----
+
+
+
+=== 房间类型
+获取房间类型定义只需要GET
+[source, http]
+----
+GET http://localhost:10080/api/rooms/types
+Content-Type: application/json
+----
+返回结果
+[source, json]
+----
+[
+  {
+    "id": 1,
+    "type": "大床房",
+    "description": "足够两个人唑在一起的大小"
+  },
+  {
+    "id": 2,
+    "type": "大床房2",
+    "description": "足够两个人唑在一起的大小"
+  }
+]
+----
+
 
 添加房间类型定义,重复返回409。限制为只有管理员经理才能操作
 [source, http]
 ----
-POST http://localhost:10080/api/rooms/addType
+POST http://localhost:10080/api/rooms/types
 Content-Type: application/json
 Authorization:Basic dGVzdDoyMzMz
 
@@ -238,14 +370,37 @@ Authorization:Basic dGVzdDoyMzMz
   "type": "大床房",
   "description": "足够两个人唑在一起的大小"
 }
-
 ----
-=== 添加房间朝向
+=== 房间朝向
+
+获取房间朝向定义只需要GET
+[source, http]
+----
+GET http://localhost:10080/api/rooms/directions
+Content-Type: application/json
+----
+返回结果
+[source, json]
+----
+[
+  {
+    "id": 3,
+    "type": "东",
+    "description": "冬暖夏狼"
+  },
+  {
+    "id": 4,
+    "type": "东2",
+    "description": "冬暖夏狼"
+  }
+]
+----
+
 
 添加房间朝向定义
 [source, http]
 ----
-POST http://localhost:10080/api/rooms/addDirection
+POST http://localhost:10080/api/rooms/directions
 Content-Type: application/json
 Authorization:Basic dGVzdDoyMzMz
 
@@ -253,11 +408,16 @@ Authorization:Basic dGVzdDoyMzMz
   "type": "东",
   "description": "冬暖夏狼"
 }
-
 ----
-=== 添加房间定义
+
+=== 房间定义
+
+添加房间定义
 [source, http]
 ----
+POST http://localhost:10080/api/rooms/add
+Content-Type: application/json
+
 {
   "type": "大床房",
   "direction": "东",
@@ -270,7 +430,32 @@ Authorization:Basic dGVzdDoyMzMz
 }
 ----
 
-== 查询房间
+=== 获取楼层信息列表
+[source, http]
+----
+GET http://localhost:10080/api/rooms/floors
+----
+
+[source, json]
+----
+[
+  {
+    "floor": 3,
+    "number": 1
+  },
+  {
+    "floor": 4,
+    "number": 1
+  },
+  {
+    "floor": 5,
+    "number": 1
+  }
+]
+----
+其实还不如直接用下面的list 获取所有房间列表
+
+=== 查询房间
 
 列出所有房间
 [source,http]
@@ -380,29 +565,12 @@ GET http://localhost:10080/api/rooms/list?type=大床房
 
     GET http://localhost:10080/api/rooms/list?from=2018-04-22T18:25:43.511&to=2018-04-23T18:25:43.511
 
-== 用户预订
+=== 设置房间状态
 
-所有订单都是预定，区别在于activited（生效）属性和used（来店入住）属性
-
-
-这个还没完成
-
-.用户创建订单
-[source,http]
-----
-POST http://localhost:10080/api/transactions/make
-Content-Type: application/json
-
-{
-  "dateFrom": "2017-12-22T16:57:10",
-  "dateTo": "2017-12-23T16:57:10",
-  "user": "
-}
-----
 
 == 订单管理
 
-=== 新增订单
+=== 新增订单，用户预订
 [source, http]
 ----
 POST http://localhost:10080/api/transactions/make

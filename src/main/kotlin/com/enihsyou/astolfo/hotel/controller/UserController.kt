@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -29,6 +30,7 @@ class UserController {
     @GetMapping
     fun information(@RequestParam phone: String): User?
         = userService.findByPhone(phone)
+
     @PutMapping
     fun updateInformation(@RequestParam phone: String, @RequestBody user:User): User
         = userService.updateInformation(phone, user)
@@ -81,4 +83,8 @@ class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     fun addGuest(@RequestParam("phone") phone: String, @RequestBody guest: Guest)
         = userService.addGuest(phone, guest)
+    @DeleteMapping("/guests")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun deleteGuest(@RequestParam("phone") phone: String, @RequestBody guest: Guest)
+        = userService.deleteGuest(phone, guest)
 }
