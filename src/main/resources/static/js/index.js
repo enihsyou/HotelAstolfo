@@ -172,66 +172,8 @@ $('.window .close').click(function () {
     $('.main').css('filter', 'none');
 });
 
-//首页搜索框确认动作
-$('.searchBox .confirm').click(function () {
-    if ($(this).children('span').hasClass('loading')) {
-        return;
-    }
-    let _this = this;
-    let from = $('#bookingStart').val();
-    let to = $('#bookingEnd').val();
-    let type = $('#bookingType').val();
-    let priceFrom = $('#priceFrom').val();
-    let priceTo = $('#priceTo').val();
-    let direction = $('#bookingDirection').val();
-    let floor = $('#bookingFloor').val();
-    let number = $('#bookingNumber').val();
-    if (new Date(from) >= new Date(to)) {
-        showMsg('离店时间必须晚于预定时间');
-        return;
-    }
-    if (priceFrom > priceTo) {
-        showMsg('最高价格必须高于最低价格');
-        return;
-    }
-    $(_this).append('<span class="loading line"></span>');
-    $.ajax({
-        url: `${serverHost}/api/rooms/list`,
-        type: 'GET',
-        contentType: "application/json; charset=UTF-8",
-        data: {
-            from: from.length > 0 && to.length > 0 ? new Date(from).toISOString().replace('Z', '') : undefined,
-            to: from.length > 0 && to.length > 0 ? new Date(to).toISOString().replace('Z', '') : undefined,
-            type: type.length > 0 ? type : undefined,
-            priceFrom: priceFrom > 0 && priceTo > 0 ? priceFrom : undefined,
-            priceTo: priceFrom > 0 && priceTo > 0 ? priceTo : undefined,
-            direction: direction.length > 0 ? direction : undefined,
-            floor: floor > 0 ? floor : undefined,
-            number: number > 0 ? number : undefined
-        },
-        success: function (data, textStatus, jqXHR) {
-            //显示右侧搜索列表
-            $('.slider_container').css('filter', 'blur(10px)');
-            $('.searchBox').css('left', '5%');
-            $('.searchList').slideDown(333);
-            //激活Vue
-            searchListVue.rooms = data;
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            showMsg('网络错误！');
-        },
-        complete: function () {
-            $(_this).children('.loading').remove();
-        }
-    });
-});
-
 //搜索框关闭图标动作
-$('.searchList .close').click(function () {
-    $(this).parent().slideUp();
-    $('.slider_container').css('filter', 'none');
-    $('.searchBox').css('left', '10%');
-});
+$('.searchList .close').click();
 
 //初始化
 $(function init() {
@@ -298,13 +240,64 @@ let searchBoxVue = new Vue({
             this.type = data.types;
             this.direction = data.directions;
             this.floorAndNumber = data.rooms;
-            this.isLoaded = true;
         },
         updateNumber: function (e) {
             let sfloor = $('#bookingFloor').val();
             if (sfloor.length != null) {
                 this.number = this.floorAndNumber[sfloor]
             }
+        },
+        search: function (e) {
+            let _this = e.target;
+            if ($(_this).children('span').hasClass('loading')) {
+                return;
+            }
+            let from = $('#bookingStart').val();
+            let to = $('#bookingEnd').val();
+            let type = $('#bookingType').val();
+            let priceFrom = $('#priceFrom').val();
+            let priceTo = $('#priceTo').val();
+            let direction = $('#bookingDirection').val();
+            let floor = $('#bookingFloor').val();
+            let number = $('#bookingNumber').val();
+            if (new Date(from) >= new Date(to)) {
+                showMsg('离店时间必须晚于预定时间');
+                return;
+            }
+            if (priceFrom > priceTo) {
+                showMsg('最高价格必须高于最低价格');
+                return;
+            }
+            $(_this).append('<span class="loading line"></span>');
+            $.ajax({
+                url: `${serverHost}/api/rooms/list`,
+                type: 'GET',
+                contentType: "application/json; charset=UTF-8",
+                data: {
+                    from: from.length > 0 && to.length > 0 ? new Date(from).toISOString().replace('Z', '') : undefined,
+                    to: from.length > 0 && to.length > 0 ? new Date(to).toISOString().replace('Z', '') : undefined,
+                    type: type.length > 0 ? type : undefined,
+                    priceFrom: priceFrom > 0 && priceTo > 0 ? priceFrom : undefined,
+                    priceTo: priceFrom > 0 && priceTo > 0 ? priceTo : undefined,
+                    direction: direction.length > 0 ? direction : undefined,
+                    floor: floor > 0 ? floor : undefined,
+                    number: number > 0 ? number : undefined
+                },
+                success: function (data, textStatus, jqXHR) {
+                    //显示右侧搜索列表
+                    $('.slider_container').css('filter', 'blur(10px)');
+                    $('.searchBox').css('left', '5%');
+                    $('.searchList').slideDown(333);
+                    //激活Vue
+                    searchListVue.rooms = data;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    showMsg('网络错误！');
+                },
+                complete: function () {
+                    $(_this).children('.loading').remove();
+                }
+            });
         }
     },
     computed: {
@@ -329,6 +322,11 @@ let searchListVue = new Vue({
             * 预定动作
             */
             console.log(e);
+        },
+        close: function (e) {
+            $(e.target).parent().parent().slideUp();
+            $('.slider_container').css('filter', 'none');
+            $('.searchBox').css('left', '10%');
         }
     }
 });

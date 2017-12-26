@@ -152,13 +152,13 @@
                     <option value="" selected>任意</option>
                 </select>
             </label>
-            <div class=" text-center">
-                <div type="submit" class="btn-default btn-lg confirm untouchable">搜索</div>
-            </div>
+        </div>
+        <div class="searchBoxButton text-center" @click="search">
+            <div class="btn-default btn-lg confirm untouchable">搜索</div>
         </div>
     </div>
     <div class="searchList untouchable">
-        <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" @click="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <table>
             <tr>
                 <td>楼层</td>

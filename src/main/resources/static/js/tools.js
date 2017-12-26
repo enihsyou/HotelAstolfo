@@ -5,13 +5,12 @@ let serverHost = 'http://47.100.117.174:8899';
 async function showMsg(msg) {
     let newMsg = $(`<div class="msg untouchable"><span>${msg}</span></div>`);
     $('.main').after(newMsg);
-    newMsg.slideDown(400);
-    await sleep(Math.max(1000, msg.length * 100));
-    newMsg.slideUp(300);
+    newMsg.slideDown(333);
+    await sleep(Math.max(1000, msg.length * 150));
+    newMsg.slideUp(333);
     await sleep(400);
     newMsg.remove();
 }
-
 
 //延时函数
 function sleep(time) {

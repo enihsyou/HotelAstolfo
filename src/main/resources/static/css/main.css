@@ -1,3 +1,7 @@
+:root {
+    --global-theme: #a2d6f5;
+}
+
 html {
 }
 
@@ -39,7 +43,7 @@ body {
 }
 
 .top_banner {
-    background: linear-gradient(to bottom, #54a8d2, white);
+    background: linear-gradient(to bottom, var(--global-theme), white);
     width: 100%;
     margin: 0;
     height: 8vh;
@@ -57,8 +61,6 @@ body {
     color: #ffffff;
     font-weight: bold;
     border-radius: 0 0 1em 1em;
-    /*background: linear-gradient(to bottom, #0091d2, #7dc3f9);*/
-    /*display: inline-block;*/
     display: none;
 }
 
@@ -285,7 +287,6 @@ body {
     border-radius: 1em;
     box-shadow: 1.2em 1.2em 5em .5em rgba(41, 41, 41, 0.3);
     transition: left 0.33s linear;
-    overflow: hidden;
 }
 
 .searchBox label {
@@ -295,20 +296,30 @@ body {
 .searchBox .searchBoxContent {
     position: absolute;
     width: 90%;
-    height: 90%;
+    height: 75%;
     top: 5%;
     left: 5%;
-}
-
-.searchBox .searchBoxContent .confirm {
-    position: absolute;
-    bottom: 2%;
-    width: 100%;
-    cursor: pointer;
+    overflow-y: auto;
 }
 
 #bookingStart, #bookingEnd, #priceFrom, #priceTo {
     width: 9vw;
+}
+
+.searchBox .searchBoxButton {
+    position: absolute;
+    margin: auto;
+    left: 50%;
+    bottom: 5%;
+    width: 90%;
+    transform: translateX(-50%);
+}
+
+.searchBox .searchBoxButton .confirm {
+    position: absolute;
+    bottom: 2%;
+    width: 100%;
+    cursor: pointer;
 }
 
 .searchList {
@@ -373,7 +384,7 @@ body {
     display: block;
     height: 7vh;
     box-shadow: #0f0f0f;
-    background-color: #3fa1d2;
+    background-color: var(--global-theme);
 }
 
 .footer p {
