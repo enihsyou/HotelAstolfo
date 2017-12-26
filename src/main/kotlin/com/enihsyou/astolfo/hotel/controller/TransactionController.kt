@@ -2,6 +2,7 @@ package com.enihsyou.astolfo.hotel.controller
 
 import com.enihsyou.astolfo.hotel.domain.Room
 import com.enihsyou.astolfo.hotel.domain.Transaction
+import com.enihsyou.astolfo.hotel.domain.User
 import com.enihsyou.astolfo.hotel.repository.RoomDirectionRepository
 import com.enihsyou.astolfo.hotel.repository.RoomTypeRepository
 import com.enihsyou.astolfo.hotel.service.RoomService
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -40,9 +42,8 @@ class TransactionController {
         @RequestParam("priceFrom", required = false) priceFrom: Int? = null,
         @RequestParam("priceTo", required = false) priceTo: Int? = null,
         @RequestParam("floor", required = false) floor: Int? = null,
-        @RequestParam("number", required = false) number: Int? = null): List<Transaction> {
-        return transactionService.listByParameter(userPhone, createFrom, createTo, validFrom, validTo, type, direction, priceFrom, priceTo, floor, number)
-    }
+        @RequestParam("number", required = false) number: Int? = null): List<Transaction>
+        = transactionService.listByParameter(userPhone, createFrom, createTo, validFrom, validTo, type, direction, priceFrom, priceTo, floor, number)
 
     class BookBody(
         var phone: String = "",
@@ -57,11 +58,8 @@ class TransactionController {
         transactionService.singleBook(body)
     }
 
-    @GetMapping("/dummy")
-    fun dummy() {
-        val user = userService.findByPhone("12345678888")
-        val room = roomService.listRoomByParameter(priceFrom = 99).first()
-        transactionService.addTransactions(Transaction(user = user, room = room, dateFrom = LocalDateTime.now(), dateTo = LocalDateTime.now().plusDays(1)))
-    }
+    @PutMapping
+    fun updateInformation(@RequestParam phone: String, @RequestBody user: User): User
+        =User()// transactionService.modifyRoom(phone, user)
 }
 

@@ -225,10 +225,11 @@ Authorization:Basic dGVzdDoyMzMz
 == 房间管理
 
 === 获取初始化信息
-一行代码 获取显示首页需要的内容
+
+. 一行代码 获取显示首页需要的内容
 [source, http]
 ----
-GET http://localhost:10080/api/rooms/load
+GET http://localhost:10080/api/rooms/load2
 Content-Type: application/json
 ----
 返回三块
@@ -332,14 +333,45 @@ Content-Type: application/json
 }
 ----
 
+. 简要版本
+[source, http]
+----
+GET http://localhost:10080/api/rooms/load
+Content-Type: application/json
+----
+[source, json]
+----
+{
+  "types": [
+    "东",
+    "东2",
+    "大床房"
+  ],
+  "directions": [
+    "东2",
+    "东"
+  ],
+  "rooms": {
+    "2": [
+      1
+    ],
+    "3": [
+      1
+    ],
+    "5": [
+      1
+    ]
+  }
+}
+----
 
 
 === 房间类型
-获取房间类型定义只需要GET
+
+. 获取房间类型定义只需要GET
 [source, http]
 ----
 GET http://localhost:10080/api/rooms/types
-Content-Type: application/json
 ----
 返回结果
 [source, json]
@@ -358,8 +390,7 @@ Content-Type: application/json
 ]
 ----
 
-
-添加房间类型定义,重复返回409。限制为只有管理员经理才能操作
+. 添加房间类型定义。限制为只有管理员经理才能操作
 [source, http]
 ----
 POST http://localhost:10080/api/rooms/types
@@ -371,9 +402,31 @@ Authorization:Basic dGVzdDoyMzMz
   "description": "足够两个人唑在一起的大小"
 }
 ----
+如果成功就是201，并返回新建的项目。
+如果失败就是409，并返回已有的项目。
+
+. 更新类型定义
+[source, http]
+----
+PUT http://localhost:10080/api/rooms/types?type=大床房
+Content-Type: application/json
+
+{
+  "description": "修改之后的内容"
+}
+----
+给什么改什么
+
+. 删除类型
+[source, http]
+----
+DELETE http://localhost:10080/api/rooms/types?type=大床房
+Content-Type: application/json
+----
+
 === 房间朝向
 
-获取房间朝向定义只需要GET
+. 获取房间朝向定义只需要GET
 [source, http]
 ----
 GET http://localhost:10080/api/rooms/directions
@@ -396,8 +449,7 @@ Content-Type: application/json
 ]
 ----
 
-
-添加房间朝向定义
+. 添加房间朝向定义
 [source, http]
 ----
 POST http://localhost:10080/api/rooms/directions
@@ -409,58 +461,33 @@ Authorization:Basic dGVzdDoyMzMz
   "description": "冬暖夏狼"
 }
 ----
+功就是201，并返回新建的项目。
+如果失败就是409，并返回已有的项目。
 
-=== 房间定义
-
-添加房间定义
+. 更新朝向定义
 [source, http]
 ----
-POST http://localhost:10080/api/rooms/add
+PUT http://localhost:10080/api/rooms/directions?direction=东
 Content-Type: application/json
 
 {
-  "type": "大床房",
-  "direction": "东",
-  "specialty": "一个介绍",
-  "price": "143",
-  "roomNumber": {
-    "floor": 3,
-    "number": 1
-  }
+  "description": "修改之后的内容"
 }
 ----
+给什么改什么
 
-=== 获取楼层信息列表
+. 删除类型
 [source, http]
 ----
-GET http://localhost:10080/api/rooms/floors
+DELETE http://localhost:10080/api/rooms/directions?direction=东
+Content-Type: application/json
 ----
 
-[source, json]
-----
-[
-  {
-    "floor": 3,
-    "number": 1
-  },
-  {
-    "floor": 4,
-    "number": 1
-  },
-  {
-    "floor": 5,
-    "number": 1
-  }
-]
-----
-其实还不如直接用下面的list 获取所有房间列表
-
-=== 查询房间
-
-列出所有房间
+=== 房间
+. 列出所有房间和查询房间
 [source,http]
 ----
-GET http://localhost:10080/api/rooms/list
+GET http://localhost:10080/api/rooms/
 ----
 结果大概这样
 [source, json]
@@ -549,24 +576,119 @@ number 楼层内的第几个房间
 
 都是可选的，不传就是列出全部。不带分页
 
-
-----
+[source, http]
 GET http://localhost:10080/api/rooms/list?type=大床房
-----
+
 房价大于等于100元的全部
 
-    GET http://localhost:10080/api/rooms/list?priceFrom=100
+[source, http]
+GET http://localhost:10080/api/rooms/list?priceFrom=100
 
 [99, 100]元范围
 
-    GET http://localhost:10080/api/rooms/list?priceFrom=99&priceTo=100
+[source, http]
+GET http://localhost:10080/api/rooms/list?priceFrom=99&priceTo=100
 
 查询2018-04-22入住 2018-04-23离开的话 可用的房间列表
 
-    GET http://localhost:10080/api/rooms/list?from=2018-04-22T18:25:43.511&to=2018-04-23T18:25:43.511
+[source, http]
+GET http://localhost:10080/api/rooms/list?from=2018-04-22T18:25:43.511&to=2018-04-23T18:25:43.511
 
-=== 设置房间状态
+. 添加房间定义
+[source, http]
+----
+POST http://localhost:10080/api/rooms
+Content-Type: application/json
 
+{
+  "type": "大床房",
+  "direction": "东",
+  "specialty": "一个介绍",
+  "price": "143",
+  "roomNumber": {
+    "floor": 3,
+    "number": 1
+  }
+}
+----
+
+. 更新房间定义
+
+和更新用户个人信息一样，只提供有的部分
+[source, http]
+----
+PUT http://localhost:10080/api/rooms?floor=1&number=1
+Content-Type: application/json
+
+{
+  "type": "大床房",
+  "direction": "东",
+  "specialty": "一个介绍",
+  "price": "143"
+}
+----
+成功返回200,并带上新项目
+不存在就是404
+
+. 删除房间
+[source, http]
+DELETE http://localhost:10080/api/rooms?floor=1&number=1
+
+
+[source, http]
+----
+GET http://localhost:10080/api/rooms/load
+Content-Type: application/json
+----
+[source, json]
+----
+{
+  "types": [
+    "东",
+    "东2",
+    "大床房"
+  ],
+  "directions": [
+    "东2",
+    "东"
+  ],
+  "rooms": {
+    "2": [
+      1
+    ],
+    "3": [
+      1
+    ],
+    "5": [
+      1
+    ]
+  }
+}
+----
+=== 获取楼层信息列表
+[source, http]
+----
+GET http://localhost:10080/api/rooms/floors
+----
+
+[source, json]
+----
+[
+  {
+    "floor": 3,
+    "number": 1
+  },
+  {
+    "floor": 4,
+    "number": 1
+  },
+  {
+    "floor": 5,
+    "number": 1
+  }
+]
+----
+其实还不如直接用下面的list 获取所有房间列表
 
 == 订单管理
 
@@ -637,5 +759,4 @@ GET http://localhost:10080/api/transactions/list
 ]
 ----
 
-
-
+//todo 修改房间的文档

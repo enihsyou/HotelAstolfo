@@ -1,9 +1,6 @@
 package com.enihsyou.astolfo.hotel.repository
 
 import com.enihsyou.astolfo.hotel.domain.Room
-import com.enihsyou.astolfo.hotel.domain.RoomDirection
-import com.enihsyou.astolfo.hotel.domain.RoomType
-import org.intellij.lang.annotations.Language
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.PagingAndSortingRepository
@@ -46,16 +43,4 @@ interface RoomRepository : PagingAndSortingRepository<Room, Int> {
     fun findByAvailability(@Param("availability") availability: Boolean): List<Room>
 }
 
-@Repository("房间类型仓库")
-@RepositoryRestResource(path = "roomTypes")
-interface RoomTypeRepository : PagingAndSortingRepository<RoomType, Int> {
 
-    fun findByType(type: String): RoomType?
-}
-
-@Repository("房间朝向仓库")
-@RepositoryRestResource(path = "roomDirections")
-interface RoomDirectionRepository : PagingAndSortingRepository<RoomDirection, Int> {
-
-    fun findByType(type: String): RoomDirection?
-}

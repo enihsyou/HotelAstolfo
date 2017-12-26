@@ -83,8 +83,9 @@ class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     fun addGuest(@RequestParam("phone") phone: String, @RequestBody guest: Guest)
         = userService.addGuest(phone, guest)
+
     @DeleteMapping("/guests")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.GONE)
     fun deleteGuest(@RequestParam("phone") phone: String, @RequestBody guest: Guest)
         = userService.deleteGuest(phone, guest)
 }

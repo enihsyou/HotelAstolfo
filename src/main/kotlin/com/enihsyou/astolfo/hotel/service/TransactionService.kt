@@ -38,7 +38,7 @@ class TransactionServiceImpl : TransactionService {
 
     override fun singleBook(body: TransactionController.BookBody): ResponseEntity<Unit> {
         val user = userService.findByPhone(body.phone)
-        val room = roomService.listRoomByParameter(floor = body.room.floor, number = body.room.number).first()
+        val room = roomService.listRooms(floor = body.room.floor, number = body.room.number).first()
         val guests = mutableListOf<Guest>()
         body.guests.forEach { guestRepository.findByIdentification(it)?.let { guests.add(it) } }
         val transaction = Transaction(dateFrom = body.from, dateTo = body.to, user = user, room = room, guests = guests)

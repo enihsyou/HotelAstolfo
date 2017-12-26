@@ -180,10 +180,9 @@ Authorization:Basic dGVzdDoyMzMz
 }
 
 ###
-POST http://localhost:10080/api/users/transactions?phone=18800000001
-
+GET http://localhost:10080/api/rooms
 ###
-PUT http://localhost:10080/api/users?phone=18800000001
+PUT http://localhost:10080/api/rooms?floor=
 Content-Type: application/json
 
 {
@@ -282,15 +281,29 @@ Content-Type: application/json
 }
 
 ###
-GET http://47.100.117.174:8899/api/users/make/admin
+POST http://localhost:10080/api/rooms/types
+Content-Type: application/json
+Authorization:Basic dGVzdDoyMzMz
+
+{
+  "type": "大だ床房",
+  "description": "足够两个人唑在一起的大小"
+}
+###
+DELETE http://localhost:10080/api/rooms/types
 Content-Type: application/json
 
 {
-  "phoneNumber": "188",
-  "password": "2333",
-  "nickname": "我是前台"
+  "type": "大だ床房",
+  "description": "修改之后的内容"
 }
+
 ###
-GET http://47.100.117.174:8899/
+PUT http://localhost:10080/api/rooms/types?type=大床房
+Content-Type: application/json
+
+{
+  "description": "修改之后的内容"
+}
 
 ###
