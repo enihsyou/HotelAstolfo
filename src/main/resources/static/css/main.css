@@ -303,7 +303,7 @@ body {
 }
 
 #bookingStart, #bookingEnd, #priceFrom, #priceTo {
-    width: 9vw;
+    width: 8vw;
 }
 
 .searchBox .searchBoxButton {
@@ -378,6 +378,27 @@ body {
 .searchList table .confirm {
     zoom: .75;
     cursor: pointer;
+}
+
+.searchList .selectID {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    line-height: 3em;
+    padding: 2em;
+    border-radius: 1em;
+    box-shadow: 0 0 5px 1px #000000;
+    display: none;
+}
+
+.searchList .selectID dt {
+    margin-bottom: 2em;
+}
+
+.searchList .selectID dd {
+    display: inline-block;
 }
 
 .footer {

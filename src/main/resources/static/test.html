@@ -16,9 +16,78 @@
 <div class="main">
     <div class="left-nav untouchable"></div>
     <div class="container">
-        <ul>
-            <li v-for="t in tt">{{t}}</li>
-        </ul>
+        <div class="book_a_room">
+            <div class="inside_searchBox">
+                <div class="searchBoxContent untouchable">
+                    <label class="col-xs-12" for="bookingStart">入住日期：
+                        <input type="date" id="bookingStart">
+                        ~
+                        <input type="date" id="bookingEnd">
+                    </label>
+                    <label class="col-xs-12" for="bookingPrice">价格区间：
+                        <span id="bookingPrice">
+                    <input id="priceFrom" type="number" min="0" max="9999" placeholder="最低价格">
+                    ~
+                    <input id="priceTo" min="0" max="9999" type="number" placeholder="最高价格">
+                </span>
+                    </label>
+                    <label class="col-xs-12" for="bookingType" v-if="isLoaded" v-cloak>客房类型：
+                        <select class="form-control" id="bookingType">
+                            <option v-for="etype in type" :value="etype">{{etype}}</option>
+                            <option value="" selected>任意</option>
+                        </select>
+                    </label>
+                    <label class="col-xs-12" for="bookingDirection" v-if="isLoaded" v-cloak>房间朝向：
+                        <select class="form-control" id="bookingDirection">
+                            <option v-for="edirection in direction" :value="direction">{{direction}}</option>
+                            <option value="" selected>任意</option>
+                        </select>
+                    </label>
+                    <label class="col-xs-12" for="bookingFloor" v-if="isLoaded" v-cloak>楼层：
+                        <select class="form-control" id="bookingFloor" @change="updateNumber">
+                            <option v-for="efloor in floor" :value="efloor">{{efloor}}</option>
+                            <option value="" selected>任意</option>
+                        </select>
+                    </label>
+                    <label class="col-xs-12" for="bookingNumber" v-if="isLoaded" v-cloak>房号：
+                        <select class="form-control" id="bookingNumber">
+                            <option v-for="enumber in number" :value="enumber">{{enumber}}</option>
+                            <option value="" selected>任意</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="searchBoxButton text-center">
+                    <button class="btn btn-default confirm untouchable" @click="search">搜索</button>
+                </div>
+            </div>
+            <div class="inside_searchList untouchable">
+                <h2>搜索结果：</h2>
+                <table>
+                    <tr>
+                        <td>楼层</td>
+                        <td>房号</td>
+                        <td>朝向</td>
+                        <td>房间类型</td>
+                        <td>特色</td>
+                        <td>价格</td>
+                        <td><!--操作--></td>
+                    </tr>
+                    <tr v-for="room in rooms" v-cloak>
+                        <td>{{room.roomNumber.floor}}</td>
+                        <td>{{room.roomNumber.number}}</td>
+                        <td :title="room.direction.description">{{room.direction.type}}</td>
+                        <td :title="room.type.description">{{room.type.type}}</td>
+                        <td>{{room.specialty}}</td>
+                        <td>{{room.price}}</td>
+                        <td>
+                            <div class="confirm btn btn-default" :floor="room.roomNumber.floor"
+                                 :number="room.roomNumber.number" @click="book" v-cloak>预定
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 <div class="footer">
@@ -27,12 +96,136 @@
 <script src="js/jquery-3.2.1.js"></script>
 <script src="js/tools.js"></script>
 <script>
-let hh=new Vue({
-    el:'.container',
-    data:{
-        tt:[1,2,3,4]
-    }
-})
+    //初始化首页搜索
+    let time = new Date();
+    let year = time.getFullYear();
+    let month = time.getMonth();
+    let day = time.getDay() > 9 ? time.getDay() : '0' + time.getDay();
+    $('#bookingStart').val(`${year}-${month}-${day}`)
+        .attr('min', `${year}-${month}-${day}`)
+        .attr('max', `${year + 1}-${month}-${day}`);
+    let nday = (time.getDay() + 1) > 9 ? (time.getDay() + 1) : '0' + (time.getDay() + 1);
+    $('#bookingEnd').val(`${year}-${month}-${nday}`)
+        .attr('min', `${year}-${month}-${nday}`)
+        .attr('max', `${year + 1}-${month}-${nday}`);
+    $.ajax({
+        url: `${serverHost}/api/rooms/load`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "application/json; charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            searchBoxVue.update(data);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            showMsg('连接服务器失败')
+        },
+        complete: function () {
+            searchBoxVue.isLoaded = true;
+        }
+    });
+    let searchBoxVue = new Vue({
+        el: '.inside_searchBox',
+        data: {
+            type: [],
+            direction: [],
+            floorAndNumber: {},
+            number: [],
+            isLoaded: false
+        },
+        methods: {
+            update: function (data) {
+                this.type = data.types;
+                this.direction = data.directions;
+                this.floorAndNumber = data.rooms;
+            },
+            updateNumber: function (e) {
+                let sfloor = $('#bookingFloor').val();
+                if (sfloor.length != null) {
+                    this.number = this.floorAndNumber[sfloor]
+                }
+            },
+            search: function (e) {
+                let _this = e.target;
+                if ($(_this).children('span').hasClass('loading')) {
+                    return;
+                }
+                let from = $('#bookingStart').val();
+                let to = $('#bookingEnd').val();
+                let type = $('#bookingType').val();
+                let priceFrom = $('#priceFrom').val();
+                let priceTo = $('#priceTo').val();
+                let direction = $('#bookingDirection').val();
+                let floor = $('#bookingFloor').val();
+                let number = $('#bookingNumber').val();
+                if (new Date(from) >= new Date(to)) {
+                    showMsg('离店时间必须晚于预定时间');
+                    return;
+                }
+                if (priceFrom > priceTo) {
+                    showMsg('最高价格必须高于最低价格');
+                    return;
+                }
+                $(_this).append('<span class="loading line"></span>');
+                $.ajax({
+                    url: `${serverHost}/api/rooms/list`,
+                    type: 'GET',
+                    contentType: "application/json; charset=UTF-8",
+                    data: {
+                        from: from.length > 0 && to.length > 0 ? new Date(from).toISOString().replace('Z', '') : undefined,
+                        to: from.length > 0 && to.length > 0 ? new Date(to).toISOString().replace('Z', '') : undefined,
+                        type: type.length > 0 ? type : undefined,
+                        priceFrom: priceFrom > 0 && priceTo > 0 ? priceFrom : undefined,
+                        priceTo: priceFrom > 0 && priceTo > 0 ? priceTo : undefined,
+                        direction: direction.length > 0 ? direction : undefined,
+                        floor: floor > 0 ? floor : undefined,
+                        number: number > 0 ? number : undefined
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        //显示右侧搜索列表
+                        $('.slider_container').css('filter', 'blur(10px)');
+                        $('.searchBox').css('left', '5%');
+                        $('.searchList').slideDown(333);
+                        //激活Vue
+                        searchListVue.rooms = data;
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        showMsg('网络错误！');
+                    },
+                    complete: function () {
+                        $(_this).children('.loading').remove();
+                    }
+                });
+            }
+        },
+        computed: {
+            floor: function () {
+                let floors = [];
+                for (let floor in this.floorAndNumber) {
+                    floors.push(floor);
+                }
+                return floors;
+            }
+        }
+    });
+
+    let searchListVue = new Vue({
+        el: '.inside_searchList',
+        data: {
+            rooms: []
+        },
+        methods: {
+            book: function (e) {
+                /*TODO
+                * 预定动作
+                */
+                console.log(e);
+            }
+        }
+    });
+
 </script>
 </body>
 </html>

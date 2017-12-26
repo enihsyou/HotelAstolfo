@@ -264,82 +264,29 @@ async function book_a_room() {
             //获取订单
             let resStr = `
             <div class="book_a_room">
-                <div class="search">
-                    <label class="col-xs-6" for="bookingStart">入住日期：
-                        <input type="date" id="bookingStart">
-                        ~
-                        <input type="date" id="bookingEnd">
-                    </label>
-                    <label class="col-xs-6" for="bookingPrice">价格区间：
-                        <span id="bookingPrice">
-                        <input type="number" min="0" max="9999" placeholder="最低">
-                        ~
-                        <input min="0" max="9999" type="number" placeholder="最高">
-                    </span>
-                    </label>
-                    <label class="col-xs-12" for="bookingType">客房类型：
-                        <select class="form-control" id="bookingType">
-                            <option value="std">高端双床间</option>
-                            <option value="big">至尊大床房</option>
-                            <option value="thr">激情三人房</option>
-                            <option value="suit">奢华总统套房</option>
-                            <option value="" selected>任意</option>
-                        </select>
-                    </label>
-                    <label class="col-xs-12" for="bookingDirection">房间朝向：
-                        <select class="form-control" id="bookingDirection">
-                            <option value="east">东</option>
-                            <option value="south">南</option>
-                            <option value="west">西</option>
-                            <option value="north">北</option>
-                            <option value="" selected>任意</option>
-                        </select>
-                    </label>
-                    <label class="col-xs-12" for="bookingFloor">楼层：
-                        <select class="form-control" id="bookingFloor">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="4">3</option>
-                            <option value="5">4</option>
-                            <option value="5">5</option>
-                            <option value="" selected>任意</option>
-                        </select>
-                    </label>
-                    <label class="col-xs-12" for="bookingNumber">房号：
-                        <select class="form-control" id="bookingNumber" disabled>
-                            <option v-for="number in numbers" :value="value" v-cloak="">{{number}}</option>
-                            <option value="" selected>任意</option>
-                        </select>
-                    </label>
-                    <div class=" text-center">
-                        <div type="submit" class="btn btn-default confirm untouchable">搜索</div>
-                    </div>
-                </div>
-                <div class="resList">
-                    <table>
-                        <tr>
-                            <td>房型</td>
-                            <td>床型</td>
-                            <td>特殊服务</td>
-                            <td>房价</td>
-                            <td><!--预定--></td>
-                        </tr>
-                        <!--<tr>-->
-                        <!--<td>高端双床间</td>-->
-                        <!--<td>2</td>-->
-                        <!--<td>大保健</td>-->
-                        <!--<td>699</td>-->
-                        <!--<td>-->
-                        <!--<div class="book-btn btn-default btn-md">立即预定</div>-->
-                        <!--</td>-->
-                        <!--</tr>-->
-                        <tr v-cloak>
-                            <td class="searchListItem" v-for="item in searchResults">
-                                {{item}}
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                <button type="button" class="close" @click="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <table>
+                    <tr>
+                        <td>楼层</td>
+                        <td>房号</td>
+                        <td>朝向</td>
+                        <td>房间类型</td>
+                        <td>特色</td>
+                        <td>价格</td>
+                        <td><!--操作--></td>
+                    </tr>
+                    <tr v-for="room in rooms" v-cloak>
+                        <td>{{room.roomNumber.floor}}</td>
+                        <td>{{room.roomNumber.number}}</td>
+                        <td :title="room.direction.description">{{room.direction.type}}</td>
+                        <td :title="room.type.description">{{room.type.type}}</td>
+                        <td>{{room.specialty}}</td>
+                        <td>{{room.price}}</td>
+                        <td>
+                            <div class="confirm btn btn-default" :id="room.id" @click="book">预定</div>
+                        </td>
+                    </tr>
+                </table>
             </div>
             `;
             //生成html
@@ -709,5 +656,6 @@ async function backHome() {
 async function logout() {
     localStorage.clear();
     sessionStorage.clear();
+    sessionStorage.isLogin=false;
     location.href = '/';
 }

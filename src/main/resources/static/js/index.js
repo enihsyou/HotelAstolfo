@@ -22,6 +22,7 @@ $('.user-btn').click((e) => {
 $('.logout-btn').click((e) => {
     localStorage.clear();
     sessionStorage.clear();
+    sessionStorage.isLogin = false;
     location.href = '/'
 });
 
@@ -70,11 +71,11 @@ $('.login .window .confirm').click(function () {
                         localStorage.username = data.phoneNumber;
                         localStorage.password = data.password;
                         localStorage.nickname = data.nickname;
-                    } else {
-                        sessionStorage.username = data.phoneNumber;
-                        sessionStorage.password = data.password;
-                        sessionStorage.nickname = data.nickname;
                     }
+                    sessionStorage.username = data.phoneNumber;
+                    sessionStorage.password = data.password;
+                    sessionStorage.nickname = data.nickname;
+                    sessionStorage.isLogin = true;
                     sessionStorage.role = data.role;
                     location.href = '/';
                 });
@@ -138,6 +139,7 @@ $('.signup .window .confirm').click(function () {
                     "guests": []
                 }*/
                 showMsg(`亲爱的${data.nickname},欢迎你来到阿福旅店！`).then(() => {
+                    sessionStorage.isLogin = true;
                     sessionStorage.username = data.phoneNumber;
                     sessionStorage.password = data.password;
                     sessionStorage.nickname = data.nickname;
@@ -314,19 +316,48 @@ let searchBoxVue = new Vue({
 let searchListVue = new Vue({
     el: '.searchList',
     data: {
-        rooms: []
+        rooms: [],
+        ids: []//待测试
     },
     methods: {
-        book: function (e) {
-            /*TODO
-            * 预定动作
-            */
-            console.log(e);
+        showIDs: function (e) {
+            if (!sessionStorage.isLogin) {
+                showMsg('请先登录！').then(
+                    () => {
+                        $('.login-btn').trigger('click');
+                    }
+                );
+                return;
+            }
+            startCatLoading();
+            $.ajax({
+                url: `${serverHost}/api/users/guests?phone=${sessionStorage.username || localStorage.username}`,
+                type: 'GET',
+                dataType: 'json',
+                contentType: "application/json; charset=UTF-8",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+                },
+                success: function (data, textStatus, jqXHR) {
+                    this.id = data;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    showMsg(jqXHR.status)
+                },
+                complete: function () {
+                    stopCatLoading();
+                }
+            })
+        },
+        submitBook: function () {
+            //TODO
+            //提交订单动作
         },
         close: function (e) {
             $(e.target).parent().parent().slideUp();
             $('.slider_container').css('filter', 'none');
             $('.searchBox').css('left', '10%');
         }
-    }
+    },
+    computed: {}
 });

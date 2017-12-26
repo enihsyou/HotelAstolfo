@@ -66,7 +66,7 @@ $(function init() {
     let username = sessionStorage.username || localStorage.username;
     let password = sessionStorage.password || localStorage.password;
     let nickname = sessionStorage.nickname || localStorage.nickname;
-    if (username == null || password == null) {
+    if (!sessionStorage.isLogin) {
         //未登录则返回主页
         location.href = '/';
     }
@@ -92,8 +92,7 @@ $(function init() {
             },
             (errorThrown) => {
                 //报错信息未翻译
-                showMsg(errorThrown);
-                sleep(3000).then(
+                showMsg(errorThrown).then(
                     () => {
                         location.href = '/';
                     }

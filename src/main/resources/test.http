@@ -282,3 +282,15 @@ Content-Type: application/json
 }
 
 ###
+GET http://47.100.117.174:8899/api/users/make/admin
+Content-Type: application/json
+
+{
+  "phoneNumber": "188",
+  "password": "2333",
+  "nickname": "我是前台"
+}
+###
+GET http://47.100.117.174:8899/
+
+###

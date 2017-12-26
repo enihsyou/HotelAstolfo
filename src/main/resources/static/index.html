@@ -158,7 +158,8 @@
         </div>
     </div>
     <div class="searchList untouchable">
-        <button type="button" class="close" @click="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" @click="close" aria-label="Close"><span aria-hidden="true">&times;</span>
+        </button>
         <table>
             <tr>
                 <td>楼层</td>
@@ -177,10 +178,28 @@
                 <td>{{room.specialty}}</td>
                 <td>{{room.price}}</td>
                 <td>
-                    <div class="confirm btn btn-default" :id="room.id" @click="book">预定</div>
+                    <div class="confirm btn btn-default" :id="room.id" @click="showIDs" v-cloak>预定</div>
                 </td>
             </tr>
         </table>
+        <div class="selectID">
+            <button type="button" class="close" @click="close" aria-label="Close"><span
+                    aria-hidden="true">&times;</span>
+            </button>
+            <dl v-cloak>
+                <dt>请选择入住的旅客：</dt>
+                <dd v-if="ids.length === 0">
+                    账户内没有录入身份证信息，请前往<a href="management.html">个人中心</a>添加个人信息！
+                </dd>
+                <dd v-else>
+                    <label class="col-xs-3" v-for="id in ids" :for="id.identification" :title="id.identification"
+                           v-cloak>{{id.name}}
+                        <input type="checkbox" class="form-control" :id="id.identification">
+                    </label>
+                    <button class="btn btn-default confirm untouchable" @click="submitBook">确定</button>
+                </dd>
+            </dl>
+        </div>
     </div>
 </div>
 <div class="footer">

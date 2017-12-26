@@ -2,14 +2,17 @@
 let serverHost = 'http://47.100.117.174:8899';
 
 //封装消息提示
-async function showMsg(msg) {
-    let newMsg = $(`<div class="msg untouchable"><span>${msg}</span></div>`);
-    $('.main').after(newMsg);
-    newMsg.slideDown(333);
-    await sleep(Math.max(1000, msg.length * 150));
-    newMsg.slideUp(333);
-    await sleep(400);
-    newMsg.remove();
+function showMsg(msg) {
+    return new Promise(async (resolve, reject) => {
+        let newMsg = $(`<div class="msg untouchable"><span>${msg}</span></div>`);
+        $('.main').after(newMsg);
+        newMsg.slideDown(333);
+        await sleep(Math.max(1000, msg.length * 150));
+        newMsg.slideUp(333);
+        await sleep(400);
+        newMsg.remove();
+        resolve();
+    })
 }
 
 //延时函数
@@ -61,7 +64,23 @@ function reqLogin(username, password) {
                 resolve(data)
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                reject(jqXHR.status)
+                sessionStorage.isLogin=false;
+                switch (jqXHR.status) {
+                    //密码错误则清除本地缓存
+                    case 400:
+                        sessionStorage.clear();
+                        localStorage.clear();
+                        reject('WRONG_PASSWORD');
+                        break;
+                    //用户不存在则清除本地缓存
+                    case 404:
+                        sessionStorage.clear();
+                        localStorage.clear();
+                        reject('USERNAME_NOT_EXIST');
+                        break;
+                    default:
+                        reject('BAD_NETWORK');
+                }
             },
             complete: function () {
             }
