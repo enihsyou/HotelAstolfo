@@ -45,6 +45,9 @@ const left_nav = new Vue({
                 case '客户分析':
                     client_analyze();
                     break;
+                case '返回主页':
+                    backHome();
+                    break;
                 case '登出':
                     logout();
                     break;
@@ -53,9 +56,9 @@ const left_nav = new Vue({
     }
 });
 
-let ordinary_user_items = ['查看我的订单',  '修改个人信息', '登出'];
-let receptionist_user_items = ['当前所有客房状态', '查询预定客户信息', '预订客房', '客房维修登记', '登出'];
-let manager_user_items = ['客房类型设置', '可用客房设置', '当前所有客房状态', '预订客房', '预订查询与修改', '所有账户管理', '销售月表', '客户分析', '登出'];
+let ordinary_user_items = ['查看我的订单', '修改个人信息', '返回主页', '登出'];
+let receptionist_user_items = ['当前所有客房状态', '查询预定客户信息', '预订客房', '客房维修登记', '返回主页', '登出'];
+let manager_user_items = ['客房类型设置', '可用客房设置', '当前所有客房状态', '预订客房', '预订查询与修改', '所有账户管理', '销售月表', '客户分析', '返回主页', '登出'];
 
 //初始化
 $(function init() {
@@ -63,10 +66,9 @@ $(function init() {
     let username = sessionStorage.username || localStorage.username;
     let password = sessionStorage.password || localStorage.password;
     let nickname = sessionStorage.nickname || localStorage.nickname;
-    //正式使用
     if (username == null || password == null) {
         //未登录则返回主页
-        // location.href = '/';
+        location.href = '/';
     }
     else {
         reqLogin(username, password).then(
@@ -99,7 +101,4 @@ $(function init() {
             }
         );
     }
-    //测试使用
-    left_nav.userType = '欢迎您！' + nickname;
-    left_nav.items = ordinary_user_items;
 });

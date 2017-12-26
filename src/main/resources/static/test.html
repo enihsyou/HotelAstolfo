@@ -16,20 +16,23 @@
 <div class="main">
     <div class="left-nav untouchable"></div>
     <div class="container">
-        <div class="rooms_all_info">
-            <table>
-                <tr>
-                    <td>房间号</td>
-                    <td></td>
-                </tr>
-            </table>
-        </div>
+        <ul>
+            <li v-for="t in tt">{{t}}</li>
+        </ul>
     </div>
 </div>
 <div class="footer">
 </div>
+<script src="js/vue.js"></script>
+<script src="js/jquery-3.2.1.js"></script>
+<script src="js/tools.js"></script>
 <script>
-
+let hh=new Vue({
+    el:'.container',
+    data:{
+        tt:[1,2,3,4]
+    }
+})
 </script>
 </body>
 </html>

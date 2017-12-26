@@ -1,14 +1,16 @@
+//服务器地址
+let serverHost = 'http://47.100.117.174:8899';
+
 //封装消息提示
 async function showMsg(msg) {
     let newMsg = $(`<div class="msg untouchable"><span>${msg}</span></div>`);
     $('.main').after(newMsg);
-    newMsg.slideDown(400);
-    await sleep(Math.max(1000, msg.length * 100));
-    newMsg.slideUp(300);
+    newMsg.slideDown(333);
+    await sleep(Math.max(1000, msg.length * 150));
+    newMsg.slideUp(333);
     await sleep(400);
     newMsg.remove();
 }
-
 
 //延时函数
 function sleep(time) {
@@ -35,14 +37,14 @@ function reqLogin(username, password) {
             return
         }
         $.ajax({
-            url: `/api/users/login`,
+            url: `${serverHost}/api/users/login`,
             type: 'POST',
             data: JSON.stringify({
                 phoneNumber: username,
-                password: sha256(password)
+                password: password
             }),
             dataType: 'json',
-            contentType: "charset=UTF-8",
+            contentType: "application/json; charset=UTF-8",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
             },
@@ -59,7 +61,9 @@ function reqLogin(username, password) {
                 resolve(data)
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                reject(errorThrown)
+                reject(jqXHR.status)
+            },
+            complete: function () {
             }
         });
     });

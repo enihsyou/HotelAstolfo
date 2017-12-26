@@ -24,6 +24,8 @@
     width: calc(100% - 15em);
     height: inherit;
     background: linear-gradient(to bottom, white 10%, #eff8ff);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 /* check_my_order and check_my_booking*/
@@ -72,7 +74,24 @@
 }
 
 .container .modify_my_info .btn {
+    margin: auto;
     zoom: .75;
+}
+
+.container .modify_my_info .info {
+    position: relative;
+    border: 0;
+    width: 35em;
+}
+
+.container .modify_my_info .info tr {
+    text-align: right;
+    height: 2.5em;
+    border: 0;
+}
+
+.container .modify_my_info .info tr td {
+    width: 20%;
 }
 
 .container .book_a_room .resList {
