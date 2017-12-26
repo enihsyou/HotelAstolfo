@@ -285,6 +285,7 @@ body {
     border-radius: 1em;
     box-shadow: 1.2em 1.2em 5em .5em rgba(41, 41, 41, 0.3);
     transition: left 0.33s linear;
+    overflow: hidden;
 }
 
 .searchBox label {
@@ -306,6 +307,10 @@ body {
     cursor: pointer;
 }
 
+#bookingStart, #bookingEnd, #priceFrom, #priceTo {
+    width: 9vw;
+}
+
 .searchList {
     position: absolute;
     bottom: 10%;
@@ -316,6 +321,8 @@ body {
     background: rgba(255, 255, 255, .95);
     border-radius: 1em;
     box-shadow: 1.2em 1.2em 5em .5em rgba(41, 41, 41, 0.3);
+    overflow-y: auto;
+    overflow-x: hidden;
     display: none;
 }
 
@@ -357,11 +364,22 @@ body {
     width: 4em;
 }
 
+.searchList table .confirm {
+    zoom: .75;
+    cursor: pointer;
+}
+
 .footer {
     display: block;
     height: 7vh;
     box-shadow: #0f0f0f;
     background-color: #3fa1d2;
+}
+
+.footer p {
+    padding-top: 2.5vh;
+    width: 100%;
+    text-align: center;
 }
 
 .untouchable {

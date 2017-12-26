@@ -123,42 +123,32 @@
             </label>
             <label class="col-xs-12" for="bookingPrice">价格区间：
                 <span id="bookingPrice">
-                    <input id="priceFrom" type="number" min="0" max="9999" placeholder="最低">
+                    <input id="priceFrom" type="number" min="0" max="9999" placeholder="最低价格">
                     ~
-                    <input id="priceTo" min="0" max="9999" type="number" placeholder="最高">
+                    <input id="priceTo" min="0" max="9999" type="number" placeholder="最高价格">
                 </span>
             </label>
-            <label class="col-xs-12" for="bookingType">客房类型：
+            <label class="col-xs-12" for="bookingType" v-if="isLoaded" v-cloak>客房类型：
                 <select class="form-control" id="bookingType">
-                    <option value="std">高端双床间</option>
-                    <option value="big">至尊大床房</option>
-                    <option value="thr">激情三人房</option>
-                    <option value="suit">奢华总统套房</option>
+                    <option v-for="etype in type" :value="etype">{{etype}}</option>
                     <option value="" selected>任意</option>
                 </select>
             </label>
-            <label class="col-xs-12" for="bookingDirection">房间朝向：
+            <label class="col-xs-12" for="bookingDirection" v-if="isLoaded" v-cloak>房间朝向：
                 <select class="form-control" id="bookingDirection">
-                    <option value="east">东</option>
-                    <option value="south">南</option>
-                    <option value="west">西</option>
-                    <option value="north">北</option>
+                    <option v-for="edirection in direction" :value="direction">{{direction}}</option>
                     <option value="" selected>任意</option>
                 </select>
             </label>
-            <label class="col-xs-12" for="bookingFloor">楼层：
-                <select class="form-control" id="bookingFloor">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="4">3</option>
-                    <option value="5">4</option>
-                    <option value="5">5</option>
+            <label class="col-xs-12" for="bookingFloor" v-if="isLoaded" v-cloak>楼层：
+                <select class="form-control" id="bookingFloor" @change="updateNumber">
+                    <option v-for="efloor in floor" :value="efloor">{{efloor}}</option>
                     <option value="" selected>任意</option>
                 </select>
             </label>
-            <label class="col-xs-12" for="bookingNumber">房号：
-                <select class="form-control" id="bookingNumber" disabled>
-                    <option v-for="number in numbers" :value="value" v-cloak="">{{number}}</option>
+            <label class="col-xs-12" for="bookingNumber" v-if="isLoaded" v-cloak>房号：
+                <select class="form-control" id="bookingNumber">
+                    <option v-for="enumber in number" :value="enumber">{{enumber}}</option>
                     <option value="" selected>任意</option>
                 </select>
             </label>
@@ -171,22 +161,34 @@
         <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <table>
             <tr>
-                <td>房型</td>
-                <td>床型</td>
-                <td>特殊服务</td>
-                <td>房价</td>
-                <td><!--预定--></td>
+                <td>楼层</td>
+                <td>房号</td>
+                <td>朝向</td>
+                <td>房间类型</td>
+                <td>特色</td>
+                <td>价格</td>
+                <td><!--操作--></td>
             </tr>
-            <tr v-cloak>
-                <td class="searchListItem" v-for="item in searchResults">
-                    {{item}}
+            <tr v-for="room in rooms" v-cloak>
+                <td>{{room.roomNumber.floor}}</td>
+                <td>{{room.roomNumber.number}}</td>
+                <td :title="room.direction.description">{{room.direction.type}}</td>
+                <td :title="room.type.description">{{room.type.type}}</td>
+                <td>{{room.specialty}}</td>
+                <td>{{room.price}}</td>
+                <td>
+                    <div class="confirm btn btn-default" :id="room.id" @click="book">预定</div>
                 </td>
             </tr>
         </table>
     </div>
 </div>
 <div class="footer">
-
+    <p class="untouchable">Designed&created by
+        <span title="1517440121">黄春翔</span>/
+        <span title="1517030317">黄术</span>/
+        <span title="1512480226">黄君扬</span>
+    </p>
 </div>
 <script src="js/jquery-3.2.1.js"></script>
 <script src="js/vue.js"></script>

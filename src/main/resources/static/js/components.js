@@ -134,7 +134,7 @@ async function modify_my_info() {
                             <td>{{guest.name}}</td>
                             <td>{{guest.identification}}</td>
                             <td>
-                                <div class="comfirm btn btn-default" :name="guest.name">删除</div>
+                                <div class="comfirm btn btn-default" :id="guest.identification">删除</div>
                             </td>
                         </tr>
                         <tr>

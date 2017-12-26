@@ -200,8 +200,8 @@ $('.searchBox .confirm').click(function () {
         type: 'GET',
         contentType: "application/json; charset=UTF-8",
         data: {
-            from: from.length > 0 && to.length > 0 ? new Date(from).toISOString().replace('Z','') : undefined,
-            to: from.length > 0 && to.length > 0 ? new Date(to).toISOString().replace('Z','') : undefined,
+            from: from.length > 0 && to.length > 0 ? new Date(from).toISOString().replace('Z', '') : undefined,
+            to: from.length > 0 && to.length > 0 ? new Date(to).toISOString().replace('Z', '') : undefined,
             type: type.length > 0 ? type : undefined,
             priceFrom: priceFrom > 0 && priceTo > 0 ? priceFrom : undefined,
             priceTo: priceFrom > 0 && priceTo > 0 ? priceTo : undefined,
@@ -210,11 +210,12 @@ $('.searchBox .confirm').click(function () {
             number: number > 0 ? number : undefined
         },
         success: function (data, textStatus, jqXHR) {
-            //TODO dateStructure of callback
             //显示右侧搜索列表
             $('.slider_container').css('filter', 'blur(10px)');
             $('.searchBox').css('left', '5%');
             $('.searchList').slideDown(333);
+            //激活Vue
+            searchListVue.rooms = data;
         },
         error: function (jqXHR, textStatus, errorThrown) {
             showMsg('网络错误！');
@@ -248,6 +249,25 @@ $(function init() {
     $('#bookingEnd').val(`${year}-${month}-${nday}`)
         .attr('min', `${year}-${month}-${nday}`)
         .attr('max', `${year + 1}-${month}-${nday}`);
+    //获取首页搜索选项
+    $.ajax({
+        url: `${serverHost}/api/rooms/load`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "application/json; charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            searchBoxVue.update(data);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            showMsg('连接服务器失败')
+        },
+        complete: function () {
+            searchBoxVue.isLoaded = true;
+        }
+    });
     //初始化顶栏
     reqLogin(sessionStorage.username || localStorage.username, sessionStorage.password || localStorage.password)
         .then((data) => {
@@ -264,3 +284,51 @@ $(function init() {
         });
 });
 
+let searchBoxVue = new Vue({
+    el: '.searchBox',
+    data: {
+        type: [],
+        direction: [],
+        floorAndNumber: {},
+        number: [],
+        isLoaded: false
+    },
+    methods: {
+        update: function (data) {
+            this.type = data.types;
+            this.direction = data.directions;
+            this.floorAndNumber = data.rooms;
+            this.isLoaded = true;
+        },
+        updateNumber: function (e) {
+            let sfloor = $('#bookingFloor').val();
+            if (sfloor.length != null) {
+                this.number = this.floorAndNumber[sfloor]
+            }
+        }
+    },
+    computed: {
+        floor: function () {
+            let floors = [];
+            for (let floor in this.floorAndNumber) {
+                floors.push(floor);
+            }
+            return floors;
+        }
+    }
+});
+
+let searchListVue = new Vue({
+    el: '.searchList',
+    data: {
+        rooms: []
+    },
+    methods: {
+        book: function (e) {
+            /*TODO
+            * 预定动作
+            */
+            console.log(e);
+        }
+    }
+});
