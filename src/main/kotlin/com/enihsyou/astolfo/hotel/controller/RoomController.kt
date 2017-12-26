@@ -77,9 +77,9 @@ class RoomController {
     @GetMapping("/load")
     fun load(): MutableMap<String, Any> {
         val result = mutableMapOf<String, Any>()
-        result.put("types", listTypes())
-        result.put("directions", listDirections())
-        result.put("rooms", listRoom())
+        result.put("types", listTypes().map { it.type})
+        result.put("directions", listDirections().map { it.type })
+        result.put("rooms", listRoom().groupBy { it.roomNumber.floor }.mapValues { it.value.map { it.roomNumber.number } })
         return result
     }
 }
