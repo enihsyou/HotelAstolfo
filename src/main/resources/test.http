@@ -180,10 +180,9 @@ Authorization:Basic dGVzdDoyMzMz
 }
 
 ###
-POST http://localhost:10080/api/users/transactions?phone=18800000001
-
+GET http://localhost:10080/api/rooms
 ###
-PUT http://localhost:10080/api/users?phone=18800000001
+PUT http://localhost:10080/api/rooms?floor=
 Content-Type: application/json
 
 {
@@ -279,6 +278,24 @@ Content-Type: application/json
 {
   "type": "东2",
   "description": "冬暖夏狼"
+}
+
+###
+POST http://localhost:10080/api/rooms/types
+Content-Type: application/json
+Authorization:Basic dGVzdDoyMzMz
+
+{
+  "type": "大だ床房",
+  "description": "足够两个人唑在一起的大小"
+}
+###
+DELETE http://localhost:10080/api/rooms/types
+Content-Type: application/json
+
+{
+  "type": "大だ床房",
+  "description": "修改之后的内容"
 }
 
 ###

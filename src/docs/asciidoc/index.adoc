@@ -228,7 +228,7 @@ Authorization:Basic dGVzdDoyMzMz
 一行代码 获取显示首页需要的内容
 [source, http]
 ----
-GET http://localhost:10080/api/rooms/load
+GET http://localhost:10080/api/rooms/load2
 Content-Type: application/json
 ----
 返回三块
@@ -331,7 +331,37 @@ Content-Type: application/json
   ]
 }
 ----
-
+简要版本
+[source, http]
+----
+GET http://localhost:10080/api/rooms/load
+Content-Type: application/json
+----
+[source, json]
+----
+{
+  "types": [
+    "东",
+    "东2",
+    "大床房"
+  ],
+  "directions": [
+    "东2",
+    "东"
+  ],
+  "rooms": {
+    "2": [
+      1
+    ],
+    "3": [
+      1
+    ],
+    "5": [
+      1
+    ]
+  }
+}
+----
 
 
 === 房间类型
@@ -339,7 +369,6 @@ Content-Type: application/json
 [source, http]
 ----
 GET http://localhost:10080/api/rooms/types
-Content-Type: application/json
 ----
 返回结果
 [source, json]
@@ -358,8 +387,7 @@ Content-Type: application/json
 ]
 ----
 
-
-添加房间类型定义,重复返回409。限制为只有管理员经理才能操作
+添加房间类型定义。限制为只有管理员经理才能操作
 [source, http]
 ----
 POST http://localhost:10080/api/rooms/types
@@ -371,6 +399,22 @@ Authorization:Basic dGVzdDoyMzMz
   "description": "足够两个人唑在一起的大小"
 }
 ----
+如果成功就是201，并返回新建的项目。
+如果失败就是409，并返回已有的项目。
+
+更新类型定义
+[source, http]
+----
+PUT http://localhost:10080/api/rooms/types
+Content-Type: application/json
+
+{
+  "type": "大だ床房",
+  "description": "修改之后的内容"
+}
+----
+内容里的type是需要修改的目标，也就只有description可以修改
+
 === 房间朝向
 
 获取房间朝向定义只需要GET
@@ -415,7 +459,7 @@ Authorization:Basic dGVzdDoyMzMz
 添加房间定义
 [source, http]
 ----
-POST http://localhost:10080/api/rooms/add
+POST http://localhost:10080/api/rooms
 Content-Type: application/json
 
 {
@@ -430,6 +474,40 @@ Content-Type: application/json
 }
 ----
 
+
+=== 更新房间定义
+
+和更新用户个人信息一样，只提供有的部分
+[source, http]
+----
+GET http://localhost:10080/api/rooms/load
+Content-Type: application/json
+----
+[source, json]
+----
+{
+  "types": [
+    "东",
+    "东2",
+    "大床房"
+  ],
+  "directions": [
+    "东2",
+    "东"
+  ],
+  "rooms": {
+    "2": [
+      1
+    ],
+    "3": [
+      1
+    ],
+    "5": [
+      1
+    ]
+  }
+}
+----
 === 获取楼层信息列表
 [source, http]
 ----
@@ -565,8 +643,6 @@ GET http://localhost:10080/api/rooms/list?type=大床房
 
     GET http://localhost:10080/api/rooms/list?from=2018-04-22T18:25:43.511&to=2018-04-23T18:25:43.511
 
-=== 设置房间状态
-
 
 == 订单管理
 
@@ -637,5 +713,4 @@ GET http://localhost:10080/api/transactions/list
 ]
 ----
 
-
-
+//todo 修改房间的文档

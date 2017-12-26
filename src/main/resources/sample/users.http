@@ -21,7 +21,7 @@ Authorization:Basic dGVzdDoyMzMz
 # 这是一个在预填充Dumy数据里的用户，返回200 以及用户信息，这里返回内容不包含密码
 
 ###
-POST http://localhost:10080/api/users/make
+POST http://localhost:10080/api/users/make/admin
 # 注册接口，昵称域是可选的。如果密码不是SHA256加密后的(256位长度)会在后台加密保存
 # 请求格式不正确就是400
 Content-Type: application/json
