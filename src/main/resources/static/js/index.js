@@ -209,7 +209,6 @@ $(function init() {
             showMsg('连接服务器失败')
         },
         complete: function () {
-            searchBoxVue.isLoaded = true;
         }
     });
     //初始化顶栏
@@ -226,6 +225,15 @@ $(function init() {
             }
             $('.login-btn').show();
         });
+    //初始化登录与注册格式
+    $("#inputUserName").mask("999-9999-9999");
+    $("#signupUsername").mask("999-9999-9999");
+    //初始化键盘快捷键
+    $('.form-horizontal').keypress(function (e) {
+        if(e.keyCode===13){
+            $(this).find('.confirm').trigger('click');
+        }
+    })
 });
 
 let searchBoxVue = new Vue({
@@ -234,8 +242,7 @@ let searchBoxVue = new Vue({
         type: [],
         direction: [],
         floorAndNumber: {},
-        number: [],
-        isLoaded: false
+        number: []
     },
     methods: {
         update: function (data) {
@@ -272,7 +279,7 @@ let searchBoxVue = new Vue({
             }
             $(_this).append('<span class="loading line"></span>');
             $.ajax({
-                url: `${serverHost}/api/rooms/list`,
+                url: `${serverHost}/api/rooms`,
                 type: 'GET',
                 contentType: "application/json; charset=UTF-8",
                 data: {
@@ -317,10 +324,11 @@ let searchListVue = new Vue({
     el: '.searchList',
     data: {
         rooms: [],
-        ids: []//待测试
+        ids: []
     },
     methods: {
         showIDs: function (e) {
+            let _this = this;
             if (!sessionStorage.isLogin) {
                 showMsg('请先登录！').then(
                     () => {
@@ -339,7 +347,7 @@ let searchListVue = new Vue({
                     xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
                 },
                 success: function (data, textStatus, jqXHR) {
-                    this.id = data;
+                    _this.ids = data;
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     showMsg(jqXHR.status)

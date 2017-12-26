@@ -63,37 +63,41 @@
     width: 4em;
 }
 
-.container .modify_my_info dt {
+.container #modify_my_info dt {
     font-weight: bold;
     padding-bottom: .5em;
 }
 
-.container .modify_my_info dd label {
+.container #modify_my_info dd label {
     font-size: 12px;
     width: 100%;
 }
 
-.container .modify_my_info .btn {
+.container #modify_my_info .btn {
     margin: auto;
-    zoom: .75;
 }
 
-.container .modify_my_info .info {
+.container #modify_my_info .info {
     position: relative;
     border: 0;
     width: 35em;
 }
 
-.container .modify_my_info .info tr {
+.container #modify_my_info .info tr {
     text-align: right;
     height: 2.5em;
     border: 0;
 }
 
-.container .modify_my_info .info tr td {
+.container #modify_my_info .info tr td {
     width: 20%;
 }
 
-.container .book_a_room .resList {
+.container #book_a_room .resList {
     margin: 2em;
+}
+
+.container #modify_rooms_type div table {
+    position: relative;
+    margin-bottom: 3em;
 }

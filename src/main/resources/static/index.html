@@ -17,7 +17,7 @@
                 <label for="inputUserName"
                        class="col-xs-offset-1 col-xs-11 col-sm-offset-2 col-sm-2 col-lg-offset-3 col-lg-2 control-label">用户名(手机号)</label>
                 <div class="col-xs-offset-1 col-xs-10 col-sm-offset-0 col-sm-4 col-lg-offset-0 col-lg-2">
-                    <input type="text" class="form-control" id="inputUserName" placeholder="请输入用户名"
+                    <input type="text" class="form-control" id="inputUserName" placeholder="请输入用户名(手机号)"
                            aria-describedby="inputError2Status">
                 </div>
             </div>
@@ -37,12 +37,12 @@
                     </div>
                 </div>
                 <div class="col-xs-offset-1 col-xs-10 col-sm-offset-4 col-sm-4 col-lg-offset-5 col-lg-2 text-center">
-                    <div type="submit" class="btn-primary btn-lg confirm untouchable">登录
+                    <div class="btn-primary btn-lg confirm untouchable">登录
                     </div>
                 </div>
             </div>
-            <div class="loginFooter text-center"><a class="forgot" href="#">忘记密码</a>|<a class="signup-btn"
-                                                                                        href="#">注册用户</a>
+            <div class="loginFooter text-center"><a class="forgot" href="#">忘记密码</a>|
+                <a class="signup-btn" href="#">注册用户</a>
             </div>
         </form>
     </div>
@@ -83,7 +83,7 @@
             </div>
             <div class="form-group">
                 <div class="col-xs-offset-1 col-xs-10 col-sm-offset-4 col-sm-4 col-lg-offset-5 col-lg-2 text-center">
-                    <div type="submit" class="btn-primary btn-lg confirm untouchable">注册
+                    <div class="btn-primary btn-lg confirm untouchable">注册
                     </div>
                 </div>
             </div>
@@ -102,7 +102,7 @@
             <span class="info">今夜，相约阿福，不见不散</span>
         </div>
         <div>
-            <span class="info">贴心小姐姐尊贵倒茶体验</span>
+            <span class="info">贴心小姐姐尊贵倒水体验</span>
         </div>
         <div>
             <span class="info">分店辐射全国各大USST分校</span>
@@ -123,32 +123,32 @@
             </label>
             <label class="col-xs-12" for="bookingPrice">价格区间：
                 <span id="bookingPrice">
-                    <input id="priceFrom" type="number" min="0" max="9999" placeholder="最低价格">
+                    <input id="priceFrom" type="number" min="0" max="999999" placeholder="最低价格">
                     ~
-                    <input id="priceTo" min="0" max="9999" type="number" placeholder="最高价格">
+                    <input id="priceTo" type="number" min="0" max="999999" placeholder="最高价格">
                 </span>
             </label>
-            <label class="col-xs-12" for="bookingType" v-if="isLoaded" v-cloak>客房类型：
+            <label class="col-xs-12" for="bookingType">客房类型：
                 <select class="form-control" id="bookingType">
-                    <option v-for="etype in type" :value="etype">{{etype}}</option>
+                    <option v-for="etype in type" :value="etype" v-cloak>{{etype}}</option>
                     <option value="" selected>任意</option>
                 </select>
             </label>
-            <label class="col-xs-12" for="bookingDirection" v-if="isLoaded" v-cloak>房间朝向：
+            <label class="col-xs-12" for="bookingDirection">房间朝向：
                 <select class="form-control" id="bookingDirection">
-                    <option v-for="edirection in direction" :value="direction">{{direction}}</option>
+                    <option v-for="edirection in direction" :value="direction" v-cloak>{{direction}}</option>
                     <option value="" selected>任意</option>
                 </select>
             </label>
-            <label class="col-xs-12" for="bookingFloor" v-if="isLoaded" v-cloak>楼层：
+            <label class="col-xs-12" for="bookingFloor">楼层：
                 <select class="form-control" id="bookingFloor" @change="updateNumber">
-                    <option v-for="efloor in floor" :value="efloor">{{efloor}}</option>
+                    <option v-for="efloor in floor" :value="efloor" v-cloak>{{efloor}}</option>
                     <option value="" selected>任意</option>
                 </select>
             </label>
-            <label class="col-xs-12" for="bookingNumber" v-if="isLoaded" v-cloak>房号：
+            <label class="col-xs-12" for="bookingNumber">房号：
                 <select class="form-control" id="bookingNumber">
-                    <option v-for="enumber in number" :value="enumber">{{enumber}}</option>
+                    <option v-for="enumber in number" :value="enumber" v-cloak>{{enumber}}</option>
                     <option value="" selected>任意</option>
                 </select>
             </label>
@@ -210,6 +210,7 @@
     </p>
 </div>
 <script src="js/jquery-3.2.1.js"></script>
+<script src="js/jquery.maskedinput.js"></script>
 <script src="js/vue.js"></script>
 <script src="js/js-sha256.js"></script>
 <script src="js/tools.js"></script>

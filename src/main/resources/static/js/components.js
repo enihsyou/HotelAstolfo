@@ -27,7 +27,7 @@ async function check_my_order() {
         success: function (data, textStatus, jqXHR) {
             //获取订单
             let resStr = `
-            <div class="check_my_order">
+            <div id="check_my_order">
                 <table>
                     <tr>
                         <td>订单编号</td>
@@ -56,7 +56,7 @@ async function check_my_order() {
             render_Container(resStr);
             //script
             let app = new Vue({
-                el: '.check_my_order',
+                el: '#check_my_order',
                 data: {
                     orders: data
                 }
@@ -72,7 +72,7 @@ async function check_my_order() {
     });
 }
 
-//done
+//done?
 async function modify_my_info() {
     //身份验证&获取数据
     $.ajax({
@@ -85,7 +85,7 @@ async function modify_my_info() {
         },
         success: function (data, textStatus, jqXHR) {
             let resStr = `
-            <div class="modify_my_info">
+            <div id="modify_my_info">
             <dl>
                 <dt>修改个人资料</dt>
                 <dd>
@@ -114,7 +114,7 @@ async function modify_my_info() {
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <div class="btn btn-default">确认修改</div>
+                                <div class="btn btn-default" @click="modifyPro">确认修改</div>
                             </td>
                             <td>
                         </tr>
@@ -134,14 +134,14 @@ async function modify_my_info() {
                             <td>{{guest.name}}</td>
                             <td>{{guest.identification}}</td>
                             <td>
-                                <div class="comfirm btn btn-default" :id="guest.identification">删除</div>
+                                <div class="comfirm btn btn-default" :id="guest.identification" @click="delID">删除</div>
                             </td>
                         </tr>
                         <tr>
                             <td><input type="text" id="newG" title="name" placeholder="新旅客姓名"></td>
                             <td><input type="text" id="newID" title="ID" placeholder="新旅客身份证"></td>
                             <td>
-                                <div class="btn btn-default confirm">添加</div>
+                                <div class="btn btn-default confirm" @click="addID">添加</div>
                             </td>
                         </tr>
                     </table>
@@ -151,93 +151,99 @@ async function modify_my_info() {
             `;
             //生成html
             render_Container(resStr);
-            //script
             //初始化界面
             const app = new Vue({
-                el: '.modify_my_info',
+                el: '#modify_my_info',
                 data: {
                     nickname: sessionStorage.nickname || localStorage.nickname,
                     guests: data
-                }
-            });
-            //修改个人资料
-            $('.container .info .btn').click(function () {
-                let newPassword = $('#newPWD').val();
-                let oldNickname = sessionStorage.nickname || localStorage.nickname;
-                let newNickname = $('#nickname').val();
-                if (newPassword !== $('#newPWDR').val()) {
-                    showMsg('两次输入的密码不相符！');
-                    return;
-                }
-                startCatLoading();
-                $.ajax({
-                    url: `${serverHost}/api/users?phone=${sessionStorage.username || localStorage.username}`,
-                    type: 'PUT',
-                    data: JSON.stringify({
-                        nickname: newNickname,
-                        password: newPassword.length > 0 ? newPassword : undefined
-                    }),
-                    dataType: 'json',
-                    contentType: "application/json; charset=UTF-8",
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
-                    },
-                    success: function (data, textStatus, jqXHR) {
-                        sessionStorage.nickname = newNickname;
-                        left_nav.userType = left_nav.userType.replace(oldNickname, newNickname);
-                        showMsg('修改成功！');
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        showMsg('修改失败！');
-                    },
-                    complete: function () {
-                        stopCatLoading();
-                    }
-                })
-            });
-            //添加身份证信息
-            $('.container .id .confirm').click(function () {
-                let newG = $('#newG').val();
-                let newID = $('#newID').val();
-                if (newG == null || newID == null) {
-                    showMsg('请完整填写新旅客信息');
-                    return;
-                }
-                startCatLoading();
-                $.ajax({
-                    url: `${serverHost}/api/users/guests?phone=${sessionStorage.username || localStorage.username}`,
-                    type: 'POST',
-                    data: JSON.stringify({
-                        name: newG,
-                        identification: newID,
-                    }),
-                    contentType: "application/json; charset=UTF-8",
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
-                    },
-                    success: function (data, textStatus, jqXHR) {
-                        showMsg(`添加新旅客${newG}成功！`);
-                        app.guests.push({
-                            id: -1,
-                            identification: newID,
-                            name: newG
+                },
+                methods: {
+                    //修改个人资料
+                    modifyPro: function () {
+                        let newPassword = $('#newPWD').val();
+                        let oldNickname = sessionStorage.nickname || localStorage.nickname;
+                        let newNickname = $('#nickname').val();
+                        if (newPassword !== $('#newPWDR').val()) {
+                            showMsg('两次输入的密码不相符！');
+                            return;
+                        }
+                        startCatLoading();
+                        $.ajax({
+                            url: `${serverHost}/api/users?phone=${sessionStorage.username || localStorage.username}`,
+                            type: 'PUT',
+                            data: JSON.stringify({
+                                nickname: newNickname,
+                                password: newPassword.length > 0 ? newPassword : undefined
+                            }),
+                            dataType: 'json',
+                            contentType: "application/json; charset=UTF-8",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+                            },
+                            success: function (data, textStatus, jqXHR) {
+                                sessionStorage.nickname = newNickname;
+                                left_nav.userType = left_nav.userType.replace(oldNickname, newNickname);
+                                showMsg('修改成功！');
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                showMsg('修改失败！');
+                            },
+                            complete: function () {
+                                stopCatLoading();
+                            }
                         })
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        let msg = '添加新旅客失败';
-                        switch (jqXHR.status) {
-                            case 409:
-                                msg += ',已存在该旅客';
-                                break;
+                    //添加身份证信息
+                    addID: function () {
+                        let newG = $('#newG').val();
+                        let newID = $('#newID').val();
+                        if (newG == null || newID == null) {
+                            showMsg('请完整填写新旅客信息');
+                            return;
                         }
-                        console.log(jqXHR);
-                        showMsg(msg);
+                        startCatLoading();
+                        $.ajax({
+                            url: `${serverHost}/api/users/guests?phone=${sessionStorage.username || localStorage.username}`,
+                            type: 'POST',
+                            data: JSON.stringify({
+                                name: newG,
+                                identification: newID,
+                            }),
+                            contentType: "application/json; charset=UTF-8",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+                            },
+                            success: function (data, textStatus, jqXHR) {
+                                showMsg(`添加新旅客${newG}成功！`);
+                                app.guests.push({
+                                    id: -1,
+                                    identification: newID,
+                                    name: newG
+                                })
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                let msg = '添加新旅客失败';
+                                switch (jqXHR.status) {
+                                    case 409:
+                                        msg += ',已存在该旅客';
+                                        break;
+                                }
+                                console.log(jqXHR);
+                                showMsg(msg);
+                            },
+                            complete: function () {
+                                stopCatLoading();
+                            }
+                        })
                     },
-                    complete: function () {
-                        stopCatLoading();
+                    //删除身份证信息
+                    delID: function () {
+                        //TODO
+                        //等待接口
                     }
-                })
-            })
+                }
+            });
         },
         error: function (jqXHR, textStatus, errorThrown) {
             showMsg(jqXHR.status)
@@ -310,7 +316,7 @@ async function book_a_room() {
 async function rooms_all_info() {
     //身份验证&获取数据
     $.ajax({
-        url: `${serverHost}/api/rooms/list`,
+        url: `${serverHost}/api/rooms`,
         type: 'GET',
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
@@ -320,7 +326,7 @@ async function rooms_all_info() {
         success: function (data, textStatus, jqXHR) {
             //获取订单
             let resStr = `
-            <div class="rooms_all_info">
+            <div id="rooms_all_info">
                 <dl>
                     <dt>所有房间信息：</dt>
                     <dd>
@@ -352,7 +358,7 @@ async function rooms_all_info() {
             render_Container(resStr);
             //script
             const app = new Vue({
-                el: '.rooms_all_info',
+                el: '#rooms_all_info',
                 data: {
                     rooms: data
                 }
@@ -382,62 +388,60 @@ async function check_all_booking() {
         success: function (data, textStatus, jqXHR) {
             //获取订单
             let resStr = `
-            <div class="check_all_booking">
-            <dl>
-                <dt>所有订单：</dt>
-                <dd>
-                    <table>
-                        <tr>
-                            <td>订单编号</td>
-                            <td>创建时间</td>
-                            <td>房间楼层与房间号</td>
-                            <td>入住人</td>
-                            <td>入住时间</td>
-                            <td>退房时间</td>
-                            <td>订单有效性</td>
-                            <td>是否入住</td>
-                            <td><!--操作--></td>
-                        </tr>
-                        <tr v-for="order in orders" v-cloak>
-                            <td>{{order.id}}</td>
-                            <td>{{timeFormat(order.createDate)}}</td>
-                            <td :title="order.room.type.type">
-                                {{order.room.roomNumber.floor}}-{{order.room.roomNumber.number}}
-                            </td>
-                            <td><span v-for="guest in order.guests">{{guest.name}}:{{guest.identification}}</span>
-                            </td>
-                            <td>{{timeFormat(order.dateFrom)}}</td>
-                            <td>{{timeFormat(order.dateTo)}}</td>
-                            <td>{{orderActivated}}</td>
-                            <td>{{orderUsed}}</td>
-                            <td></td>
-                        </tr>
-                    </table>
-                </dd>
-            </dl>
-        </div>
+            <div id="check_all_booking">
+                <dl>
+                    <dt>所有订单：</dt>
+                    <dd>
+                        <table>
+                            <tr>
+                                <td>订单编号</td>
+                                <td>创建时间</td>
+                                <td>房间楼层与房间号</td>
+                                <td>入住人</td>
+                                <td>入住时间</td>
+                                <td>退房时间</td>
+                                <td>订单有效性</td>
+                                <td>是否入住</td>
+                                <td><!--操作--></td>
+                            </tr>
+                            <tr v-for="order in orders" v-cloak>
+                                <td>{{order.id}}</td>
+                                <td>{{timeFormat(order.createDate)}}</td>
+                                <td :title="order.room.type.type">
+                                    {{order.room.roomNumber.floor}}-{{order.room.roomNumber.number}}
+                                </td>
+                                <td>
+                                    <span v-for="guest in order.guests">{{guest.name}}:{{guest.identification}}</span>
+                                </td>
+                                <td>{{timeFormat(order.dateFrom)}}</td>
+                                <td>{{timeFormat(order.dateTo)}}</td>
+                                <td>{{orderActivated(order.activated)}}</td>
+                                <td>{{orderUsed(order.used)}}</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </dd>
+                </dl>
+            </div>
             `;
             //生成html
             render_Container(resStr);
             //script
             const app = new Vue({
-                el: '.check_all_booking',
+                el: '#check_all_booking',
                 data: {
                     orders: data
                 },
                 methods: {
                     timeFormat: function (time) {
                         return new Date(time).toLocaleString();
-                    }
-                },
-                computed: {
-                    orderActivated: function () {
-                        return data.activated ? '有效' : '已失效'
                     },
-                    orderUsed: function () {
-                        return data.used ? '已入住' : '未入住'
+                    orderActivated: function (isActivated) {
+                        return isActivated ? '有效' : '已失效'
+                    },
+                    orderUsed: function (isUsed) {
+                        return isUsed ? '已入住' : '未入住'
                     }
-
                 }
             });
         },
@@ -488,7 +492,7 @@ async function fix_a_room() {
 async function modify_rooms_type() {
     //身份验证&获取数据
     $.ajax({
-        url: `${serverHost}/api/`,
+        url: `${serverHost}/api/rooms/load2`,
         type: 'GET',
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
@@ -498,14 +502,12 @@ async function modify_rooms_type() {
         success: function (data, textStatus, jqXHR) {
             //获取订单
             let resStr = `
-            <h1>假装打印出所有订单</h1>
+
             `;
             //生成html
             render_Container(resStr);
             //script
-            $('.container h1').click(function () {
-                showMsg('测试一下')
-            });
+
         },
         error: function (jqXHR, textStatus, errorThrown) {
             showMsg(jqXHR.status)
@@ -656,6 +658,6 @@ async function backHome() {
 async function logout() {
     localStorage.clear();
     sessionStorage.clear();
-    sessionStorage.isLogin=false;
+    sessionStorage.isLogin = false;
     location.href = '/';
 }
