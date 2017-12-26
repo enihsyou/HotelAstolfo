@@ -42,7 +42,7 @@ interface RoomService {
 
     fun listDirections(): List<RoomDirection>
     fun addDirection(direction: RoomDirection): ResponseEntity<RoomDirection>
-    fun modifyDirection(direction: RoomDirection): RoomDirection
+    fun modifyDirection(direction: String, payload: Map<String, String>): RoomDirection
     fun deleteDirection(direction: String)
 
     fun listFloors(): List<Room.RoomNumber>
@@ -161,10 +161,10 @@ class RoomServiceImpl : RoomService {
             ResponseEntity(type_test, HttpStatus.CONFLICT)
     }
 
-    override fun modifyType(type: RoomType): RoomType {
-        val type_test = getType(type.type)
+    override fun modifyType(type: String, payload: Map<String, String>): RoomType {
+        val type_test = getType(type)
 
-        type_test.description = type.description
+        payload["description"]?.let { type_test.description = it }
 
         roomTypeRepository.save(type_test)
         return type_test
@@ -187,10 +187,10 @@ class RoomServiceImpl : RoomService {
             ResponseEntity(type_test, HttpStatus.CONFLICT)
     }
 
-    override fun modifyDirection(direction: RoomDirection): RoomDirection {
-        val direction_test = getDirection(direction.type)
+    override fun modifyDirection(direction: String, payload: Map<String, String>): RoomDirection{
+        val direction_test = getDirection(direction)
 
-        direction_test.description = direction.description
+        payload["description"]?.let { direction_test.description = it }
 
         roomDirectionRepository.save(direction_test)
         return direction_test

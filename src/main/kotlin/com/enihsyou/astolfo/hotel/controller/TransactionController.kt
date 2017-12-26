@@ -42,9 +42,8 @@ class TransactionController {
         @RequestParam("priceFrom", required = false) priceFrom: Int? = null,
         @RequestParam("priceTo", required = false) priceTo: Int? = null,
         @RequestParam("floor", required = false) floor: Int? = null,
-        @RequestParam("number", required = false) number: Int? = null): List<Transaction> {
-        return transactionService.listByParameter(userPhone, createFrom, createTo, validFrom, validTo, type, direction, priceFrom, priceTo, floor, number)
-    }
+        @RequestParam("number", required = false) number: Int? = null): List<Transaction>
+        = transactionService.listByParameter(userPhone, createFrom, createTo, validFrom, validTo, type, direction, priceFrom, priceTo, floor, number)
 
     class BookBody(
         var phone: String = "",

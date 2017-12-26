@@ -299,3 +299,11 @@ Content-Type: application/json
 }
 
 ###
+PUT http://localhost:10080/api/rooms/types?type=大床房
+Content-Type: application/json
+
+{
+  "description": "修改之后的内容"
+}
+
+###
