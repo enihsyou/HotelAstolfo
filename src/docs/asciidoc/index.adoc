@@ -172,7 +172,7 @@ DELETE http://localhost:10080/api/users?phone=18800000001
 
 .获取用户的订单
 
-使用手机号参数，支持分页操作
+使用手机号参数
 [source, http]
 GET http://localhost:10080/api/users/transactions?phone=18800000001
 
@@ -181,38 +181,6 @@ GET http://localhost:10080/api/users/transactions?phone=18800000001
 [source, http]
 GET http://localhost:10080/api/users
 Authorization:Basic dGVzdDoyMzMz
-
-list列出操作，可以带上分页信息 `page,size,sort` 加在参数里。
-page从0开始计数
-
-比如，第一页，每页10项目。
-sort不会玩别用（
-[source, http]
-GET http://localhost:10080/api/users?page=0&size=10
-
-返回
-[source, json]
-{
-  "content": [
-    {
-      "id": 9,
-      "phoneNumber": "18834321240",
-      "nickname": "temp",
-      "password": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
-      "register_date": "2017-12-26T19:33:03",
-      "role": "管理员",
-      "guests": []
-    }
-  ],
-  "last": true,
-  "totalPages": 1,
-  "totalElements": 1,
-  "number": 0,
-  "size": 10,
-  "sort": null,
-  "numberOfElements": 1,
-  "first": true
-}
 
 === 绑定的身份证
 .查询
@@ -399,7 +367,7 @@ Content-Type: application/json
 
 === 房间类型
 .获取房间类型定义
-只需要GET，不支持分页操作
+只需要GET
 [source, http]
 GET http://localhost:10080/api/rooms/types
 
@@ -589,7 +557,7 @@ floor 房间楼层
 
 number 楼层内的第几个房间
 
-都是可选的，不传就是列出全部。不带分页
+都是可选的，不传就是列出全部。
 
 . 列出大床房类型
 默认查询的是可用房，如果需要列出全部请加上参数 `all=true`

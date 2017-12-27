@@ -12,8 +12,6 @@ import com.enihsyou.astolfo.hotel.repository.TransactionRepository
 import com.enihsyou.astolfo.hotel.repository.UserRepository
 import com.google.common.hash.Hashing
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -24,15 +22,15 @@ interface UserService {
 
     fun login(phoneNumber: String, password: String): User
 
-    fun listUsers(pageable: Pageable): Page<User>
+    fun listUsers(): List<User>
     fun createUser(phoneNumber: String, password: String, nickname: String = "", role: User.UserRole): User
     fun getUser(phone: String): User
     fun updateUser(phone: String, user: User): User
     fun deleteUser(phone: String)
 
-    fun listTransactions(phone: String, pageable: Pageable): Page<Transaction>
+    fun listTransactions(phone: String): List<Transaction>
 
-    fun listGuests(phone: String, pageable: Pageable): Page<Guest>
+    fun listGuests(phone: String): List<Guest>
     fun addGuest(phone: String, guest: Guest): ResponseEntity<Guest>
     fun deleteGuest(guest: Guest)
     fun modifyGuest(identification: String, payload: Map<String, String>): ResponseEntity<Guest>
@@ -41,8 +39,8 @@ interface UserService {
 @Service(value = "用户层逻辑")
 class UserServiceImpl : UserService {
 
-    override fun listUsers(pageable: Pageable): Page<User>
-        = userRepository.findAll(pageable)
+    override fun listUsers(): List<User>
+        = userRepository.findAll().toList()
 
     override fun deleteUser(phone: String)
         = userRepository.delete(getUser(phone))
@@ -76,11 +74,8 @@ class UserServiceImpl : UserService {
             let { return it }
             ?: throw throw 用户不存在(phone)
 
-    override fun listTransactions(
-        phone: String,
-        pageable: Pageable
-    )
-        = existUser(phone).let { transactionRepository.findByUser(it, pageable) }
+    override fun listTransactions(phone: String)
+        = existUser(phone).let { transactionRepository.findByUser(it).toList() }
 
 
     override fun addGuest(
@@ -99,12 +94,9 @@ class UserServiceImpl : UserService {
         return ResponseEntity(HttpStatus.MULTI_STATUS)
     }
 
-    override fun listGuests(
-        phone: String,
-        pageable: Pageable
-    ): Page<Guest> {
+    override fun listGuests(phone: String): List<Guest> {
         existUser(phone).let {
-            return guestRepository.findByUserId(it.id, pageable)
+            return guestRepository.findByUserId(it.id).toList()
         }
     }
 

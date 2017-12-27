@@ -1,12 +1,9 @@
 package com.enihsyou.astolfo.hotel.controller
 
 import com.enihsyou.astolfo.hotel.domain.Guest
-import com.enihsyou.astolfo.hotel.domain.Transaction
 import com.enihsyou.astolfo.hotel.domain.User
 import com.enihsyou.astolfo.hotel.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Pageable
-import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -50,8 +47,8 @@ class UserController {
     }
 
     @GetMapping
-    fun listUsers(pageable: Pageable, assembler: PagedResourcesAssembler<User>)
-        = assembler.toResource(userService.listUsers(pageable))!!
+    fun listUsers()
+        = userService.listUsers()
 
     @GetMapping("/get")
     fun getUser(@RequestParam phone: String)
@@ -77,17 +74,14 @@ class UserController {
         = "忘掉密码不就退出了么w"
 
     @GetMapping("/transactions")
-    fun listTransactions(
-        @RequestParam("phone") phone: String, pageable: Pageable,
-        assembler: PagedResourcesAssembler<Transaction>
-    )
-        = assembler.toResource(userService.listTransactions(phone, pageable))!!
+    fun listTransactions(@RequestParam("phone") phone: String)
+        = userService.listTransactions(phone)
 
 
     /*旅客信息*/
     @GetMapping("/guests")
-    fun listGuests(@RequestParam("phone") phone: String, pageable: Pageable, assembler: PagedResourcesAssembler<User>)
-        = userService.listGuests(phone, pageable)
+    fun listGuests(@RequestParam("phone") phone: String)
+        = userService.listGuests(phone)
 
     @PostMapping("/guests")
     fun addGuest(@RequestParam("phone") phone: String, @RequestBody guest: Guest)
