@@ -96,7 +96,6 @@ class UserServiceImpl : UserService {
     override fun addGuest(phone: String, guest: Guest): ResponseEntity<Guest> {
         val iden = guest.identification
         val user = existUser(phone)
-
         if (guestRepository.findByIdentification(iden) == null) {
             val new_guest = Guest(identification = iden, name = guest.name, user = mutableListOf())
             user.guests.add(new_guest)

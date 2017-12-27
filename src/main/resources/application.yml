@@ -8,7 +8,7 @@ spring:
 #    password: W78mnABYG$Is*N17
 #    schema: classpath*:hotel_schema.sql
 #    data: classpath*:hotel_data.sql
-    initialize: true
+    initialize: false
     name: astolfo_hotel
     url: jdbc:mysql://localhost/astolfo_hotel?useSSL=false
     username: root
@@ -58,16 +58,17 @@ banner:
   image:
     width: 80
     margin: 0
-security:
-  basic:
-    enabled: false
-    path: /api/**
-    realm: Astolfo
-  enable-csrf: false
-  user:
-    name: test
-    password: 2333
-  ignored: /api/users/login, /api/users/make, /api/users/logout
+#security:
+#  basic:
+#    enabled: true
+#    path: /api/**
+#    realm: Astolfo
+#  enable-csrf: false
+#  user:
+#    name: admin
+#    password: 2333
+#    role: ADMIN
+#  ignored: /api/users/login, /api/users/make, /api/users/logout
 ---
 spring:
     profiles: production
