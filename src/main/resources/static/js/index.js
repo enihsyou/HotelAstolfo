@@ -77,7 +77,7 @@ $('.login .window .confirm').click(function () {
                     sessionStorage.nickname = data.nickname;
                     sessionStorage.isLogin = true;
                     sessionStorage.role = data.role;
-                    location.href = '/';
+                    location.reload(true);
                 });
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -200,13 +200,18 @@ $(function init() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             searchBoxVue.update(data);
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg('连接服务器失败')
+            let msg = '初始化搜索框失败';
+            switch (jqXHR.status) {
+                default:
+                    msg += '：无法连接到服务器'
+            }
+            showMsg(msg);
         },
         complete: function () {
         }
@@ -220,8 +225,7 @@ $(function init() {
             $('.user-info ').show();
         }, (error) => {
             if (error !== 'EMPTY_USERNAME_OR_PASSWORD') {
-                console.error('autoLogin:', error);
-                showMsg(error)
+                // showMsg('自动登录失败');
             }
             $('.login-btn').show();
         });
@@ -344,7 +348,7 @@ let searchListVue = new Vue({
                 dataType: 'json',
                 contentType: "application/json; charset=UTF-8",
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+                    xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                 },
                 success: function (data, textStatus, jqXHR) {
                     searchListVue.ids = data;
@@ -359,11 +363,11 @@ let searchListVue = new Vue({
             })
         },
         submitBook: function () {
-            let selectedIDs=[];
+            let selectedIDs = [];
             $(".selectID input:checked").each(function () {
                 selectedIDs.push(+$(this).attr('identification'));
             });
-            if (isEmpty(selectedIDs)){
+            if (isEmpty(selectedIDs)) {
                 showMsg('请至少选择一位旅客');
                 return;
             }
@@ -385,7 +389,7 @@ let searchListVue = new Vue({
                 },
                 contentType: "application/json; charset=UTF-8",
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+                    xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                 },
                 success: function (data, textStatus, jqXHR) {
                     showMsg('预定成功')

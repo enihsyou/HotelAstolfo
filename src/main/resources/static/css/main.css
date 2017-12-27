@@ -16,7 +16,6 @@ body {
 
 .msg {
     position: fixed;
-    z-index: 99;
     top: 30%;
     left: 50%;
     text-align: center;

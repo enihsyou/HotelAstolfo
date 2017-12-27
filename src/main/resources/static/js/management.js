@@ -63,9 +63,9 @@ let manager_user_items = ['客房类型设置', '可用客房设置', '当前所
 //初始化
 $(function init() {
     //获取用户信息
-    let username = sessionStorage.username || localStorage.username;
-    let password = sessionStorage.password || localStorage.password;
-    let nickname = sessionStorage.nickname || localStorage.nickname;
+    let username = sessionStorage.username;
+    let password = sessionStorage.password;
+    let nickname = sessionStorage.nickname;
     if (!sessionStorage.isLogin) {
         //未登录则返回主页
         location.href = '/';
@@ -91,7 +91,6 @@ $(function init() {
                 }
             },
             (errorThrown) => {
-                //报错信息未翻译
                 showMsg(errorThrown).then(
                     () => {
                         location.href = '/';
