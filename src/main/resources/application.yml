@@ -48,7 +48,7 @@ endpoints:
     enabled: true
 
 server:
-  address: localhost
+  address: 0.0.0.0
   port: 10080
   connection-timeout: 2000
   compression:

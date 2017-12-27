@@ -3,6 +3,7 @@ package com.enihsyou.astolfo.hotel.service
 import com.enihsyou.astolfo.hotel.controller.TransactionController
 import com.enihsyou.astolfo.hotel.domain.Guest
 import com.enihsyou.astolfo.hotel.domain.Transaction
+import com.enihsyou.astolfo.hotel.exception.订单时间冲突
 import com.enihsyou.astolfo.hotel.repository.GuestRepository
 import com.enihsyou.astolfo.hotel.repository.TransactionRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,10 +13,6 @@ import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 interface TransactionService {
-    fun addTransactions(
-        transaction: Transaction
-    )
-
     fun listTransactions(
         user_phone: String? = null,
         createFrom: LocalDateTime? = null,
@@ -38,9 +35,14 @@ class TransactionServiceImpl : TransactionService {
 
     override fun singleBook(body: TransactionController.BookBody): ResponseEntity<Unit> {
         val user = userService.getUser(body.phone)
-        val room = roomService.listRooms(floor = body.room.floor, number = body.room.number).first()
+        val room = roomService.getRoom(body.room.floor, body.room.number)
         val guests = mutableListOf<Guest>()
-        body.guests.forEach { guestRepository.findByIdentification(it)?.let { guests.add(it) } }
+        body.guests.forEach {
+            userService.getGuest(user.phoneNumber, it)
+                .let { guests.add(it) }
+        }
+        val tranList = transactionRepository.findByUser(user)
+            if(tranList.any { body.from <= it.dateFrom && it.dateTo <= body.to }) throw 订单时间冲突(body.from, body.to)
         val transaction = Transaction(dateFrom = body.from, dateTo = body.to, user = user, room = room, guests = guests)
         transactionRepository.save(transaction)
         return ResponseEntity(HttpStatus.CREATED)
@@ -95,10 +97,6 @@ class TransactionServiceImpl : TransactionService {
         }
 
         return result.toList()
-    }
-
-    override fun addTransactions(transaction: Transaction) {
-        transactionRepository.save(transaction)
     }
 
     @Autowired lateinit var userService: UserService

@@ -11,7 +11,7 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
+import javax.persistence.ManyToMany
 import javax.persistence.Table
 
 @Entity
@@ -35,9 +35,9 @@ data class Transaction(
     /*预定的这个房间*/  //现在只支持单个房间
     var room: Room = Room(broken = false),
 
-    @OneToMany
     /*入住这些旅客*/
-    var guests: List<Guest> = emptyList(),
+    @ManyToMany
+    var guests: MutableList<Guest> = mutableListOf(),
 
     /*预定开始日期*/
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)

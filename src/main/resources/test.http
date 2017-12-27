@@ -286,15 +286,15 @@ Content-Type: application/json
 Authorization:Basic dGVzdDoyMzMz
 
 {
-  "type": "大だ床房",
+  "type": "大床房",
   "description": "足够两个人唑在一起的大小"
 }
 ###
-DELETE http://localhost:10080/api/rooms/types
+POST http://localhost:10080/api/rooms/directions
 Content-Type: application/json
 
 {
-  "type": "大だ床房",
+  "type": "大床房",
   "description": "修改之后的内容"
 }
 
@@ -315,7 +315,7 @@ POST http://localhost:10080/api/users/guests?phone=18834321240
 Content-Type: application/json
 
 {
-  "identification": "1306221999010175372",
+  "identification": "13062219990101753545",
   "name": "宋娘2"
 }
 ###
@@ -330,11 +330,11 @@ Content-Type: application/json
 
 {
   "type": "大床房",
-  "direction": "东",
+  "direction": "大床房",
   "specialty": "一个介绍",
   "price": "143",
   "roomNumber": {
-    "floor": 8,
+    "floor": 1,
     "number": 1
   }
 }
@@ -344,5 +344,43 @@ GET http://localhost:10080/api/rooms/directions
 
 ###
 DELETE http://localhost:10080/api/rooms/directions?direction=东2
+
+###
+POST http://localhost:10080/api/users/make/
+Content-Type: application/json
+
+{
+  "phoneNumber": "18888888888",
+  "password": "2333",
+  "nickname": "老子最大"
+}
+
+###
+GET http://localhost:10080/api/users/
+
+###
+POST http://localhost:10080/api/transactions
+Content-Type: application/json
+
+{
+  "from": "2017-12-22T16:57:10",
+  "to": "2017-12-23T16:57:10",
+  "phone": "18888888888",
+  "guests": [
+
+  ],
+  "room": {
+    "floor": 1,
+    "number": 1
+  }
+}
+
+###
+GET http://localhost:10080/api/users/transactions?phone=18888888888
+Content-Type: application/json
+
+{
+
+}
 
 ###

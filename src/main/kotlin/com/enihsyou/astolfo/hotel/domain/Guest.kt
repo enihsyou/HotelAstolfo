@@ -18,14 +18,17 @@ data class Guest(
     @GeneratedValue
     var id: Int = 0,
 
-    @CreatedBy
     @JsonIgnore
-    @ManyToMany(cascade = [CascadeType.ALL])
+    @ManyToMany(mappedBy = "guests")
     var user: MutableList<User> = mutableListOf(),
 
     /*身份证号码*/
     var identification: String = "",
 
     /*姓名*/
-    var name: String = ""
+    var name: String = "",
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "guests")
+    var transactions: MutableList<Transaction> = mutableListOf()
 )
