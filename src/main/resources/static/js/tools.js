@@ -7,6 +7,7 @@ function showMsg(msg) {
         let newMsg = $(`<div class="msg untouchable"><span>${msg}</span></div>`);
         $('.main').after(newMsg);
         newMsg.slideDown(333);
+        newMsg.css('z-index', 9999 - msg.length);
         await sleep(Math.max(1000, msg.length * 150));
         newMsg.slideUp(333);
         await sleep(400);
