@@ -230,7 +230,7 @@ $(function init() {
     $("#signupUsername").mask("999-9999-9999");
     //初始化键盘快捷键
     $('.form-horizontal').keypress(function (e) {
-        if(e.keyCode===13){
+        if (e.keyCode === 13) {
             $(this).find('.confirm').trigger('click');
         }
     })
@@ -324,11 +324,11 @@ let searchListVue = new Vue({
     el: '.searchList',
     data: {
         rooms: [],
-        ids: []
+        ids: [],
+        selectedIndex: -1
     },
     methods: {
         showIDs: function (e) {
-            let _this = this;
             if (!sessionStorage.isLogin) {
                 showMsg('请先登录！').then(
                     () => {
@@ -347,7 +347,8 @@ let searchListVue = new Vue({
                     xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
                 },
                 success: function (data, textStatus, jqXHR) {
-                    _this.ids = data;
+                    searchListVue.ids = data;
+                    searchListVue.selectedIndex = $(e.target).attr('index');
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     showMsg(jqXHR.status)
@@ -358,14 +359,49 @@ let searchListVue = new Vue({
             })
         },
         submitBook: function () {
-            //TODO
-            //提交订单动作
+            let selectedIDs=[];
+            $(".selectID input:checked").each(function () {
+                selectedIDs.push(+$(this).attr('identification'));
+            });
+            if (isEmpty(selectedIDs)){
+                showMsg('请至少选择一位旅客');
+                return;
+            }
+            startCatLoading();
+            $('.selectID .close').trigger('click');
+            $.ajax({
+                url: `${serverHost}/api/transactions`,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    dateFrom: new Date($('#bookingStart').val()).toISOString().replace('Z', ''),
+                    dateTo: new Date($('#bookingEnd').val()).toISOString().replace('Z', ''),
+                    phone: sessionStorage.username,
+                    guests: selectedIDs,
+                    room: {
+                        floor: searchListVue.rooms[selectedIndex].roomNumber.floor,
+                        number: searchListVue.rooms[selectedIndex].roomNumber.number
+                    }
+                },
+                contentType: "application/json; charset=UTF-8",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+                },
+                success: function (data, textStatus, jqXHR) {
+                    showMsg('预定成功')
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    showMsg('预定失败')
+                },
+                complete: function () {
+                    stopCatLoading();
+                }
+            })
         },
         close: function (e) {
             $(e.target).parent().parent().slideUp();
             $('.slider_container').css('filter', 'none');
             $('.searchBox').css('left', '10%');
         }
-    },
-    computed: {}
+    }
 });
