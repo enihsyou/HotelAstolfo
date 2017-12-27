@@ -319,4 +319,30 @@ Content-Type: application/json
   "name": "宋娘2"
 }
 ###
+GET http://localhost:10080/api/rooms
 
+###
+GET http://47.100.117.174:8899/api/rooms/types
+
+###
+POST http://localhost:10080/api/rooms
+Content-Type: application/json
+
+{
+  "type": "大床房",
+  "direction": "东",
+  "specialty": "一个介绍",
+  "price": "143",
+  "roomNumber": {
+    "floor": 8,
+    "number": 1
+  }
+}
+
+###
+GET http://localhost:10080/api/rooms/directions
+
+###
+DELETE http://localhost:10080/api/rooms/directions?direction=东2
+
+###

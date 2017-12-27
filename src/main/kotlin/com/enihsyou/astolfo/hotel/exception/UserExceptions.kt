@@ -21,7 +21,7 @@ class 房间类型不存在(type:String) :
 
 @ResponseStatus(value= HttpStatus.NOT_FOUND)
 class 房间朝向不存在(type: String) :
-    RuntimeException("房间朝向<$type>存在")
+    RuntimeException("房间朝向<$type>不存在")
 
 @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
 class 用户名和密码不匹配 :

@@ -91,7 +91,7 @@ class RoomController {
 
     @DeleteMapping("/directions")
     @ResponseStatus(HttpStatus.GONE)
-    fun deleteDirection(@RequestBody direction: String)
+    fun deleteDirection(@RequestParam direction: String)
         = roomService.deleteDirection(direction)
 
 

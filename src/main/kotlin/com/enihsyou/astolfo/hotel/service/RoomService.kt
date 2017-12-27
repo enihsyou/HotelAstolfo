@@ -110,7 +110,7 @@ class RoomServiceImpl : RoomService {
         val room_test = roomRepository.findByRoomNumber(room.roomNumber.floor, room.roomNumber.number)
         return if (room_test == null) {
             val type = getType(room.type.type)
-            val direction = getDirection(room.type.type)
+            val direction = getDirection(room.direction.type)
 
             room.type = type
             room.direction = direction
@@ -209,7 +209,8 @@ class RoomServiceImpl : RoomService {
         ?: throw 房号不存在(floor, number)
 
     fun getType(type: String): RoomType
-        = roomTypeRepository.findByType(type)?.let { return it } ?:
+        = roomTypeRepository.findByType(type)?.
+        let { return it } ?:
         throw 房间类型不存在(type)
 
     fun getDirection(type: String): RoomDirection
