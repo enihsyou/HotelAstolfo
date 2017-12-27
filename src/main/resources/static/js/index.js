@@ -117,6 +117,7 @@ $('.signup .window .confirm').click(function () {
     let passwordAgain = $('#signupPasswordAgain').val();
     if (isEmpty(username, passwordAgain, password, passwordAgain)) {
         showMsg('请完整填写注册信息');
+        return;
     }
     if (password !== passwordAgain) {
         showMsg('两次输入密码不相符');
