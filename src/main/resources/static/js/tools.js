@@ -1,5 +1,5 @@
 //服务器地址
-let serverHost = 'http://47.100.117.174:8899';
+let serverHost = 'https://enihsyou.synology.me:8899';
 
 //封装消息提示
 function showMsg(msg) {
@@ -145,7 +145,7 @@ let Cookies = {
 //开始猫滚
 async function startCatLoading() {
     if ($('.cat-loading').length > 0) return;
-    let loading = $(`<div class="cat-loading untouchable"><div class="inner"></div></div>`);
+    let loading = $(`<div class="cat-loading untouchable"></div>`);
     $('.main').after(loading);
     loading.fadeIn(500);
 }
