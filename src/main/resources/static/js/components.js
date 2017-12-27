@@ -22,7 +22,7 @@ async function check_my_order() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -81,7 +81,7 @@ async function modify_my_info() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             let resStr = `
@@ -179,7 +179,7 @@ async function modify_my_info() {
                             dataType: 'json',
                             contentType: "application/json; charset=UTF-8",
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
                                 sessionStorage.nickname = newNickname;
@@ -198,7 +198,7 @@ async function modify_my_info() {
                     addID: function () {
                         let newG = $('#newG').val();
                         let newID = $('#newID').val();
-                        if (isEmpty(newG,newID)) {
+                        if (isEmpty(newG, newID)) {
                             showMsg('请完整填写新旅客信息');
                             return;
                         }
@@ -212,7 +212,7 @@ async function modify_my_info() {
                             }),
                             contentType: "application/json; charset=UTF-8",
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
                                 showMsg(`添加新旅客${newG}成功！`);
@@ -263,7 +263,7 @@ async function book_a_room() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -320,7 +320,7 @@ async function rooms_all_info() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -382,7 +382,7 @@ async function check_all_booking() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -463,7 +463,7 @@ async function fix_a_room() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -497,7 +497,7 @@ async function modify_rooms_type() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -578,14 +578,12 @@ async function modify_rooms_type() {
                             <td><input type="number" min="0" id="newRNum" title="开放新房间房号" placeholder="开放新房间房号"></td>
                             <td>
                                 <select id="newRDir" title="开放新房间朝向">
-                                    <option v-for="edirection in directions" :value="edirection" v-cloak>
-                                        {{edirection.type}}
-                                    </option>
+                                    <option v-for="edirection in directions" v-cloak>{{edirection.type}}</option>
                                 </select>
                             </td>
                             <td>
                                 <select id="newRType" title="开放新房间类型">
-                                    <option v-for="etype in types" :value="etype" v-cloak>{{etype.type}}</option>
+                                    <option v-for="etype in types" v-cloak>{{etype.type}}</option>
                                 </select>
                             </td>
                             <td><input type="text" id="newRSpecial" title="开放新房间特色" placeholder="开放新房间特色"></td>
@@ -632,7 +630,7 @@ async function modify_rooms_type() {
                                 description: newTypeDes
                             }),
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
                                 app.types.push({
@@ -640,6 +638,8 @@ async function modify_rooms_type() {
                                     type: newType,
                                     description: newTypeDes
                                 });
+                                $('#newType').val('');
+                                $('#newTypeDes').val('');
                                 showMsg('添加成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -665,14 +665,11 @@ async function modify_rooms_type() {
                         if (!confirm(`确定删除房间类型"${delType}"?`)) return;
                         startCatLoading();
                         $.ajax({
-                            url: `${serverHost}/api/rooms/types`,
+                            url: `${serverHost}/api/rooms/types?type=${delType}`,
                             type: 'DELETE',
                             contentType: "application/json; charset=UTF-8",
-                            data: {
-                                type: delType
-                            },
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
                                 app.types.splice(index, 1);
@@ -707,7 +704,7 @@ async function modify_rooms_type() {
                                 description: newDirDes
                             }),
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
                                 app.directions.push({
@@ -715,6 +712,8 @@ async function modify_rooms_type() {
                                     type: newDir,
                                     description: newDirDes
                                 });
+                                $('#newDir').val('');
+                                $('#newDirDes').val('');
                                 showMsg('添加成功！');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -736,17 +735,15 @@ async function modify_rooms_type() {
                         if (!confirm(`确定删除方向"${delDir}"?`)) return;
                         startCatLoading();
                         $.ajax({
-                            url: `${serverHost}/api/rooms/directions`,
+                            url: `${serverHost}/api/rooms/directions?direction=${delDir}`,
                             type: 'DELETE',
                             contentType: "application/json; charset=UTF-8",
-                            data: {
-                                direction: delDir
-                            },
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
-                                app.types.splice(index, 1);
+                                app.directions.splice(index, 1);
+
                                 showMsg('删除成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -764,8 +761,8 @@ async function modify_rooms_type() {
                     addRoom: function () {
                         let newRFloor = $('#newRFloor').val();
                         let newRNum = $('#newRNum').val();
-                        let newRDir = $('#newRDir').val();
-                        let newRType = $('#newRType').val();
+                        let newRDir = $('#newRDir').children('option:selected').text();
+                        let newRType = $('#newRType').children('option:selected').text();
                         let newRSpecial = $('#newRSpecial').val();
                         let newRPrice = $('#newRPrice').val();
                         let newRBroken = $('#newRBroken').val();
@@ -780,7 +777,7 @@ async function modify_rooms_type() {
                             contentType: "application/json; charset=UTF-8",
                             data: JSON.stringify({
                                 type: newRType,
-                                direction: newRType,
+                                direction: newRDir,
                                 specialty: newRSpecial,
                                 price: newRPrice,
                                 roomNumber: {
@@ -789,10 +786,10 @@ async function modify_rooms_type() {
                                 }
                             }),
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
-                                app.directions.push({
+                                app.rooms.push({
                                     id: -1,
                                     roomNumber: {
                                         floor: newRFloor,
@@ -832,15 +829,11 @@ async function modify_rooms_type() {
                         if (!confirm(`确定删除${app.rooms[index].roomNumber.floor}层${app.rooms[index].roomNumber.number}号房间?`)) return;
                         startCatLoading();
                         $.ajax({
-                            url: `${serverHost}/api/rooms/rooms`,
+                            url: `${serverHost}/api/rooms?floor=${app.rooms[index].roomNumber.floor}&number=${app.rooms[index].roomNumber.number}`,
                             type: 'DELETE',
                             contentType: "application/json; charset=UTF-8",
-                            data: {
-                                floor: app.rooms[index].roomNumber.floor,
-                                number:app.rooms[index].roomNumber.number
-                            },
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
                                 app.rooms.splice(index, 1);
@@ -883,7 +876,7 @@ async function set_rooms_avail() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -916,7 +909,7 @@ async function modify_user_info() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -949,7 +942,7 @@ async function sales_per_month() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -982,7 +975,7 @@ async function client_analyze() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单

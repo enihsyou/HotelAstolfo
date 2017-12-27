@@ -66,7 +66,7 @@ $(function init() {
     let username = sessionStorage.username || localStorage.username;
     let password = sessionStorage.password || localStorage.password;
     let nickname = sessionStorage.nickname || localStorage.nickname;
-    if (!sessionStorage.isLogin) {
+    if (sessionStorage.isLogin !== 'true') {
         //未登录则返回主页
         location.href = '/';
     }
@@ -74,8 +74,8 @@ $(function init() {
         reqLogin(username, password).then(
             (data) => {
                 sessionStorage.nickname = data.nickname;
-                let userType = '';
-                switch (data.role) {
+                sessionStorage.role = data.role;
+                switch (sessionStorage.role) {
                     case '管理员':
                         left_nav.userType = '经理：' + nickname;
                         left_nav.items = manager_user_items;
@@ -91,7 +91,6 @@ $(function init() {
                 }
             },
             (errorThrown) => {
-                //报错信息未翻译
                 showMsg(errorThrown).then(
                     () => {
                         location.href = '/';
