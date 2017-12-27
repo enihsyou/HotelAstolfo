@@ -88,7 +88,6 @@ class UserController {
         = userService.modifyGuest(identification, payload)
 
     @DeleteMapping("/guests")
-    @ResponseStatus(HttpStatus.GONE)
     fun deleteGuest(@RequestBody guest: Guest)
         = userService.deleteGuest(guest)
 

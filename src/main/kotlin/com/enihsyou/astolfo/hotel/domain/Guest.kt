@@ -3,6 +3,7 @@ package com.enihsyou.astolfo.hotel.domain
 import afu.org.checkerframework.checker.igj.qual.Mutable
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.data.annotation.CreatedBy
+import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
@@ -18,8 +19,8 @@ data class Guest(
     var id: Int = 0,
 
     @CreatedBy
-    @ManyToMany
     @JsonIgnore
+    @ManyToMany(cascade = [CascadeType.ALL])
     var user: MutableList<User> = mutableListOf(),
 
     /*身份证号码*/
