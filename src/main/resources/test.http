@@ -307,5 +307,16 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:10080/api/users?phone=18800000001
+GET http://localhost:10080/api/users/get?phone=18834321240
 ###
+GET http://localhost:10080/api/users/guests?phone=18834321240
+###
+POST http://localhost:10080/api/users/guests?phone=18834321240
+Content-Type: application/json
+
+{
+  "identification": "1306221999010175372",
+  "name": "宋娘2"
+}
+###
+

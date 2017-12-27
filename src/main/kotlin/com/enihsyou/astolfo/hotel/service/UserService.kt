@@ -83,15 +83,19 @@ class UserServiceImpl : UserService {
         guest: Guest
     ): ResponseEntity<Guest> {
         val iden = guest.identification
-        existUser(phone).let {
-            if (guestRepository.findByIdentification(guest.identification) == null)
-                guest.run {
-                    guestRepository.save(Guest(identification = iden, name = name, user = it))
-                }
-            else
-                throw 相同身份证已存在(iden)
+        val user = existUser(phone)
+
+        if (guestRepository.findByIdentification(guest.identification) == null) {
+            val new_guest = Guest(identification = iden, name = guest.name)
+            user.guests.add(new_guest)
+            new_guest.user.add(user)
+
+            guestRepository.save(new_guest)
+            userRepository.save(user)
+            return ResponseEntity(HttpStatus.CREATED)
         }
-        return ResponseEntity(HttpStatus.MULTI_STATUS)
+        else
+            throw 相同身份证已存在(iden)
     }
 
     override fun listGuests(phone: String): List<Guest> {

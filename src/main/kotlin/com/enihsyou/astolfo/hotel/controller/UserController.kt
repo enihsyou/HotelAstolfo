@@ -73,10 +73,6 @@ class UserController {
     fun logout(@RequestHeader("Authorization") header: String)
         = "忘掉密码不就退出了么w"
 
-    @GetMapping("/transactions")
-    fun listTransactions(@RequestParam("phone") phone: String)
-        = userService.listTransactions(phone)
-
 
     /*旅客信息*/
     @GetMapping("/guests")
@@ -95,4 +91,9 @@ class UserController {
     @ResponseStatus(HttpStatus.GONE)
     fun deleteGuest(@RequestBody guest: Guest)
         = userService.deleteGuest(guest)
+
+
+    @GetMapping("/transactions")
+    fun listTransactions(@RequestParam("phone") phone: String)
+        = userService.listTransactions(phone)
 }
