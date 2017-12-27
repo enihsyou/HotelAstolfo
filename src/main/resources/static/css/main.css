@@ -31,7 +31,13 @@ body {
 
 .cat-loading {
     position: fixed;
+    width: 100vw;
+    height: 100vh;
     z-index: 98;
+}
+
+.cat-loading .inner {
+    position: fixed;
     top: calc(50% - 200px);
     left: calc(50% - 200px);
     width: 400px;

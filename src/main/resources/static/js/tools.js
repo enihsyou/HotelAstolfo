@@ -15,6 +15,14 @@ function showMsg(msg) {
     })
 }
 
+//判空
+function isEmpty(a1, a2, ...an) {
+    for (let i of arguments) {
+        if (i == null || i.length === 0) return true;
+    }
+    return false;
+}
+
 //延时函数
 function sleep(time) {
     return new Promise((resolve, reject) => {
@@ -64,7 +72,7 @@ function reqLogin(username, password) {
                 resolve(data)
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                sessionStorage.isLogin=false;
+                sessionStorage.isLogin = false;
                 switch (jqXHR.status) {
                     //密码错误则清除本地缓存
                     case 400:
@@ -136,7 +144,7 @@ let Cookies = {
 //开始猫滚
 async function startCatLoading() {
     if ($('.cat-loading').length > 0) return;
-    let loading = $(`<div class="cat-loading untouchable"></div>`);
+    let loading = $(`<div class="cat-loading untouchable"><div class="inner"></div></div>`);
     $('.main').after(loading);
     loading.fadeIn(500);
 }
