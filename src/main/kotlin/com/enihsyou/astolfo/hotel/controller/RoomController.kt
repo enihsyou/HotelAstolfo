@@ -52,7 +52,6 @@ class RoomController {
         = roomService.modifyRoom(floor, number, payload)
 
     @DeleteMapping
-    @ResponseStatus(HttpStatus.GONE)
     fun deleteRoom(@RequestParam floor: Int, @RequestParam number: Int)
         = roomService.deleteRoom(floor, number)
 
@@ -71,7 +70,6 @@ class RoomController {
         = roomService.modifyType(type, payload)
 
     @DeleteMapping("/types")
-    @ResponseStatus(HttpStatus.GONE)
     fun deleteType(@RequestParam type: String)
         = roomService.deleteType(type)
 
@@ -90,8 +88,7 @@ class RoomController {
         = roomService.modifyDirection(direction,payload)
 
     @DeleteMapping("/directions")
-    @ResponseStatus(HttpStatus.GONE)
-    fun deleteDirection(@RequestBody direction: String)
+    fun deleteDirection(@RequestParam direction: String)
         = roomService.deleteDirection(direction)
 
 

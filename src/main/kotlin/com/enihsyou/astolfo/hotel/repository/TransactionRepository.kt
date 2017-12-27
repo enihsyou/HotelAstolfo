@@ -17,8 +17,7 @@ import java.time.LocalDateTime
 @RepositoryRestResource(path = "transactions")
 interface TransactionRepository : PagingAndSortingRepository<Transaction, Int> {
 
-    fun findByUser(user: User,
-                   pageable: Pageable): Page<Transaction>
+    fun findByUser(user: User): List<Transaction>
 
 
     @Query(value = "SELECT T FROM Transaction T where T.activated=true and T.room.roomNumber.floor=?1 and T.room.roomNumber.number=?2")

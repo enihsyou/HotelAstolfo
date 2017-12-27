@@ -32,6 +32,7 @@ interface RoomService {
         floor: Int? = null,
         number: Int? = null
     ): List<Room>
+    fun getRoom(floor: Int, number: Int): Room
     fun modifyRoom(floor: Int, number: Int, payload: Map<String, String>): Room
     fun deleteRoom(floor: Int, number: Int)
 
@@ -110,7 +111,7 @@ class RoomServiceImpl : RoomService {
         val room_test = roomRepository.findByRoomNumber(room.roomNumber.floor, room.roomNumber.number)
         return if (room_test == null) {
             val type = getType(room.type.type)
-            val direction = getDirection(room.type.type)
+            val direction = getDirection(room.direction.type)
 
             room.type = type
             room.direction = direction
@@ -203,17 +204,15 @@ class RoomServiceImpl : RoomService {
         return roomRepository.listFloor()
     }
 
-    fun getRoom(floor: Int, number: Int): Room
-        = roomRepository.findByRoomNumber(floor, number)?.
-        let { return it }
-        ?: throw 房号不存在(floor, number)
+    override fun getRoom(floor: Int, number: Int): Room
+        = roomRepository.findByRoomNumber(floor, number) ?:
+        throw 房号不存在(floor, number)
 
     fun getType(type: String): RoomType
-        = roomTypeRepository.findByType(type)?.let { return it } ?:
+        = roomTypeRepository.findByType(type)?:
         throw 房间类型不存在(type)
 
     fun getDirection(type: String): RoomDirection
-        = roomDirectionRepository.findByType(type)?.
-        let { return it } ?:
+        = roomDirectionRepository.findByType(type)?:
         throw 房间朝向不存在(type)
 }
