@@ -22,7 +22,7 @@ async function check_my_order() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -72,7 +72,7 @@ async function check_my_order() {
     });
 }
 
-//done?
+//done
 async function modify_my_info() {
     //身份验证&获取数据
     $.ajax({
@@ -81,7 +81,7 @@ async function modify_my_info() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             let resStr = `
@@ -130,11 +130,11 @@ async function modify_my_info() {
                             <td>身份证</td>
                             <td></td>
                         </tr>
-                        <tr v-for="guest in guests" v-cloak>
+                        <tr v-for="(guest,index) in guests" v-cloak>
                             <td>{{guest.name}}</td>
                             <td>{{guest.identification}}</td>
                             <td>
-                                <div class="comfirm btn btn-default" :id="guest.identification" @click="delID">删除</div>
+                                <div class="comfirm btn btn-default" :index="index" @click="delID">删除</div>
                             </td>
                         </tr>
                         <tr>
@@ -179,7 +179,7 @@ async function modify_my_info() {
                             dataType: 'json',
                             contentType: "application/json; charset=UTF-8",
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
                                 sessionStorage.nickname = newNickname;
@@ -198,7 +198,7 @@ async function modify_my_info() {
                     addID: function () {
                         let newG = $('#newG').val();
                         let newID = $('#newID').val();
-                        if (isEmpty(newG,newID)) {
+                        if (isEmpty(newG, newID)) {
                             showMsg('请完整填写新旅客信息');
                             return;
                         }
@@ -212,7 +212,7 @@ async function modify_my_info() {
                             }),
                             contentType: "application/json; charset=UTF-8",
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
                                 showMsg(`添加新旅客${newG}成功！`);
@@ -238,9 +238,34 @@ async function modify_my_info() {
                         })
                     },
                     //删除身份证信息
-                    delID: function () {
-                        //TODO
-                        //等待接口
+                    delID: function (e) {
+                        let index = $(e.target).attr('index');
+                        let name = app.guests[index].name;
+                        let identification = app.guests[index].identification;
+                        if (!confirm(`确定删除旅客"${name}:${identification}"？`)) return;
+                        startCatLoading();
+                        $.ajax({
+                            url: `${serverHost}/api/users/guests?identification=${identification}`,
+                            type: 'DELETE',
+                            contentType: "application/json; charset=UTF-8",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
+                            },
+                            success: function (data, textStatus, jqXHR) {
+                                app.guests.splice(index, 1);
+                                showMsg('删除旅客成功！')
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                let msg = '删除旅客失败';
+                                switch (jqXHR.status) {
+
+                                }
+                                showMsg(msg);
+                            },
+                            complete: function () {
+                                stopCatLoading();
+                            }
+                        });
                     }
                 }
             });
@@ -263,7 +288,7 @@ async function book_a_room() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -320,7 +345,7 @@ async function rooms_all_info() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -382,7 +407,7 @@ async function check_all_booking() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -463,7 +488,7 @@ async function fix_a_room() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -497,7 +522,7 @@ async function modify_rooms_type() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -578,14 +603,12 @@ async function modify_rooms_type() {
                             <td><input type="number" min="0" id="newRNum" title="开放新房间房号" placeholder="开放新房间房号"></td>
                             <td>
                                 <select id="newRDir" title="开放新房间朝向">
-                                    <option v-for="edirection in directions" :value="edirection" v-cloak>
-                                        {{edirection.type}}
-                                    </option>
+                                    <option v-for="edirection in directions" v-cloak>{{edirection.type}}</option>
                                 </select>
                             </td>
                             <td>
                                 <select id="newRType" title="开放新房间类型">
-                                    <option v-for="etype in types" :value="etype" v-cloak>{{etype.type}}</option>
+                                    <option v-for="etype in types" v-cloak>{{etype.type}}</option>
                                 </select>
                             </td>
                             <td><input type="text" id="newRSpecial" title="开放新房间特色" placeholder="开放新房间特色"></td>
@@ -632,7 +655,7 @@ async function modify_rooms_type() {
                                 description: newTypeDes
                             }),
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
                                 app.types.push({
@@ -640,6 +663,8 @@ async function modify_rooms_type() {
                                     type: newType,
                                     description: newTypeDes
                                 });
+                                $('#newType').val('');
+                                $('#newTypeDes').val('');
                                 showMsg('添加成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -662,17 +687,14 @@ async function modify_rooms_type() {
                     delType: function (e) {
                         let index = $(e.target).attr('index');
                         let delType = app.types[index].type;
-                        if (!confirm(`确定删除房间类型"${delType}"?`)) return;
+                        if (!confirm(`确定删除房间类型"${delType}"？`)) return;
                         startCatLoading();
                         $.ajax({
-                            url: `${serverHost}/api/rooms/types`,
+                            url: `${serverHost}/api/rooms/types?type=${delType}`,
                             type: 'DELETE',
                             contentType: "application/json; charset=UTF-8",
-                            data: {
-                                type: delType
-                            },
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
                                 app.types.splice(index, 1);
@@ -707,7 +729,7 @@ async function modify_rooms_type() {
                                 description: newDirDes
                             }),
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
                                 app.directions.push({
@@ -715,6 +737,8 @@ async function modify_rooms_type() {
                                     type: newDir,
                                     description: newDirDes
                                 });
+                                $('#newDir').val('');
+                                $('#newDirDes').val('');
                                 showMsg('添加成功！');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -736,17 +760,15 @@ async function modify_rooms_type() {
                         if (!confirm(`确定删除方向"${delDir}"?`)) return;
                         startCatLoading();
                         $.ajax({
-                            url: `${serverHost}/api/rooms/directions`,
+                            url: `${serverHost}/api/rooms/directions?direction=${delDir}`,
                             type: 'DELETE',
                             contentType: "application/json; charset=UTF-8",
-                            data: {
-                                direction: delDir
-                            },
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
-                                app.types.splice(index, 1);
+                                app.directions.splice(index, 1);
+
                                 showMsg('删除成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -764,8 +786,8 @@ async function modify_rooms_type() {
                     addRoom: function () {
                         let newRFloor = $('#newRFloor').val();
                         let newRNum = $('#newRNum').val();
-                        let newRDir = $('#newRDir').val();
-                        let newRType = $('#newRType').val();
+                        let newRDir = $('#newRDir').children('option:selected').text();
+                        let newRType = $('#newRType').children('option:selected').text();
                         let newRSpecial = $('#newRSpecial').val();
                         let newRPrice = $('#newRPrice').val();
                         let newRBroken = $('#newRBroken').val();
@@ -780,7 +802,7 @@ async function modify_rooms_type() {
                             contentType: "application/json; charset=UTF-8",
                             data: JSON.stringify({
                                 type: newRType,
-                                direction: newRType,
+                                direction: newRDir,
                                 specialty: newRSpecial,
                                 price: newRPrice,
                                 roomNumber: {
@@ -789,10 +811,10 @@ async function modify_rooms_type() {
                                 }
                             }),
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
-                                app.directions.push({
+                                app.rooms.push({
                                     id: -1,
                                     roomNumber: {
                                         floor: newRFloor,
@@ -832,15 +854,11 @@ async function modify_rooms_type() {
                         if (!confirm(`确定删除${app.rooms[index].roomNumber.floor}层${app.rooms[index].roomNumber.number}号房间?`)) return;
                         startCatLoading();
                         $.ajax({
-                            url: `${serverHost}/api/rooms/rooms`,
+                            url: `${serverHost}/api/rooms?floor=${app.rooms[index].roomNumber.floor}&number=${app.rooms[index].roomNumber.number}`,
                             type: 'DELETE',
                             contentType: "application/json; charset=UTF-8",
-                            data: {
-                                floor: app.rooms[index].roomNumber.floor,
-                                number:app.rooms[index].roomNumber.number
-                            },
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
                                 app.rooms.splice(index, 1);
@@ -883,7 +901,7 @@ async function set_rooms_avail() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -908,6 +926,7 @@ async function set_rooms_avail() {
 
 }
 
+//done？
 async function modify_user_info() {
     //身份验证&获取数据
     $.ajax({
@@ -916,18 +935,208 @@ async function modify_user_info() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
             let resStr = `
-            <h1>假装打印出所有订单</h1>
+                <div id="modify_user_info">
+            <dl class="addAccount">
+                <dt>添加账户</dt>
+                <dd>
+                    <table>
+                        <tr>
+                            <td>账户名：</td>
+                            <td><input type="text" id="newAccName" title="新建账户"></td>
+                        </tr>
+                        <tr>
+                            <td>账户昵称：</td>
+                            <td><input type="text" id="newAccNick" title="新建账户昵称"></td>
+                        </tr>
+                        <tr>
+                            <td>密码：</td>
+                            <td><input type="password" id="newAccPWD" title="新建账户密码"></td>
+                        </tr>
+                        <tr>
+                            <td>确认密码：</td>
+                            <td><input type="password" id="newAccPWDR" title="新建账户确认密码"></td>
+                        </tr>
+                        <tr>
+                            <td>账户类型：</td>
+                            <td>
+                                <select id="newAccRole" title="新建账户类型">
+                                    <option value="/admin">经理</option>
+                                    <option value="/employee" selected>前台</option>
+                                    <option value="">注册用户</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="btn btn-default confirm" @click="addAcc">添加</div>
+                            </td>
+                        </tr>
+                    </table>
+                </dd>
+            </dl>
+            <dl class="modifyAccount">
+                <dt>管理当前所有账户</dt>
+                <dd>
+                    <table>
+                        <tr>
+                            <td>账户名（手机号）</td>
+                            <td>账户昵称</td>
+                            <td>密码<span>*不填写则不修改</span></td>
+                            <td>账户类型</td>
+                            <td>创建时间</td>
+                            <td>绑定旅客</td>
+                            <td><!--修改--></td>
+                            <td><!--删除--></td>
+                        </tr>
+                        <tr v-for="(user,index) in users" v-cloak>
+                            <td>{{user.phoneNumber}}</td>
+                            <td><input type="text" class="mNickname" title="修改该用户昵称" :value="user.nickname"></td>
+                            <td><input type="password" class="mPWD" title="修改该用户密码" placeholder="********"></td>
+                            <td>
+                                <select title="修改该用户类型" class="mRole">
+                                    <option value="经理" :selected="user.role === '经理'">经理</option>
+                                    <option value="前台" :selected="user.role === '前台'">前台</option>
+                                    <option value="注册用户" :selected="user.role === '注册用户'">注册用户</option>
+                                </select>
+                            </td>
+                            <td>{{user.register_date}}</td>
+                            <td>
+                                <span v-for="guest in user.guests">{{guest.name}}:{{guest.identification}}</span>
+                            </td>
+                            <td>
+                                <div class="btn btn-default confirm" :index="index" @click="modAcc">修改</div>
+                            </td>
+                            <td>
+                                <div class="btn btn-default confirm" :index="index" @click="delAcc">删除</div>
+                            </td>
+                        </tr>
+                    </table>
+                </dd>
+            </dl>
+        </div>
             `;
             //生成html
             render_Container(resStr);
             //script
-            $('.container h1').click(function () {
-                showMsg('测试一下')
+            let app = new Vue({
+                el: '#modify_user_info',
+                data: {
+                    users: data
+                },
+                methods: {
+                    addAcc: function () {
+                        let username = $('#newAccName').val().replace(/-/g, '');
+                        let nickname = $('#newAccNick').val();
+                        let password = $('#newAccPWD').val();
+                        let passwordAgain = $('#newAccPWDR').val();
+                        let role = $('#newAccRole').children('option:selected');
+                        if (isEmpty(username, passwordAgain, password, passwordAgain)) {
+                            showMsg('请完整填写注册信息');
+                        }
+                        if (password !== passwordAgain) {
+                            showMsg('两次输入密码不相符');
+                            return;
+                        }
+                        startCatLoading();
+                        $.ajax({
+                            url: `${serverHost}/api/users/make${role}.val()`,
+                            type: 'POST',
+                            contentType: "application/json; charset=UTF-8",
+                            data: JSON.stringify({
+                                phoneNumber: username,
+                                password: password,
+                                nickname: nickname
+                            }),
+                            success: function (data, textStatus, jqXHR) {
+                                app.users.push({
+                                    id: -1,
+                                    phoneNumber: username,
+                                    nickname: nickname,
+                                    password: password,
+                                    register_date: new Date().toISOString(),
+                                    role: role.text(),
+                                    guests: []
+                                })
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                let msg;
+                                switch (jqXHR.status) {
+                                    case 409:
+                                        msg = '用户已存在';
+                                        break;
+                                    default:
+                                        msg = '网络错误'
+                                }
+                                showMsg(msg);
+                            },
+                            complete: function () {
+                                stopCatLoading();
+                            }
+                        });
+                    },
+                    modAcc: function (e) {
+                        let index = $(e.target).attr('index');
+                        let username = app.users[index].phoneNumber;
+                        // if (!confirm(`确定修改用户"${username}"的信息？`)) return;
+                        let line = $(`.modifyAccount table tr:nth-child(${index + 2})`);
+                        let nickname = line.find('.mNickname').val();
+                        let password = line.find('.mPWD').val();
+                        let role = line.find('.mRole option:selected').val();
+                        startCatLoading();
+                        //TODO
+                        //等待接口
+                        $.ajax({
+                            url: `${serverHost}/api`,
+                            type: 'PATCH',
+                            contentType: "application/json; charset=UTF-8",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
+                            },
+                            success: function (data, textStatus, jqXHR) {
+
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+
+                            },
+                            complete: function () {
+                                stopCatLoading();
+                            }
+                        });
+                    },
+                    delAcc: function (e) {
+                        let index = $(e.target).attr('index');
+                        let username = app.users[index].phoneNumber;
+                        if (!confirm(`确定删除用户"${username}"？`)) return;
+                        startCatLoading();
+                        $.ajax({
+                            url: `${serverHost}/api/users?phone=${username}`,
+                            type: 'DELETE',
+                            contentType: "application/json; charset=UTF-8",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
+                            },
+                            success: function (data, textStatus, jqXHR) {
+                                app.users.splice(index, 1);
+                                showMsg('删除成功！')
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                let msg = '删除失败';
+                                switch (jqXHR.status) {
+
+                                }
+                                showMsg(msg);
+                            },
+                            complete: function () {
+                                stopCatLoading();
+                            }
+                        });
+                    }
+                }
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -949,7 +1158,7 @@ async function sales_per_month() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单
@@ -982,7 +1191,7 @@ async function client_analyze() {
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username  + ":" + sessionStorage.password ));
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
         },
         success: function (data, textStatus, jqXHR) {
             //获取订单

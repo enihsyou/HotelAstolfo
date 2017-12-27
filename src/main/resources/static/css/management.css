@@ -101,3 +101,31 @@
     position: relative;
     margin-bottom: 3em;
 }
+
+.container #modify_user_info .addAccount table {
+    position: relative;
+    width: 20em;
+    border: 0;
+}
+
+.container #modify_user_info .addAccount table tr {
+    border: 0;
+    height: 2em;
+}
+
+.container #modify_user_info .addAccount table input {
+    width: 100%;
+}
+
+.container #modify_user_info .addAccount table select {
+    width: 100%;
+}
+
+.container #modify_user_info .addAccount table tr td:nth-child(1) {
+    width: 4em;
+    text-align: right;
+}
+
+.container #modify_user_info .addAccount table tr td:last-child {
+    text-align: center;
+}

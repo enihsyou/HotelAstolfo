@@ -136,7 +136,7 @@
             </label>
             <label class="col-xs-12" for="bookingDirection">房间朝向：
                 <select class="form-control" id="bookingDirection">
-                    <option v-for="edirection in direction" :value="direction" v-cloak>{{direction}}</option>
+                    <option v-for="edirection in direction" :value="direction" v-cloak>{{edirection}}</option>
                     <option value="" selected>任意</option>
                 </select>
             </label>
@@ -158,7 +158,8 @@
         </div>
     </div>
     <div class="searchList untouchable">
-        <button type="button" class="close" @click="close" aria-label="Close"><span aria-hidden="true">&times;</span>
+        <button type="button" class="close" @click="close" aria-label="Close">
+            <span id="closeSearchList" aria-hidden="true">&times;</span>
         </button>
         <table>
             <tr>
@@ -183,8 +184,8 @@
             </tr>
         </table>
         <div class="selectID">
-            <button type="button" class="close" @click="close" aria-label="Close"><span
-                    aria-hidden="true">&times;</span>
+            <button type="button" class="close" @click="close" aria-label="Close">
+                <span id="closeSelectID" aria-hidden="true">&times;</span>
             </button>
             <dl v-cloak>
                 <dt>请选择入住的旅客：</dt>
@@ -192,10 +193,13 @@
                     账户内没有录入身份证信息，请前往<a href="management.html">个人中心</a>添加个人信息！
                 </dd>
                 <dd v-else>
-                    <label class="col-xs-3" v-for="id in ids" :for="id.identification" :title="id.identification"
-                           v-cloak>{{id.name}}
-                        <input type="checkbox" class="form-control" :identification="id.identification">
-                    </label>
+                    <div class="IDs">
+                        <span v-for="id in ids">
+                            <label :for="id.identification" :title="id.identification" v-cloak>
+                                <input type="checkbox" :identification="id.identification">{{id.name}}
+                            </label>
+                        </span>
+                    </div>
                     <button class="btn btn-default confirm untouchable" @click="submitBook">确定</button>
                 </dd>
             </dl>

@@ -44,17 +44,17 @@ $('.login .window .confirm').click(function () {
         return;
     }
     let _this = this;
-    let username = $('#inputUserName');
-    let password = $('#inputPassword');
-    if (username.val().length > 0 && password.val().length > 0) {
+    let username = $('#inputUserName').val().replace(/-/g, '');
+    let password = $('#inputPassword').val();
+    if (username.length > 0 && password.length > 0) {
         $(_this).append('<span class="loading line"></span>');
         $.ajax({
             url: `${serverHost}/api/users/login`,
             type: 'POST',
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify({
-                phoneNumber: username.val(),
-                password: sha256(password.val())
+                phoneNumber: username,
+                password: sha256(password)
             }),
             success: function (data, textStatus, jqXHR) {
                 /*{
@@ -66,19 +66,21 @@ $('.login .window .confirm').click(function () {
                     "role": "注册用户",
                     "guests": []
                 }*/
-                showMsg(`亲爱的${data.nickname},欢迎你回到阿福旅店！`).then(() => {
-                    if ($(".checkbox input").prop('checked')) {
-                        localStorage.username = data.phoneNumber;
-                        localStorage.password = data.password;
-                        localStorage.nickname = data.nickname;
-                    }
-                    sessionStorage.username = data.phoneNumber;
-                    sessionStorage.password = data.password;
-                    sessionStorage.nickname = data.nickname;
-                    sessionStorage.isLogin = true;
-                    sessionStorage.role = data.role;
-                    location.href = '/';
-                });
+                if ($(".checkbox input").prop('checked')) {
+                    localStorage.username = data.phoneNumber;
+                    localStorage.password = data.password;
+                    localStorage.nickname = data.nickname;
+                }
+                sessionStorage.username = data.phoneNumber;
+                sessionStorage.password = data.password;
+                sessionStorage.nickname = data.nickname;
+                sessionStorage.role = data.role;
+                sessionStorage.isLogin = true;
+                $('.window .close').trigger('click');
+                $('.user-info .user-btn').html(sessionStorage.nickname);
+                $('.user-info ').show();
+                $('.login-btn').hide();
+                showMsg(`亲爱的${data.nickname},欢迎你回到阿福旅店！`);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 let msg;
@@ -109,62 +111,54 @@ $('.signup .window .confirm').click(function () {
         return;
     }
     let _this = this;
-    let username = $('#signupUsername');
-    let nickname = $('#signupNickname');
-    let password = $('#signupPassword');
-    let passwordAgain = $('#signupPasswordAgain');
-    if (username.val().length > 0 && password.val().length > 0 && passwordAgain.val().length > 0) {
-        if (password.val() !== passwordAgain.val()) {
-            showMsg('两次输入密码不相符');
-            return;
-        }
-        $(_this).append('<span class="loading line"></span>');
-        $.ajax({
-            url: `${serverHost}/api/users/make`,
-            type: 'POST',
-            contentType: "application/json; charset=UTF-8",
-            data: JSON.stringify({
-                phoneNumber: username.val(),
-                password: password.val(),
-                nickname: nickname.val()
-            }),
-            success: function (data, textStatus, jqXHR) {
-                /*{
-                    "id": 1,
-                    "phoneNumber": "18834321240",
-                    "nickname": "temp",
-                    "password": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
-                    "register_date": "2017-12-21T22:40:24.289",
-                    "role": "注册用户",
-                    "guests": []
-                }*/
-                showMsg(`亲爱的${data.nickname},欢迎你来到阿福旅店！`).then(() => {
-                    sessionStorage.isLogin = true;
-                    sessionStorage.username = data.phoneNumber;
-                    sessionStorage.password = data.password;
-                    sessionStorage.nickname = data.nickname;
-                    sessionStorage.role = data.role;
-                    location.href = '/';
-                });
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                let msg;
-                switch (jqXHR.status) {
-                    case 409:
-                        msg = '用户已存在';
-                        break;
-                    default:
-                        msg = '网络错误'
-                }
-                showMsg(msg);
-            },
-            complete: function () {
-                $(_this).children('.loading').remove();
-            }
-        });
-    } else {
-        showMsg('用户名和密码不能为空');
+    let username = $('#signupUsername').val().replace(/-/g, '');
+    let nickname = $('#signupNickname').val();
+    let password = $('#signupPassword').val();
+    let passwordAgain = $('#signupPasswordAgain').val();
+    if (isEmpty(username, passwordAgain, password, passwordAgain)) {
+        showMsg('请完整填写注册信息');
     }
+    if (password !== passwordAgain) {
+        showMsg('两次输入密码不相符');
+        return;
+    }
+    $(_this).append('<span class="loading line"></span>');
+    $.ajax({
+        url: `${serverHost}/api/users/make`,
+        type: 'POST',
+        contentType: "application/json; charset=UTF-8",
+        data: JSON.stringify({
+            phoneNumber: username,
+            password: password,
+            nickname: nickname
+        }),
+        success: function (data, textStatus, jqXHR) {
+            $('.window .close').trigger('click');
+            sessionStorage.username = data.phoneNumber;
+            sessionStorage.password = data.password;
+            sessionStorage.nickname = data.nickname;
+            sessionStorage.role = data.role;
+            sessionStorage.isLogin = true;
+            $('.user-info .user-btn').html(sessionStorage.nickname);
+            $('.user-info ').show();
+            $('.login-btn').hide();
+            showMsg(`亲爱的${data.nickname},欢迎你来到阿福旅店！`);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            let msg;
+            switch (jqXHR.status) {
+                case 409:
+                    msg = '用户已存在';
+                    break;
+                default:
+                    msg = '网络错误'
+            }
+            showMsg(msg);
+        },
+        complete: function () {
+            $(_this).children('.loading').remove();
+        }
+    });
 });
 
 //登录、注册界面关闭图标动作
@@ -199,14 +193,16 @@ $(function init() {
         type: 'GET',
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
-        },
         success: function (data, textStatus, jqXHR) {
             searchBoxVue.update(data);
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg('连接服务器失败')
+            let msg = '初始化搜索栏失败';
+            switch (jqXHR.status) {
+                default:
+                    msg += ':网络错误';
+            }
+            showMsg(msg)
         },
         complete: function () {
         }
@@ -220,8 +216,7 @@ $(function init() {
             $('.user-info ').show();
         }, (error) => {
             if (error !== 'EMPTY_USERNAME_OR_PASSWORD') {
-                console.error('autoLogin:', error);
-                showMsg(error)
+                showMsg(`自动登录失败:${error}`);
             }
             $('.login-btn').show();
         });
@@ -269,6 +264,10 @@ let searchBoxVue = new Vue({
             let direction = $('#bookingDirection').val();
             let floor = $('#bookingFloor').val();
             let number = $('#bookingNumber').val();
+            if (isEmpty(from, to)) {
+                showMsg('请正确填写预定时间和离店时间');
+                return;
+            }
             if (new Date(from) >= new Date(to)) {
                 showMsg('离店时间必须晚于预定时间');
                 return;
@@ -329,12 +328,16 @@ let searchListVue = new Vue({
     },
     methods: {
         showIDs: function (e) {
-            if (!sessionStorage.isLogin) {
+            if (sessionStorage.isLogin !== 'true') {
                 showMsg('请先登录！').then(
                     () => {
                         $('.login-btn').trigger('click');
                     }
                 );
+                return;
+            }
+            if (sessionStorage.role !== '注册用户') {
+                showMsg(`尊敬的${sessionStorage.role}:非注册用户禁止由此登记预订`);
                 return;
             }
             startCatLoading();
@@ -349,6 +352,7 @@ let searchListVue = new Vue({
                 success: function (data, textStatus, jqXHR) {
                     searchListVue.ids = data;
                     searchListVue.selectedIndex = $(e.target).attr('index');
+                    $('.searchList .selectID').fadeIn();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     showMsg(jqXHR.status)
@@ -359,30 +363,30 @@ let searchListVue = new Vue({
             })
         },
         submitBook: function () {
-            let selectedIDs=[];
+            let selectedIDs = [];
             $(".selectID input:checked").each(function () {
                 selectedIDs.push(+$(this).attr('identification'));
             });
-            if (isEmpty(selectedIDs)){
+            if (isEmpty(selectedIDs)) {
                 showMsg('请至少选择一位旅客');
                 return;
             }
             startCatLoading();
-            $('.selectID .close').trigger('click');
+            $('.selectID .close span').trigger('click');
             $.ajax({
                 url: `${serverHost}/api/transactions`,
                 type: 'POST',
                 dataType: 'json',
-                data: {
+                data: JSON.stringify({
                     dateFrom: new Date($('#bookingStart').val()).toISOString().replace('Z', ''),
                     dateTo: new Date($('#bookingEnd').val()).toISOString().replace('Z', ''),
                     phone: sessionStorage.username,
                     guests: selectedIDs,
                     room: {
-                        floor: searchListVue.rooms[selectedIndex].roomNumber.floor,
-                        number: searchListVue.rooms[selectedIndex].roomNumber.number
+                        floor: searchListVue.rooms[searchListVue.selectedIndex].roomNumber.floor,
+                        number: searchListVue.rooms[searchListVue.selectedIndex].roomNumber.number
                     }
-                },
+                }),
                 contentType: "application/json; charset=UTF-8",
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
@@ -391,7 +395,11 @@ let searchListVue = new Vue({
                     showMsg('预定成功')
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    showMsg('预定失败')
+                    let msg = '预订失败';
+                    switch (jqXHR.status) {
+
+                    }
+                    showMsg(msg);
                 },
                 complete: function () {
                     stopCatLoading();
@@ -400,8 +408,10 @@ let searchListVue = new Vue({
         },
         close: function (e) {
             $(e.target).parent().parent().slideUp();
-            $('.slider_container').css('filter', 'none');
-            $('.searchBox').css('left', '10%');
+            if ($(e.target).attr('id') === 'closeSearchList') {
+                $('.slider_container').css('filter', 'none');
+                $('.searchBox').css('left', '10%');
+            }
         }
     }
 });
