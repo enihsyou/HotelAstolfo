@@ -2,6 +2,7 @@ package com.enihsyou.astolfo.hotel.repository
 
 import com.enihsyou.astolfo.hotel.domain.Guest
 import com.enihsyou.astolfo.hotel.domain.User
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.PagingAndSortingRepository
@@ -15,5 +16,5 @@ interface GuestRepository : PagingAndSortingRepository<Guest, Int> {
     fun findByIdentification(identificationNumber: String):Guest?
     fun findByName(Name: String):Guest?
     fun findByUserId(id: Int,
-                   pageable: Pageable): List<Guest>
+                   pageable: Pageable): Page<Guest>
 }

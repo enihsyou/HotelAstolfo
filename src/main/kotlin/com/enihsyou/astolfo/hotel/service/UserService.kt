@@ -12,74 +12,57 @@ import com.enihsyou.astolfo.hotel.repository.TransactionRepository
 import com.enihsyou.astolfo.hotel.repository.UserRepository
 import com.google.common.hash.Hashing
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.nio.charset.StandardCharsets
 
 
 interface UserService {
-    /**
-     * 根据想要的类型和信息创建用户
-     * @return 创建的用户
-     * */
-    fun make(
-        phoneNumber: String,
-        password: String,
-        nickname: String = "",
-        role: User.UserRole
-    ): User
 
-    /**
-     * 根据手机号和密码验证并登录
-     * 如果错误直接由异常处理跳出
-     * */
-    fun login(
-        phoneNumber: String,
-        password: String
-    ): User
+    fun login(phoneNumber: String, password: String): User
 
-    /**根据手机号搜索用户,没找到直接抛出错误*/
-    fun findByPhone(phone: String): User
+    fun listUsers(pageable: Pageable): Page<User>
+    fun createUser(phoneNumber: String, password: String, nickname: String = "", role: User.UserRole): User
+    fun getUser(phone: String): User
+    fun updateUser(phone: String, user: User): User
+    fun deleteUser(phone: String)
 
-    fun updateInformation(
-        phone: String,
-        user: User
-    ): User
+    fun listTransactions(phone: String, pageable: Pageable): Page<Transaction>
 
-    fun findTransactions(
-        phone: String,
-        pageable: Pageable
-    ): List<Transaction>
-
-    fun findGuests(
-        phone: String,
-        pageable: Pageable
-    ): List<Guest>
-
-    fun addGuest(
-        phone: String,
-        guest: Guest
-    )
-
-    fun deleteGuest(phone: String, guest: Guest)
+    fun listGuests(phone: String, pageable: Pageable): Page<Guest>
+    fun addGuest(phone: String, guest: Guest): ResponseEntity<Guest>
+    fun deleteGuest(guest: Guest)
+    fun modifyGuest(identification: String, payload: Map<String, String>): ResponseEntity<Guest>
 }
 
 @Service(value = "用户层逻辑")
 class UserServiceImpl : UserService {
 
-    override fun deleteGuest(phone: String, guest: Guest) {
-        guestRepository.delete(guest)
+    override fun listUsers(pageable: Pageable): Page<User>
+        = userRepository.findAll(pageable)
+
+    override fun deleteUser(phone: String)
+        = userRepository.delete(getUser(phone))
+
+    override fun modifyGuest(identification: String, payload: Map<String, String>): ResponseEntity<Guest> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    override fun deleteGuest(guest: Guest)
+        = guestRepository.delete(guest)
 
     @Autowired lateinit var userRepository: UserRepository
     @Autowired lateinit var guestRepository: GuestRepository
     @Autowired lateinit var transactionRepository: TransactionRepository
 
-    override fun findByPhone(phone: String): User
+    override fun getUser(phone: String): User
         = existUser(phone)
 
-    override fun updateInformation(phone: String, user: User): User {
-        val old_user = findByPhone(phone)
+    override fun updateUser(phone: String, user: User): User {
+        val old_user = getUser(phone)
         if (user.password.isNotEmpty())
             old_user.password = getCheckedPassword(user.password)
         if (user.nickname.isNotEmpty())
@@ -93,19 +76,17 @@ class UserServiceImpl : UserService {
             let { return it }
             ?: throw throw 用户不存在(phone)
 
-    override fun findTransactions(
+    override fun listTransactions(
         phone: String,
         pageable: Pageable
-    ): List<Transaction>
-        = existUser(phone).let {
-        transactionRepository.findByUser(it, pageable)
-    }
+    )
+        = existUser(phone).let { transactionRepository.findByUser(it, pageable) }
 
 
     override fun addGuest(
         phone: String,
         guest: Guest
-    ) {
+    ): ResponseEntity<Guest> {
         val iden = guest.identification
         existUser(phone).let {
             if (guestRepository.findByIdentification(guest.identification) == null)
@@ -115,12 +96,13 @@ class UserServiceImpl : UserService {
             else
                 throw 相同身份证已存在(iden)
         }
+        return ResponseEntity(HttpStatus.MULTI_STATUS)
     }
 
-    override fun findGuests(
+    override fun listGuests(
         phone: String,
         pageable: Pageable
-    ): List<Guest> {
+    ): Page<Guest> {
         existUser(phone).let {
             return guestRepository.findByUserId(it.id, pageable)
         }
@@ -133,7 +115,7 @@ class UserServiceImpl : UserService {
             password
     }
 
-    override fun make(
+    override fun createUser(
         phoneNumber: String,
         password: String,
         nickname: String,

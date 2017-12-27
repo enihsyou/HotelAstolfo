@@ -6,12 +6,13 @@ import com.enihsyou.astolfo.hotel.domain.User
 import com.enihsyou.astolfo.hotel.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
@@ -27,65 +28,77 @@ class UserController {
 
     @Autowired lateinit var userService: UserService
 
-    @GetMapping
-    fun information(@RequestParam phone: String): User?
-        = userService.findByPhone(phone)
-
-    @PutMapping
-    fun updateInformation(@RequestParam phone: String, @RequestBody user:User): User
-        = userService.updateInformation(phone, user)
-
-
     @PostMapping("/make")
     @ResponseStatus(HttpStatus.CREATED)
-    fun make(@RequestBody user: User): User
+    fun make(@RequestBody user: User)
         = user.run {
-        userService.make(phoneNumber, password, nickname, role = User.UserRole.注册用户)
+        userService.createUser(phoneNumber, password, nickname, role = User.UserRole.注册用户)
     }
-
 
     @PostMapping("/make/admin")
     @ResponseStatus(HttpStatus.CREATED)
-    fun makeAdmin(@RequestBody user: User): User
+    fun makeAdmin(@RequestBody user: User)
         = user.run {
-        userService.make(phoneNumber, password, nickname, role = User.UserRole.管理员)
+        userService.createUser(phoneNumber, password, nickname, role = User.UserRole.管理员)
     }
-
 
     @PostMapping("/make/employee")
     @ResponseStatus(HttpStatus.CREATED)
-    fun makeEmployee(@RequestBody user: User): User
+    fun makeEmployee(@RequestBody user: User)
         = user.run {
-        userService.make(phoneNumber, password, nickname, role = User.UserRole.前台)
+        userService.createUser(phoneNumber, password, nickname, role = User.UserRole.前台)
     }
 
+    @GetMapping
+    fun listUsers(pageable: Pageable, assembler: PagedResourcesAssembler<User>)
+        = assembler.toResource(userService.listUsers(pageable))!!
+
+    @GetMapping("/get")
+    fun getUser(@RequestParam phone: String)
+        = userService.getUser(phone)
+
+    @PatchMapping
+    fun modifyUser(@RequestParam phone: String, @RequestBody user: User)
+        = userService.updateUser(phone, user)
+
+    @DeleteMapping
+    fun deleteUser(@RequestParam phone: String)
+        = userService.deleteUser(phone)
 
     @PostMapping("/login")
-    fun login(@RequestBody user: User): User
+    fun login(@RequestBody user: User)
         = user.run {
         userService.login(phoneNumber, password)
     }
 
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
-    fun logout(@RequestHeader("Authorization") header: String): String
+    fun logout(@RequestHeader("Authorization") header: String)
         = "忘掉密码不就退出了么w"
 
     @GetMapping("/transactions")
-    fun transactions(@RequestParam("phone") phone: String, pageable: Pageable): List<Transaction>
-        = userService.findTransactions(phone, pageable)
+    fun listTransactions(
+        @RequestParam("phone") phone: String, pageable: Pageable,
+        assembler: PagedResourcesAssembler<Transaction>
+    )
+        = assembler.toResource(userService.listTransactions(phone, pageable))!!
 
+
+    /*旅客信息*/
     @GetMapping("/guests")
-    fun guests(@RequestParam("phone") phone: String, pageable: Pageable): List<Guest>
-        = userService.findGuests(phone, pageable)
+    fun listGuests(@RequestParam("phone") phone: String, pageable: Pageable, assembler: PagedResourcesAssembler<User>)
+        = userService.listGuests(phone, pageable)
 
     @PostMapping("/guests")
-    @ResponseStatus(HttpStatus.CREATED)
     fun addGuest(@RequestParam("phone") phone: String, @RequestBody guest: Guest)
         = userService.addGuest(phone, guest)
 
+    @PatchMapping("/guests")
+    fun modifyGuest(@RequestParam("guest") identification: String, @RequestBody payload: Map<String, String>)
+        = userService.modifyGuest(identification, payload)
+
     @DeleteMapping("/guests")
     @ResponseStatus(HttpStatus.GONE)
-    fun deleteGuest(@RequestParam("phone") phone: String, @RequestBody guest: Guest)
-        = userService.deleteGuest(phone, guest)
+    fun deleteGuest(@RequestBody guest: Guest)
+        = userService.deleteGuest(guest)
 }

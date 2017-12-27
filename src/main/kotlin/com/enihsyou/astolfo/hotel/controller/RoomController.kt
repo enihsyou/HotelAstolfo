@@ -5,10 +5,15 @@ import com.enihsyou.astolfo.hotel.domain.RoomDirection
 import com.enihsyou.astolfo.hotel.domain.RoomType
 import com.enihsyou.astolfo.hotel.service.RoomService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -42,7 +47,7 @@ class RoomController {
     fun addRoom(@RequestBody room: Room)
         = roomService.addRoom(room)
 
-    @PutMapping
+    @PatchMapping
     fun modifyRoom(@RequestParam floor: Int, @RequestParam number: Int, @RequestBody payload: Map<String, String>)
         = roomService.modifyRoom(floor, number, payload)
 
@@ -61,7 +66,7 @@ class RoomController {
     fun addType(@RequestBody type: RoomType)
         = roomService.addType(type)
 
-    @PutMapping("/types")
+    @PatchMapping("/types")
     fun modifyType(@RequestParam type: String, @RequestBody payload: Map<String, String>)
         = roomService.modifyType(type, payload)
 
@@ -80,7 +85,7 @@ class RoomController {
     fun addDirection(@RequestBody direction: RoomDirection)
         = roomService.addDirection(direction)
 
-    @PutMapping("/directions")
+    @PatchMapping("/directions")
     fun modifyDirection(@RequestParam direction: String, @RequestBody payload: Map<String, String>)
         = roomService.modifyDirection(direction,payload)
 

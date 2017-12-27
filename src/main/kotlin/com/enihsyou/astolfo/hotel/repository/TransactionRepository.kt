@@ -4,6 +4,7 @@ import com.enihsyou.astolfo.hotel.domain.Room
 import com.enihsyou.astolfo.hotel.domain.Transaction
 import com.enihsyou.astolfo.hotel.domain.User
 import org.intellij.lang.annotations.Language
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.PagingAndSortingRepository
@@ -17,7 +18,7 @@ import java.time.LocalDateTime
 interface TransactionRepository : PagingAndSortingRepository<Transaction, Int> {
 
     fun findByUser(user: User,
-                   pageable: Pageable): List<Transaction>
+                   pageable: Pageable): Page<Transaction>
 
 
     @Query(value = "SELECT T FROM Transaction T where T.activated=true and T.room.roomNumber.floor=?1 and T.room.roomNumber.number=?2")

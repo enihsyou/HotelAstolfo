@@ -307,3 +307,5 @@ Content-Type: application/json
 }
 
 ###
+GET http://localhost:10080/api/users?phone=18800000001
+###

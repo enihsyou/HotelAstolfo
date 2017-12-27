@@ -16,17 +16,17 @@ interface TransactionService {
         transaction: Transaction
     )
 
-    fun listByParameter(
-        user_phone: String?,
-        createFrom: LocalDateTime?,
-        createTo: LocalDateTime?,
-        validFrom: LocalDateTime?,
-        validTo: LocalDateTime?,
-        type: String?,
-        direction: String?,
-        priceFrom: Int?,
-        priceTo: Int?,
-        floor: Int?,
+    fun listTransactions(
+        user_phone: String? = null,
+        createFrom: LocalDateTime? = null,
+        createTo: LocalDateTime? = null,
+        validFrom: LocalDateTime? = null,
+        validTo: LocalDateTime? = null,
+        type: String? = null,
+        direction: String? = null,
+        priceFrom: Int? = null,
+        priceTo: Int? = null,
+        floor: Int? = null,
         number: Int?
     ): List<Transaction>
 
@@ -37,7 +37,7 @@ interface TransactionService {
 class TransactionServiceImpl : TransactionService {
 
     override fun singleBook(body: TransactionController.BookBody): ResponseEntity<Unit> {
-        val user = userService.findByPhone(body.phone)
+        val user = userService.getUser(body.phone)
         val room = roomService.listRooms(floor = body.room.floor, number = body.room.number).first()
         val guests = mutableListOf<Guest>()
         body.guests.forEach { guestRepository.findByIdentification(it)?.let { guests.add(it) } }
@@ -46,7 +46,7 @@ class TransactionServiceImpl : TransactionService {
         return ResponseEntity(HttpStatus.CREATED)
     }
 
-    override fun listByParameter(
+    override fun listTransactions(
         user_phone: String?,
         createFrom: LocalDateTime?,
         createTo: LocalDateTime?,
