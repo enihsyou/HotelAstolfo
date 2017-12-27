@@ -311,7 +311,7 @@ GET http://localhost:10080/api/users/get?phone=18834321240
 ###
 GET http://localhost:10080/api/users/guests?phone=18834321240
 ###
-POST http://localhost:10080/api/users/guests?phone=18834321240
+POST http://localhost:10080/api/users/guests?phone=18916961896
 Content-Type: application/json
 
 {
@@ -343,7 +343,9 @@ Content-Type: application/json
 GET http://localhost:10080/api/rooms/directions
 
 ###
-DELETE http://localhost:10080/api/rooms/directions?direction=东2
+POST http://localhost:10080/api/rooms/directions
+###
+DELETE http://localhost:10080/api/rooms/directions?direction=大床房
 
 ###
 POST http://localhost:10080/api/users/make/

@@ -2,7 +2,10 @@ package com.enihsyou.astolfo.hotel.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.NaturalId
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 import java.io.Serializable
+import javax.persistence.CascadeType
 import javax.persistence.Embeddable
 import javax.persistence.Embedded
 import javax.persistence.Entity
@@ -22,10 +25,12 @@ data class Room(
     @Embedded
     var roomNumber: RoomNumber = RoomNumber(),
 
-    @ManyToOne(targetEntity = RoomType::class)
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     var type: RoomType = RoomType(),
 
-    @ManyToOne(targetEntity = RoomDirection::class)
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     var direction: RoomDirection = RoomDirection(),
 
     /*简介信息*/
@@ -57,7 +62,7 @@ data class Room(
 @Embeddable
 data class RoomType(
     @Id @GeneratedValue
-    var id: Int=0,
+    var id: Int = 0,
 
     @NaturalId
     /*类型名字*/
@@ -65,8 +70,13 @@ data class RoomType(
 
     /*房型简介*/
     var description: String = ""
-){
-    constructor(type: String) : this(){
+
+//    @OneToMany(mappedBy = "roomtype")
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    var rooms: List<Room> = emptyList()
+) {
+
+    constructor(type: String) : this() {
         this.type = type
     }
 }
@@ -76,7 +86,7 @@ data class RoomType(
 @Embeddable
 data class RoomDirection(
     @Id @GeneratedValue
-    var id: Int=0,
+    var id: Int = 0,
 
     /*方向名字*/
     @NaturalId
@@ -84,7 +94,12 @@ data class RoomDirection(
 
     /*方向简介*/
     var description: String = ""
+//
+//    @OneToMany(mappedBy = "room_direction")
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    var rooms: List<Room> = emptyList()
 ) {
+
     constructor(type: String) : this() {
         this.type = type
     }

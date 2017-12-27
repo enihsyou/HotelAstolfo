@@ -98,7 +98,7 @@ class UserServiceImpl : UserService {
         val user = existUser(phone)
 
         if (guestRepository.findByIdentification(iden) == null) {
-            val new_guest = Guest(identification = iden, name = guest.name)
+            val new_guest = Guest(identification = iden, name = guest.name, user = mutableListOf())
             user.guests.add(new_guest)
             new_guest.user.add(user)
 
