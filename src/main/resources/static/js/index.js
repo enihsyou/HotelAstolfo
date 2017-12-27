@@ -273,8 +273,8 @@ let searchBoxVue = new Vue({
                 showMsg('离店时间必须晚于预定时间');
                 return;
             }
-            if (priceFrom > priceTo) {
-                showMsg('最高价格必须高于最低价格');
+            if (priceFrom > priceTo || isNegative(priceFrom, priceTo)) {
+                showMsg('最高价格必须高于最低价格，且不为负数');
                 return;
             }
             $(_this).append('<span class="loading line"></span>');
