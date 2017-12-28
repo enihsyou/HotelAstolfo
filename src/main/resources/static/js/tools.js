@@ -1,5 +1,5 @@
 //服务器地址
-let serverHost = 'https://enihsyou.synology.me:8899';
+let serverHost = 'http://47.100.117.174:8899/';
 
 //封装消息提示
 function showMsg(msg) {
