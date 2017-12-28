@@ -15,14 +15,8 @@ const left_nav = new Vue({
                 case '修改个人信息':
                     modify_my_info();
                     break;
-                case '预订客房':
-                    book_a_room();
-                    break;
                 case '当前所有客房状态':
                     rooms_all_info();
-                    break;
-                case '查询预定客户信息':
-                    check_all_booking();
                     break;
                 case '客房维修登记':
                     fix_a_room();
@@ -51,14 +45,16 @@ const left_nav = new Vue({
                 case '登出':
                     logout();
                     break;
+                default:
+                    showMsg('不存在的选项，请联系开发者')
             }
         }
     }
 });
 
 let ordinary_user_items = ['查看我的订单', '修改个人信息', '返回主页', '登出'];
-let receptionist_user_items = ['当前所有客房状态', '查询预定客户信息', '预订客房', '客房维修登记', '返回主页', '登出'];
-let manager_user_items = ['客房类型设置', '可用客房设置', '当前所有客房状态', '预订客房', '预订查询与修改', '所有账户管理', '销售月表', '客户分析', '返回主页', '登出'];
+let receptionist_user_items = ['当前所有客房状态', '预订查询与修改', '当前所有客房状态', '返回主页', '登出'];
+let manager_user_items = ['客房类型设置', '预订查询与修改', '所有账户管理', '销售月表', '客户分析', '返回主页', '登出'];
 
 //初始化
 $(function init() {

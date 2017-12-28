@@ -15,17 +15,88 @@
 </div>
 <div class="main">
     <div class="left-nav untouchable"></div>
-    <div class="container untouchable">
-
+    <div class="container">
     </div>
 </div>
-<div class="cat-loading untouchable"></div>
 <div class="footer">
 </div>
 <script src="js/vue.js"></script>
 <script src="js/jquery-3.2.1.js"></script>
 <script src="js/tools.js"></script>
 <script>
+    let data = {
+        "types": [
+            {
+                "id": 3,
+                "type": "东",
+                "description": "冬暖夏狼"
+            },
+            {
+                "id": 4,
+                "type": "东2",
+                "description": "冬暖夏狼"
+            },
+            {
+                "id": 5,
+                "type": "大床房",
+                "description": "冬暖夏狼"
+            }
+        ],
+        "directions": [
+            {
+                "id": 1,
+                "type": "东2",
+                "description": "冬暖夏狼"
+            },
+            {
+                "id": 2,
+                "type": "东",
+                "description": "冬暖夏狼"
+            }
+        ],
+        "rooms": [
+            {
+                "id": 6,
+                "roomNumber": {
+                    "floor": 5,
+                    "number": 1
+                },
+                "type": {
+                    "id": 5,
+                    "type": "大床房",
+                    "description": "冬暖夏狼"
+                },
+                "direction": {
+                    "id": 2,
+                    "type": "东2",
+                    "description": "冬暖夏狼"
+                },
+                "specialty": "一个介绍",
+                "price": 143,
+                "broken": true
+            },
+            {
+                "id": 7,
+                "roomNumber": {
+                    "floor": 2,
+                    "number": 1
+                },
+                "type": {
+                    "id": 5,
+                    "type": "大床房",
+                    "description": "冬暖夏狼"
+                },
+                "direction": {
+                    "id": 2,
+                    "type": "东",
+                    "description": "冬暖夏狼"
+                },
+                "specialty": "一个介绍",
+                "price": 143,
+                "broken": false
+            }
+        ]
+    }
 
 </script>
 </body>
