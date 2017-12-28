@@ -3,6 +3,7 @@ package com.enihsyou.astolfo.hotel.service
 import com.enihsyou.astolfo.hotel.controller.TransactionController
 import com.enihsyou.astolfo.hotel.domain.Guest
 import com.enihsyou.astolfo.hotel.domain.Transaction
+import com.enihsyou.astolfo.hotel.exception.房间已损坏
 import com.enihsyou.astolfo.hotel.exception.订单不存在
 import com.enihsyou.astolfo.hotel.exception.订单时间冲突
 import com.enihsyou.astolfo.hotel.repository.GuestRepository
@@ -75,6 +76,8 @@ class TransactionServiceImpl : TransactionService {
                 .let { guests.add(it) }
         }
         val tranList = transactionRepository.findByUser(user)
+
+        if (room.broken == true) throw 房间已损坏(room.roomNumber.floor, room.roomNumber.number)
         if (tranList.any { body.from <= it.dateFrom && it.dateTo <= body.to }) throw 订单时间冲突(body.from, body.to)
         val transaction = Transaction(dateFrom = body.from, dateTo = body.to, user = user, room = room, guests = guests)
         transactionRepository.save(transaction)
