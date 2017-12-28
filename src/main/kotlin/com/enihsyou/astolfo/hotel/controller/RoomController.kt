@@ -32,9 +32,11 @@ class RoomController {
         @RequestParam("priceFrom", required = false) priceFrom: Int? = null,
         @RequestParam("priceTo", required = false) priceTo: Int? = null,
         @RequestParam("floor", required = false) floor: Int? = null,
-        @RequestParam("number", required = false) number: Int? = null
+        @RequestParam("number", required = false) number: Int? = null,
+        @RequestParam("broken", required = false) broken: Boolean? = null,
+        @RequestParam("available", required = false) available: Boolean? = null
     )
-        = roomService.listRooms(from, to, type, direction, priceFrom, priceTo, floor, number)
+        = roomService.listRooms(from, to, type, direction, priceFrom, priceTo, floor, number, broken, available)
 
     @PostMapping
     fun addRoom(@RequestBody room: Room)
@@ -78,7 +80,7 @@ class RoomController {
 
     @PatchMapping("/directions")
     fun modifyDirection(@RequestParam direction: String, @RequestBody payload: Map<String, String>)
-        = roomService.modifyDirection(direction,payload)
+        = roomService.modifyDirection(direction, payload)
 
     @DeleteMapping("/directions")
     fun deleteDirection(@RequestParam direction: String)

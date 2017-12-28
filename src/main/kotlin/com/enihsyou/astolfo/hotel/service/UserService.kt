@@ -27,7 +27,7 @@ interface UserService {
     fun listUsers(): List<User>
     fun createUser(phoneNumber: String, password: String, nickname: String = "", role: User.UserRole): User
     fun getUser(phone: String): User
-    fun updateUser(phone: String, user: User): User
+    fun modifyUser(phone: String, payload: Map<String, String>): User
     fun deleteUser(phone: String)
 
     fun listTransactions(phone: String): List<Transaction>
@@ -36,8 +36,8 @@ interface UserService {
     fun getGuest(identification: String): Guest
     fun getGuest(phone: String, identification: String): Guest
     fun addGuest(phone: String, guest: Guest): ResponseEntity<Guest>
-    fun deleteGuest(guest: Guest)
     fun modifyGuest(identification: String, payload: Map<String, String>): Guest
+    fun deleteGuest(guest: Guest)
 }
 
 @Service(value = "用户层逻辑")
@@ -75,12 +75,12 @@ class UserServiceImpl : UserService {
     override fun getUser(phone: String): User
         = existUser(phone)
 
-    override fun updateUser(phone: String, user: User): User {
+    override fun modifyUser(phone: String, payload: Map<String, String>): User {
         val old_user = getUser(phone)
-        if (user.password.isNotEmpty())
-            old_user.password = getCheckedPassword(user.password)
-        if (user.nickname.isNotEmpty())
-            old_user.nickname = user.nickname
+
+        payload["password"]?.takeIf { it.isNotEmpty()}?.let { old_user.password = getCheckedPassword(it)}
+        payload["nickname"]?.takeIf { it.isNotEmpty()}?.let { old_user.nickname = it}
+
         userRepository.save(old_user)
         return old_user
     }

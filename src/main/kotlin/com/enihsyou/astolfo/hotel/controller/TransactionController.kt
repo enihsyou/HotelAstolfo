@@ -10,6 +10,7 @@ import com.enihsyou.astolfo.hotel.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -56,9 +57,9 @@ class TransactionController {
     fun singleBook(@RequestBody body: BookBody)
         = transactionService.singleBook(body)
 
-//
-//    @PatchMapping
-//    fun modifyBook(@RequestParam phone: String, @RequestBody body: BookBody): User
-//        =User()// transactionService.modifyRoom(phone, user)
+
+    @PatchMapping
+    fun modifyBook(@RequestParam bookId: Int, @RequestBody payload: Map<String, String>): Transaction
+        = transactionService.modifyRoom(bookId, payload)
 }
 

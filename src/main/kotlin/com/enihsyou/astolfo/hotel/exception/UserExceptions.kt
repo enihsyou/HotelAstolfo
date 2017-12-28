@@ -43,6 +43,9 @@ class 相同身份证已存在(val id: String) :
 @ResponseStatus(value = HttpStatus.CONFLICT)
 class 订单时间冲突(from: LocalDateTime, to: LocalDateTime) :
     RuntimeException("时间<$from, $to>冲突")
+@ResponseStatus(HttpStatus.NOT_FOUND)
+class 订单不存在(bookId:Int) :
+    RuntimeException("订单号<$bookId>不存在呀")
 @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
 class 没权限 :
     RuntimeException("没权限")

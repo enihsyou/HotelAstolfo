@@ -12,11 +12,13 @@ import com.enihsyou.astolfo.hotel.repository.RoomRepository
 import com.enihsyou.astolfo.hotel.repository.RoomTypeRepository
 import com.enihsyou.astolfo.hotel.repository.TransactionRepository
 import com.enihsyou.astolfo.hotel.repository.UserRepository
+import org.hibernate.transform.ResultTransformer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import javax.swing.BorderFactory
 
 
 interface RoomService {
@@ -30,7 +32,9 @@ interface RoomService {
         priceFrom: Int? = null,
         priceTo: Int? = null,
         floor: Int? = null,
-        number: Int? = null
+        number: Int? = null,
+        broken:Boolean?=null,
+        available:Boolean?=null
     ): List<Room>
     fun getRoom(floor: Int, number: Int): Room
     fun modifyRoom(floor: Int, number: Int, payload: Map<String, String>): Room
@@ -60,16 +64,16 @@ class RoomServiceImpl : RoomService {
     @Autowired lateinit var roomDirectionRepository: RoomDirectionRepository
     @Autowired lateinit var guestRepository: GuestRepository
 
-    override fun listRooms(
-        from: String?,
-        to: String?,
-        type: String?,
-        direction: String?,
-        priceFrom: Int?,
-        priceTo: Int?,
-        floor: Int?,
-        number: Int?
-    ): List<Room> {
+    override fun listRooms(from: String?,
+                           to: String?,
+                           type: String?,
+                           direction: String?,
+                           priceFrom: Int?,
+                           priceTo: Int?,
+                           floor: Int?,
+                           number: Int?,
+                           broken: Boolean?,
+                           available: Boolean?): List<Room> {
         var result = roomRepository.findAll()
         if (type != null) {
             result = result.filter { it.type.type == type }
@@ -103,6 +107,12 @@ class RoomServiceImpl : RoomService {
 //                result = result.filterNot { it in transactionRepository.findByLeaveDate(to2).map { it.room } }
 //            }
         }
+        if  (broken!=null){
+            result = result.filter { it.broken == broken }
+        }
+//        if (available!=null){
+//            result = result.filter { transactionRepository.findByRoomNumber(it.roomNumber.floor, it.roomNumber.number).fi }
+//        }
 
         return result.toList()
     }
