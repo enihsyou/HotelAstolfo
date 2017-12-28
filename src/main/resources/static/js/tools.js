@@ -1,5 +1,11 @@
 //服务器地址
-let serverHost = 'http://47.100.117.174:8899/';
+/*
+* Ali-2G:       'http://47.100.117.174:8899'
+* enihsyou-PC   ‘https://enihsyou.synology.me:8899'
+*
+* */
+let serverHost = 'https://enihsyou.synology.me:8899';
+
 
 //封装消息提示
 function showMsg(msg) {

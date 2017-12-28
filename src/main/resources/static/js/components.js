@@ -1,9 +1,3 @@
-const NOTE = ['查看我的订单', '修改个人信息',
-    '预订客房', '当前所有客房状态', '查询预定客户信息',
-    '客房维修登记', '客房类型设置', '可用客房设置',
-    '预订查询与修改', '所有账户管理', '销售月表',
-    '客户分析', '返回主页', '登出'];
-
 //渲染网页
 function render_Container(template) {
     return new Promise((resolve) => {
@@ -17,7 +11,8 @@ function render_Container(template) {
 /*
 * 用户端：
 * 获取当前所有订单
-* 可设置取消订单 TODO
+* 可取消订单
+* 评价已完成订单 TODO
 */
 async function check_my_order() {
     $.ajax({
@@ -31,30 +26,44 @@ async function check_my_order() {
         success: function (data, textStatus, jqXHR) {
             //获取订单
             let resStr = `
-            <div id="check_my_order">
-                <table>
-                    <tr>
-                        <td>订单编号</td>
-                        <td>身份证号</td>
-                        <td>姓名</td>
-                        <td><!--操作--></td>
-                    </tr>
-                    <tr class="oderList" v-for="item in orders" v-cloak>
-                        <td>
-                            {{item.id}}
-                        </td>
-                        <td>
-                            {{item.identification}}
-                        </td>
-                        <td>
-                            {{item.name}}
-                        </td>
-                        <td>
-                            <div class="comm-btn btn-xs btn-default">评价</div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+                <div id="check_my_order">
+            <table class="orders">
+                <tr>
+                    <td>订单编号</td>
+                    <td>房间楼层号与类型</td>
+                    <td>入住人</td>
+                    <td>入住时间</td>
+                    <td>退房时间</td>
+                    <td>订单状态</td>
+                    <td><!--操作--></td>
+                </tr>
+                <tr v-for="(order,index) in orders" v-cloak>
+                    <td :title="'订单创建时间：'+timeFormat(order.createDate)">{{order.id}}</td>
+                    <td :title="order.room.type.type">
+                        {{order.room.roomNumber.floor}}-{{order.room.roomNumber.number}}-{{order.room.type.type}}
+                    </td>
+                    <td>
+                        <span v-for="guest in order.guests">{{guest.name}}:{{guest.identification}}</span>
+                    </td>
+                    <td>{{timeFormat(order.dateFrom)}}</td>
+                    <td>{{timeFormat(order.dateTo)}}</td>
+                    <td class="status">
+                        <!--10等待入住，00已取消，11已入住，01已完成-->
+                        {{status(order.activated,order.used)}}
+                    </td>
+                    <td>
+                        <!--等待入住显示-->
+                        <div class="cancelOrder btn btn-default" v-if="order.activated && !order.used" :index="index"
+                             @click="cancelBooking">取消订单
+                        </div>
+                        <!--已完成后显示-->
+                        <div class="commentlOrder btn btn-default" v-if="!order.activated && order.used" :index="index"
+                             @click="addComment">评价
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
             `;
             //生成html
             render_Container(resStr);
@@ -63,6 +72,65 @@ async function check_my_order() {
                 el: '#check_my_order',
                 data: {
                     orders: data
+                },
+                methods: {
+                    timeFormat: function (time) {
+                        return new Date(time).toLocaleString();
+                    },
+                    orderActivated: function (isActivated) {
+                        return isActivated ? '有效' : '已失效'
+                    },
+                    orderUsed: function (isUsed) {
+                        return isUsed ? '已入住' : '未入住'
+                    },
+                    status: function (activated, used) {
+                        if (activated) {
+                            if (used) return '已入住';
+                            else return '等待入住';
+                        } else {
+                            if (used) return '已完成';
+                            else return '已取消'
+                        }
+                    },
+                    cancelBooking: function (e) {
+                        let index = +$(e.target).attr('index');
+                        let bookID = app.orders[index].id;
+                        let line = $(`.orders table tr:nth-child(${index + 2})`);
+                        if (!confirm(`确定取消订单${bookID}？`)) return;
+                        startCatLoading();
+                        $.ajax({
+                            url: `${serverHost}/api/transactions?bookId=${bookID}`,
+                            type: 'PATCH',
+                            data: JSON.stringify({
+                                activated: false
+                            }),
+                            contentType: "application/json; charset=UTF-8",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
+                            },
+                            success: function (data, textStatus, jqXHR) {
+                                line.find('.status').text('已取消');
+                                line.find('.cancelOrder').hide();
+                                showMsg('取消订单成功');
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                let msg = '取消订单失败';
+                                switch (jqXHR.status) {
+                                    default:
+                                        msg += ':网络错误';
+                                }
+                                showMsg(msg);
+                            },
+                            complete: function () {
+                                stopCatLoading();
+                            }
+                        });
+                    },
+                    addComment: function () {
+                        //TODO
+                        //等待接口
+                    }
+
                 }
             })
         },
@@ -160,6 +228,7 @@ async function modify_my_info() {
             //生成html
             render_Container(resStr);
             //初始化界面
+            $('#newID').mask("99999999999999999[0-9xX]");
             const app = new Vue({
                 el: '#modify_my_info',
                 data: {
@@ -237,7 +306,6 @@ async function modify_my_info() {
                                         msg += ',已存在该旅客';
                                         break;
                                 }
-                                console.log(jqXHR);
                                 showMsg(msg);
                             },
                             complete: function () {
@@ -291,10 +359,10 @@ async function modify_my_info() {
 /*
 * 前台端：
 * 列出所有房间信息
-* 可筛选 TODO
+* 可筛选（查看可用房） TODO
 * 可报修 TODO
 * 可帮助用户预定 TODO
-* 可直接登记身份证入住 TODO
+* 可直接登记身份证入住（下单） TODO
 */
 async function rooms_all_info() {
     $.ajax({
@@ -359,9 +427,10 @@ async function rooms_all_info() {
 /*
 × 前台端/经理端：
 * 获取所有订单信息，可查看订单状态
-* 可设置登记入住 TODO
-* 可以修改订单 TODO
-* 可设置取消订单 TODO
+* 可登记入住
+* 可退房
+* 可以修改订单 TODO //有较大逻辑问题
+* 可设置取消订单
 */
 async function check_all_booking() {
     $.ajax({
@@ -375,46 +444,105 @@ async function check_all_booking() {
         success: function (data, textStatus, jqXHR) {
             //获取订单
             let resStr = `
-            <div id="check_all_booking">
-                <dl>
-                    <dt>所有订单：</dt>
-                    <dd>
-                        <table>
-                            <tr>
-                                <td>订单编号</td>
-                                <td>创建时间</td>
-                                <td>房间楼层与房间号</td>
-                                <td>入住人</td>
-                                <td>入住时间</td>
-                                <td>退房时间</td>
-                                <td>订单有效性</td>
-                                <td>是否入住</td>
-                                <td><!--操作--></td>
-                            </tr>
-                            <tr v-for="order in orders" v-cloak>
-                                <td>{{order.id}}</td>
-                                <td>{{timeFormat(order.createDate)}}</td>
-                                <td :title="order.room.type.type">
-                                    {{order.room.roomNumber.floor}}-{{order.room.roomNumber.number}}
-                                </td>
-                                <td>
-                                    <span v-for="guest in order.guests">{{guest.name}}:{{guest.identification}}</span>
-                                </td>
-                                <td>{{timeFormat(order.dateFrom)}}</td>
-                                <td>{{timeFormat(order.dateTo)}}</td>
-                                <td>{{orderActivated(order.activated)}}</td>
-                                <td>{{orderUsed(order.used)}}</td>
-                                <td></td>
-                            </tr>
-                        </table>
-                    </dd>
-                </dl>
-            </div>
+                <div id="check_all_booking">
+            <dl>
+                <dt>所有订单：</dt>
+                <dd>
+                    <table class="orders">
+                        <tr>
+                            <td>订单编号</td>
+                            <td>房间楼层号与类型</td>
+                            <td>入住人</td>
+                            <td>入住时间</td>
+                            <td>退房时间</td>
+                            <td>订单状态</td>
+                            <td><!--登记入住or退房--></td>
+                            <td>
+                                <!--取消-->
+                            </td>
+                        </tr>
+                        <tr v-for="(order,index) in orders" v-cloak>
+                            <td :title="'订单创建时间：'+timeFormat(order.createDate)">{{order.id}}</td>
+                            <td :title="order.room.type.type">
+                                {{order.room.roomNumber.floor}}-{{order.room.roomNumber.number}}-{{order.room.type.type}}
+                            </td>
+                            <td>
+                                <span v-for="guest in order.guests">{{guest.name}}:{{guest.identification}}</span>
+                            </td>
+                            <td>{{timeFormat(order.dateFrom)}}</td>
+                            <td>{{timeFormat(order.dateTo)}}</td>
+                            <td class="status">
+                                <!--10等待入住，00已取消，11已入住，01已完成-->
+                                {{status(order.activated,order.used)}}
+                            </td>
+                            <td>
+                                <!--等待入住显示-->
+                                <div class="checkIn btn btn-default" v-if="order.activated && !order.used"
+                                     :index="index"
+                                     @click="checkIn">到店入住
+                                </div>
+                                <!--已入住后显示-->
+                                <div class="checkOut btn btn-default" v-if="order.activated && order.used"
+                                     :index="index"
+                                     @click="checkOut">退房
+                                </div>
+                            </td>
+                            <td><!--等待入住显示-->
+                                <div class="cancelOrder btn btn-default" v-if="order.activated && !order.used"
+                                     :index="index"
+                                     @click="cancelBooking">取消订单
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </dd>
+            </dl>
+        </div>  
             `;
             //生成html
             render_Container(resStr);
             //script
-            const app = new Vue({
+            // let data = [
+            //     {
+            //         "id": 29,
+            //         "createDate": "2017-12-28T21:48:00",
+            //         "room": {
+            //             "id": 15,
+            //             "roomNumber": {"floor": 1, "number": 1},
+            //             "type": {"id": 1, "type": "大床房", "description": "足够两个人唑在一起的大小"},
+            //             "direction": {"id": 11, "type": "南边", "description": "222"},
+            //             "specialty": "",
+            //             "price": 199,
+            //             "broken": false
+            //         },
+            //         "guests": [{"id": 27, "identification": "123321123321", "name": "hs"}],
+            //         "dateFrom": "2017-12-28T21:48:00",
+            //         "dateTo": "2017-12-28T21:48:00",
+            //         "activated": true,
+            //         "used": false
+            //     }, {
+            //         "id": 30,
+            //         "createDate": "2017-12-28T21:48:20",
+            //         "room": {
+            //             "id": 20,
+            //             "roomNumber": {"floor": 1, "number": 2},
+            //             "type": {"id": 19, "type": "超级大床房", "description": "足够二十个人唑在一起的大小"},
+            //             "direction": {"id": 18, "type": "北方", "description": "为所欲为"},
+            //             "specialty": "可以挤很多人",
+            //             "price": 1999,
+            //             "broken": false
+            //         },
+            //         "guests": [{"id": 27, "identification": "123321123321", "name": "hs"}, {
+            //             "id": 28,
+            //             "identification": "1233211233211231",
+            //             "name": "adasd"
+            //         }],
+            //         "dateFrom": "2017-12-28T21:48:20",
+            //         "dateTo": "2017-12-28T21:48:20",
+            //         "activated": true,
+            //         "used": false
+            //     }]
+            let app = new Vue({
                 el: '#check_all_booking',
                 data: {
                     orders: data
@@ -428,9 +556,123 @@ async function check_all_booking() {
                     },
                     orderUsed: function (isUsed) {
                         return isUsed ? '已入住' : '未入住'
+                    },
+                    status: function (activated, used) {
+                        if (activated) {
+                            if (used) return '已入住';
+                            else return '等待入住';
+                        } else {
+                            if (used) return '已完成';
+                            else return '已取消'
+                        }
+                    },
+                    cancelBooking: function (e) {
+                        let index = +$(e.target).attr('index');
+                        let bookID = app.orders[index].id;
+                        let line = $(`.orders table tr:nth-child(${index + 2})`);
+                        if (!confirm(`确定取消订单${bookID}？`)) return;
+                        startCatLoading();
+                        $.ajax({
+                            url: `${serverHost}/api/transactions?bookId=${bookID}`,
+                            type: 'PATCH',
+                            data: JSON.stringify({
+                                activated: false
+                            }),
+                            contentType: "application/json; charset=UTF-8",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
+                            },
+                            success: function (data, textStatus, jqXHR) {
+                                line.find('.status').text('已取消');
+                                line.find('.cancelOrder').hide();
+                                showMsg('取消订单成功');
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                let msg = '取消订单失败';
+                                switch (jqXHR.status) {
+                                    default:
+                                        msg += ':网络错误';
+                                }
+                                showMsg(msg);
+                            },
+                            complete: function () {
+                                stopCatLoading();
+                            }
+                        });
+                    },
+                    checkIn: function (e) {
+                        let index = +$(e.target).attr('index');
+                        let bookID = app.orders[index].id;
+                        let line = $(`.orders table tr:nth-child(${index + 2})`);
+                        if (!confirm(`订单${bookID}确定入住？`)) return;
+                        startCatLoading();
+                        $.ajax({
+                            url: `${serverHost}/api/transactions?bookId=${bookID}`,
+                            type: 'PATCH',
+                            data: JSON.stringify({
+                                used: true
+                            }),
+                            contentType: "application/json; charset=UTF-8",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
+                            },
+                            success: function (data, textStatus, jqXHR) {
+                                line.find('.status').text('已入住');
+                                line.find('.checkIn').hide();
+                                showMsg('客户入住成功');
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                let msg = '客户入住失败';
+                                switch (jqXHR.status) {
+                                    default:
+                                        msg += ':网络错误';
+                                }
+                                showMsg(msg);
+                            },
+                            complete: function () {
+                                stopCatLoading();
+                            }
+                        });
+                    },
+                    checkOut: function (e) {
+                        let index = +$(e.target).attr('index');
+                        let bookID = app.orders[index].id;
+                        let line = $(`.orders table tr:nth-child(${index + 2})`);
+                        if (!confirm(`订单${bookID}确定退房？`)) return;
+                        startCatLoading();
+                        $.ajax({
+                            url: `${serverHost}/api/transactions?bookId=${bookID}`,
+                            type: 'PATCH',
+                            data: JSON.stringify({
+                                activated: false
+                            }),
+                            contentType: "application/json; charset=UTF-8",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
+                            },
+                            success: function (data, textStatus, jqXHR) {
+                                line.find('.status').text('已完成');
+                                line.find('.checkOut').hide();
+                                showMsg('客户退房成功');
+                                //TODO
+                                //结账界面
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                let msg = '客户退房失败';
+                                switch (jqXHR.status) {
+                                    default:
+                                        msg += ':网络错误';
+                                }
+                                showMsg(msg);
+                            },
+                            complete: function () {
+                                stopCatLoading();
+                            }
+                        });
                     }
+
                 }
-            });
+            })
         },
         error: function (jqXHR, textStatus, errorThrown) {
             showMsg(jqXHR.status)
