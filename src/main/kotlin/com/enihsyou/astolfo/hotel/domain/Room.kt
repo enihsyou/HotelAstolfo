@@ -5,7 +5,6 @@ import org.hibernate.annotations.NaturalId
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import java.io.Serializable
-import javax.persistence.CascadeType
 import javax.persistence.Embeddable
 import javax.persistence.Embedded
 import javax.persistence.Entity

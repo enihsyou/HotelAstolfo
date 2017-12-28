@@ -17,7 +17,6 @@ Authorization:Basic dGVzdDoyMzMz
 ###
 POST http://localhost:10080/api/users/make
 Content-Type: application/json;charset=utf8
-Authorization:Basic dGVzdDoyMzMz
 
 {
   "phoneNumber": "12345478912",
@@ -348,7 +347,7 @@ POST http://localhost:10080/api/rooms/directions
 DELETE http://localhost:10080/api/rooms/directions?direction=大床房
 
 ###
-POST http://localhost:10080/api/users/make/
+POST http://localhost:10080/api/users/make/admin
 Content-Type: application/json
 
 {
@@ -380,9 +379,13 @@ Content-Type: application/json
 ###
 GET http://localhost:10080/api/users/transactions?phone=18888888888
 Content-Type: application/json
+Authorization: Basic MTg4ODg4ODg4ODg6MjMzMw==
 
 {
 
 }
 
+###
+GET http://localhost:10080/test
+Authorization: Basic YWRtaW46MjMzMw==
 ###

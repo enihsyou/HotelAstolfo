@@ -13,8 +13,6 @@ import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
 import javax.persistence.Table
 
@@ -46,7 +44,6 @@ data class User(
     @ManyToMany(cascade = [CascadeType.ALL])
     var guests: MutableList<Guest> = mutableListOf()
 ) {
-
     enum class UserRole {
         管理员, 前台, 注册用户, 未注册
     }
@@ -60,4 +57,5 @@ data class User(
             return attribute.toString()
         }
     }
+
 }
