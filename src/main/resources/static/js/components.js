@@ -291,7 +291,10 @@ async function modify_my_info() {
 /*
 * 前台端：
 * 列出所有房间信息
+* 可筛选 TODO
 * 可报修 TODO
+* 可帮助用户预定 TODO
+* 可直接登记身份证入住 TODO
 */
 async function rooms_all_info() {
     $.ajax({
@@ -357,6 +360,7 @@ async function rooms_all_info() {
 × 前台端/经理端：
 * 获取所有订单信息，可查看订单状态
 * 可设置登记入住 TODO
+* 可以修改订单 TODO
 * 可设置取消订单 TODO
 */
 async function check_all_booking() {
