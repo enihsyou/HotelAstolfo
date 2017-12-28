@@ -115,51 +115,51 @@ $('.signup .window .confirm').click(function () {
     let nickname = $('#signupNickname').val();
     let password = $('#signupPassword').val();
     let passwordAgain = $('#signupPasswordAgain').val();
-    if (username.length > 0 && password.length > 0 && passwordAgain.length > 0) {
-        if (password !== passwordAgain) {
-            showMsg('两次输入密码不相符');
-            return;
-        }
-        $(_this).append('<span class="loading line"></span>');
-        $.ajax({
-            url: `${serverHost}/api/users/make`,
-            type: 'POST',
-            contentType: "application/json; charset=UTF-8",
-            data: JSON.stringify({
-                phoneNumber: username,
-                password: password,
-                nickname: nickname
-            }),
-            success: function (data, textStatus, jqXHR) {
-                $('.window .close').trigger('click');
-                sessionStorage.username = data.phoneNumber;
-                sessionStorage.password = data.password;
-                sessionStorage.nickname = data.nickname;
-                sessionStorage.role = data.role;
-                sessionStorage.isLogin = true;
-                $('.user-info .user-btn').html(sessionStorage.nickname);
-                $('.user-info ').show();
-                $('.login-btn').hide();
-                showMsg(`亲爱的${data.nickname},欢迎你来到阿福旅店！`);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                let msg;
-                switch (jqXHR.status) {
-                    case 409:
-                        msg = '用户已存在';
-                        break;
-                    default:
-                        msg = '网络错误'
-                }
-                showMsg(msg);
-            },
-            complete: function () {
-                $(_this).children('.loading').remove();
-            }
-        });
-    } else {
-        showMsg('用户名和密码不能为空');
+    if (isEmpty(username, passwordAgain, password, passwordAgain)) {
+        showMsg('请完整填写注册信息');
+        return;
     }
+    if (password !== passwordAgain) {
+        showMsg('两次输入密码不相符');
+        return;
+    }
+    $(_this).append('<span class="loading line"></span>');
+    $.ajax({
+        url: `${serverHost}/api/users/make`,
+        type: 'POST',
+        contentType: "application/json; charset=UTF-8",
+        data: JSON.stringify({
+            phoneNumber: username,
+            password: password,
+            nickname: nickname
+        }),
+        success: function (data, textStatus, jqXHR) {
+            $('.window .close').trigger('click');
+            sessionStorage.username = data.phoneNumber;
+            sessionStorage.password = data.password;
+            sessionStorage.nickname = data.nickname;
+            sessionStorage.role = data.role;
+            sessionStorage.isLogin = true;
+            $('.user-info .user-btn').html(sessionStorage.nickname);
+            $('.user-info ').show();
+            $('.login-btn').hide();
+            showMsg(`亲爱的${data.nickname},欢迎你来到阿福旅店！`);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            let msg;
+            switch (jqXHR.status) {
+                case 409:
+                    msg = '用户已存在';
+                    break;
+                default:
+                    msg = '网络错误'
+            }
+            showMsg(msg);
+        },
+        complete: function () {
+            $(_this).children('.loading').remove();
+        }
+    });
 });
 
 //登录、注册界面关闭图标动作
@@ -198,7 +198,12 @@ $(function init() {
             searchBoxVue.update(data);
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg('连接服务器失败')
+            let msg = '初始化搜索栏失败';
+            switch (jqXHR.status) {
+                default:
+                    msg += ':网络错误';
+            }
+            showMsg(msg)
         },
         complete: function () {
         }
@@ -212,8 +217,7 @@ $(function init() {
             $('.user-info ').show();
         }, (error) => {
             if (error !== 'EMPTY_USERNAME_OR_PASSWORD') {
-                console.error('autoLogin:', error);
-                showMsg(error)
+                showMsg(`自动登录失败:${error}`);
             }
             $('.login-btn').show();
         });
@@ -269,8 +273,8 @@ let searchBoxVue = new Vue({
                 showMsg('离店时间必须晚于预定时间');
                 return;
             }
-            if (priceFrom > priceTo) {
-                showMsg('最高价格必须高于最低价格');
+            if (priceFrom > priceTo || isNegative(priceFrom, priceTo)) {
+                showMsg('最高价格必须高于最低价格，且不为负数');
                 return;
             }
             $(_this).append('<span class="loading line"></span>');
@@ -392,9 +396,9 @@ let searchListVue = new Vue({
                     showMsg('预定成功')
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    let msg='预订失败';
-                    switch (jqXHR.status){
-                        case 500:
+                    let msg = '预订失败';
+                    switch (jqXHR.status) {
+
                     }
                     showMsg(msg);
                 },

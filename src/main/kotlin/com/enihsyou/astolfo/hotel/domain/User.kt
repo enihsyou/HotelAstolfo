@@ -1,11 +1,11 @@
 package com.enihsyou.astolfo.hotel.domain
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.NaturalId
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters
 import java.time.LocalDateTime
 import javax.persistence.AttributeConverter
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Convert
 import javax.persistence.Entity
@@ -13,7 +13,9 @@ import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
-import javax.persistence.OneToMany
+import javax.persistence.JoinColumn
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
 import javax.persistence.Table
 
 
@@ -41,8 +43,8 @@ data class User(
     @Convert(converter = UserRoleConverter::class)
     var role: UserRole = UserRole.未注册,
 
-    @OneToMany
-    var guests: List<Guest> = emptyList()
+    @ManyToMany(cascade = [CascadeType.ALL])
+    var guests: MutableList<Guest> = mutableListOf()
 ) {
 
     enum class UserRole {

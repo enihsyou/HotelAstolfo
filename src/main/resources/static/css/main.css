@@ -129,7 +129,6 @@ body {
     width: 100vw;
     height: 100vh;
     display: none;
-    /*display: block;*/
 }
 
 .window {
@@ -195,7 +194,7 @@ body {
     opacity: 0;
     filter: alpha(opacity=0);
     -webkit-animation: round 25s linear infinite;
-    animation: round 50s linear infinite 0s;
+    animation: round 25s linear infinite 0s;
 }
 
 .slider_container div:nth-child(5) {
@@ -207,25 +206,25 @@ body {
 .slider_container div:nth-child(4) {
     background: url(../images/image4.jpg) center center;
     background-size: cover;
-    animation-delay: 10s;
+    animation-delay: 5s;
 }
 
 .slider_container div:nth-child(3) {
     background: url(../images/image3.jpg) center center;
     background-size: cover;
-    animation-delay: 20s;
+    animation-delay: 10s;
 }
 
 .slider_container div:nth-child(2) {
     background: url(../images/image2.jpg) center center;
     background-size: cover;
-    animation-delay: 30s;
+    animation-delay: 15s;
 }
 
 .slider_container div:nth-child(1) {
     background: url(../images/image1.jpg) center center;
     background-size: cover;
-    animation-delay: 40s;
+    animation-delay: 20s;
 }
 
 .slider_container:hover div {
@@ -263,7 +262,7 @@ body {
         z-index: 2;
         opacity: 1;
     }
-    23% {
+    25% {
         left: -50%;
         z-index: 2;
         opacity: 0;

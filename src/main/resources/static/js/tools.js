@@ -24,6 +24,14 @@ function isEmpty(a1, a2, ...an) {
     return false;
 }
 
+//判负
+function isNegative(a1, a2, ...an) {
+    for (let i of arguments) {
+        if (+i < 0) return true;
+    }
+    return false;
+}
+
 //延时函数
 function sleep(time) {
     return new Promise((resolve, reject) => {
