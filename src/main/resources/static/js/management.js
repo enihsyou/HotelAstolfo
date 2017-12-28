@@ -9,23 +9,32 @@ const left_nav = new Vue({
             startCatLoading();
             let item = event.target.innerText;
             switch (item) {
-                case '查看我的订单':
+                case '我的订单':
                     check_my_order();
                     break;
-                case '修改个人信息':
+                case '个人信息':
                     modify_my_info();
                     break;
-                case '当前所有客房状态':
+                case '客房管理':
                     rooms_all_info();
+                    break;
+                case '订单管理':
+                    check_all_booking();
+                    break;
+                case '房态图':
+                    room_graph();
                     break;
                 case '客房类型设置':
                     modify_rooms_type();
                     break;
-                case '预订查询与修改':
-                    check_all_booking();
-                    break;
-                case '所有账户管理':
+                case '账户管理':
                     modify_user_info();
+                    break;
+                case '销售月表':
+                    sales_per_month();
+                    break;
+                case '客户分析':
+                    client_analyze();
                     break;
                 case '返回主页':
                     backHome();
@@ -40,9 +49,9 @@ const left_nav = new Vue({
     }
 });
 
-let ordinary_user_items = ['查看我的订单', '修改个人信息', '返回主页', '登出'];
-let receptionist_user_items = ['当前所有客房状态', '预订查询与修改', '当前所有客房状态', '返回主页', '登出'];
-let manager_user_items = ['客房类型设置', '预订查询与修改', '所有账户管理', '销售月表', '客户分析', '返回主页', '登出'];
+let ordinary_user_items = ['我的订单', '个人信息', '返回主页', '登出'];
+let receptionist_user_items = ['客房管理', '订单管理', '房态图', '返回主页', '登出'];
+let manager_user_items = ['客房管理', '订单管理', '客房类型设置', '账户管理', '房态图', '销售月表', '客户分析', '返回主页', '登出'];
 
 //初始化
 $(function init() {

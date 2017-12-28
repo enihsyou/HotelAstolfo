@@ -9,7 +9,7 @@ function render_Container(template) {
 }
 
 /*
-* 用户端：
+* 用户端：我的订单
 * 获取当前所有订单
 * 可取消订单
 * 评价已完成订单 TODO
@@ -145,7 +145,7 @@ async function check_my_order() {
 }
 
 /*
-* 用户端：
+* 用户端：个人信息
 * 修改自己的昵称、密码
 * 添加旅客身份证
 */
@@ -357,12 +357,13 @@ async function modify_my_info() {
 }
 
 /*
-* 前台端：
+* 前台端/经理端：客房管理
 * 列出所有房间信息
 * 可筛选（查看可用房） TODO
 * 可报修 TODO
 * 可帮助用户预定 TODO
-* 可直接登记身份证入住（下单） TODO
+* 可直接登记身份证散客入住（前台下单） TODO
+* 可控房（经理下单）TODO
 */
 async function rooms_all_info() {
     $.ajax({
@@ -425,12 +426,15 @@ async function rooms_all_info() {
 }
 
 /*
-× 前台端/经理端：
+× 前台端/经理端：订单管理
 * 获取所有订单信息，可查看订单状态
+* 可筛选（四态订单） TODO
 * 可登记入住
-* 可退房
-* 可以修改订单 TODO //有较大逻辑问题
 * 可设置取消订单
+* 可以修改订单 TODO //有较大逻辑问题
+* 可退房
+* 可续住 TODO
+* 可换房 TODO //未解决逻辑问题
 */
 async function check_all_booking() {
     $.ajax({
@@ -686,7 +690,42 @@ async function check_all_booking() {
 }
 
 /*
-* 经理端：
+* 前台端/经理端：房态图
+* 所有客房状态 TODO
+* 已入住客房信息 TODO
+*/
+async function room_graph() {
+    //身份验证&获取数据
+    $.ajax({
+        url: `${serverHost}/api`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "application/json; charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            //获取订单
+            let resStr = `
+            
+            `;
+            //生成html
+            render_Container(resStr);
+            //script
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            showMsg(jqXHR.status)
+        },
+        complete: function () {
+            //关闭动画？
+            stopCatLoading();
+        }
+    });
+
+}
+
+/*
+* 经理端：客房类型设置
 * （获取/修改/删除）当前所有房间（类型/方向/房间）
 */
 async function modify_rooms_type() {
@@ -1219,7 +1258,7 @@ async function modify_rooms_type() {
 }
 
 /*
-* 经理端：
+* 经理端：账户管理
 * 添加任何类型账户
 * 修改/删除现有所有账户
 */
@@ -1319,6 +1358,7 @@ async function modify_user_info() {
             //生成html
             render_Container(resStr);
             //script
+            $("#newAccName").mask("999-9999-9999");
             let app = new Vue({
                 el: '#modify_user_info',
                 data: {
@@ -1437,7 +1477,6 @@ async function modify_user_info() {
                     }
                 }
             });
-            $("#newAccName").mask("999-9999-9999");
         },
         error: function (jqXHR, textStatus, errorThrown) {
             showMsg(jqXHR.status)
@@ -1451,15 +1490,82 @@ async function modify_user_info() {
 }
 
 /*
-* 所有端：
-* 返回主页
+* 经理端：销售月表
+* 显示当月每天的销售情况 TODO
+*/
+async function sales_per_month() {
+    //身份验证&获取数据
+    $.ajax({
+        url: `${serverHost}/api`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "application/json; charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            //获取订单
+            let resStr = `
+            
+            `;
+            //生成html
+            render_Container(resStr);
+            //script
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            showMsg(jqXHR.status)
+        },
+        complete: function () {
+            //关闭动画？
+            stopCatLoading();
+        }
+    });
+
+}
+
+/*
+* 经理端：客户分析
+* 在住房客信息 TODO
+*/
+async function client_analyze() {
+    //身份验证&获取数据
+    $.ajax({
+        url: `${serverHost}/api`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "application/json; charset=UTF-8",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
+        },
+        success: function (data, textStatus, jqXHR) {
+            //获取订单
+            let resStr = `
+            
+            `;
+            //生成html
+            render_Container(resStr);
+            //script
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            showMsg(jqXHR.status)
+        },
+        complete: function () {
+            //关闭动画？
+            stopCatLoading();
+        }
+    });
+
+}
+
+/*
+* 所有端：返回主页
 */
 async function backHome() {
     location.href = '/';
 }
 
 /*
-* 所有端：
+* 所有端：登出
 * 退出登录并返回主页
 */
 async function logout() {
