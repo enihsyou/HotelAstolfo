@@ -228,7 +228,8 @@ async function modify_my_info() {
             //生成html
             render_Container(resStr);
             //初始化界面
-            $('#newID').mask("99999999999999999[0-9xX]");
+            $.mask.definitions['X']='[0-9Xx]';
+            $('#newID').mask("999999-9999-99-99-999X");
             const app = new Vue({
                 el: '#modify_my_info',
                 data: {
@@ -274,7 +275,7 @@ async function modify_my_info() {
                     //添加身份证信息
                     addID: function () {
                         let newG = $('#newG').val();
-                        let newID = $('#newID').val();
+                        let newID = $('#newID').val().replace(/-/g,'').toLocaleUpperCase();
                         if (isEmpty(newG, newID)) {
                             showMsg('请完整填写新旅客信息');
                             return;
