@@ -4,6 +4,7 @@ const NOTE = ['查看我的订单', '修改个人信息',
     '预订查询与修改', '所有账户管理', '销售月表',
     '客户分析', '返回主页', '登出'];
 
+//渲染网页
 function render_Container(template) {
     return new Promise((resolve) => {
         let JQcontainer = $('.container');
@@ -13,9 +14,12 @@ function render_Container(template) {
     })
 }
 
-//done
+/*
+* 用户端：
+* 获取当前所有订单
+* 可设置取消订单 TODO
+*/
 async function check_my_order() {
-    //身份验证&获取数据
     $.ajax({
         url: `${serverHost}/api/users/transactions?phone=${sessionStorage.username }`,
         type: 'GET',
@@ -72,7 +76,11 @@ async function check_my_order() {
     });
 }
 
-//done
+/*
+* 用户端：
+* 修改自己的昵称、密码
+* 添加旅客身份证
+*/
 async function modify_my_info() {
     //身份验证&获取数据
     $.ajax({
@@ -280,9 +288,12 @@ async function modify_my_info() {
     });
 }
 
-//done
+/*
+* 前台端：
+* 列出所有房间信息
+* 可报修 TODO
+*/
 async function rooms_all_info() {
-    //身份验证&获取数据
     $.ajax({
         url: `${serverHost}/api/rooms`,
         type: 'GET',
@@ -342,9 +353,13 @@ async function rooms_all_info() {
     });
 }
 
-//done
+/*
+× 前台端/经理端：
+* 获取所有订单信息，可查看订单状态
+* 可设置登记入住 TODO
+* 可设置取消订单 TODO
+*/
 async function check_all_booking() {
-    //身份验证&获取数据
     $.ajax({
         url: `${serverHost}/api/transactions/list`,
         type: 'GET',
@@ -424,40 +439,10 @@ async function check_all_booking() {
 
 }
 
-async function fix_a_room() {
-    //身份验证&获取数据
-    $.ajax({
-        url: `${serverHost}/api/`,
-        type: 'GET',
-        dataType: 'json',
-        contentType: "application/json; charset=UTF-8",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
-        },
-        success: function (data, textStatus, jqXHR) {
-            //获取订单
-            let resStr = `
-            <h1>假装打印出所有订单</h1>
-            `;
-            //生成html
-            render_Container(resStr);
-            //script
-            $('.container h1').click(function () {
-                showMsg('测试一下')
-            });
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(jqXHR.status)
-        },
-        complete: function () {
-            //关闭动画？
-            stopCatLoading();
-        }
-    });
-
-}
-
-//done
+/*
+* 经理端：
+* （获取/修改/删除）当前所有房间（类型/方向/房间）
+*/
 async function modify_rooms_type() {
     //身份验证&获取数据
     $.ajax({
@@ -903,11 +888,11 @@ async function modify_rooms_type() {
                         let line = $(`.room table tr:nth-child(${index + 2})`);
                         let modRFloor = app.rooms[index].roomNumber.floor;
                         let modRNumber = app.rooms[index].roomNumber.number;
-                        let modRDir=line.find('.modRDir option:selected').text();
-                        let modRType=line.find('.modRType option:selected').text();
+                        let modRDir = line.find('.modRDir option:selected').text();
+                        let modRType = line.find('.modRType option:selected').text();
                         let modRSpe = line.find('.modRSpe').val();
                         let modRpri = line.find('.modRpri').val();
-                        let modRBro = line.find('.modRBro option:selected').val()==='true';
+                        let modRBro = line.find('.modRBro option:selected').val() === 'true';
                         if (!confirm(`确定修改${modRFloor}层${modRNumber}号房间的信息？`)) return;
                         startCatLoading();
                         $.ajax({
@@ -918,7 +903,7 @@ async function modify_rooms_type() {
                                 direction: modRDir,
                                 specialty: modRSpe,
                                 price: modRpri,
-                                broken:modRBro
+                                broken: modRBro
                             }),
                             contentType: "application/json; charset=UTF-8",
                             beforeSend: function (xhr) {
@@ -987,40 +972,11 @@ async function modify_rooms_type() {
 
 }
 
-async function set_rooms_avail() {
-    //身份验证&获取数据
-    $.ajax({
-        url: `${serverHost}/api/`,
-        type: 'GET',
-        dataType: 'json',
-        contentType: "application/json; charset=UTF-8",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
-        },
-        success: function (data, textStatus, jqXHR) {
-            //获取订单
-            let resStr = `
-            <h1>假装打印出所有订单</h1>
-            `;
-            //生成html
-            render_Container(resStr);
-            //script
-            $('.container h1').click(function () {
-                showMsg('测试一下')
-            });
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(jqXHR.status)
-        },
-        complete: function () {
-            //关闭动画？
-            stopCatLoading();
-        }
-    });
-
-}
-
-//done？
+/*
+* 经理端：
+* 添加任何类型账户
+* 修改/删除现有所有账户
+*/
 async function modify_user_info() {
     //身份验证&获取数据
     $.ajax({
@@ -1182,11 +1138,14 @@ async function modify_user_info() {
                         let password = line.find('.mPWD').val();
                         let role = line.find('.mRole option:selected').val();
                         startCatLoading();
-                        //TODO
-                        //等待接口
                         $.ajax({
-                            url: `${serverHost}/api`,
+                            url: `${serverHost}/api/users?phone=${username}`,
                             type: 'PATCH',
+                            data: {
+                                password: password.length > 0 ? password : undefined,
+                                nickname: nickname,
+                                role: role
+                            },
                             contentType: "application/json; charset=UTF-8",
                             beforeSend: function (xhr) {
                                 xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
@@ -1245,75 +1204,18 @@ async function modify_user_info() {
 
 }
 
-async function sales_per_month() {
-    //身份验证&获取数据
-    $.ajax({
-        url: `${serverHost}/api/`,
-        type: 'GET',
-        dataType: 'json',
-        contentType: "application/json; charset=UTF-8",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
-        },
-        success: function (data, textStatus, jqXHR) {
-            //获取订单
-            let resStr = `
-            <h1>假装打印出所有订单</h1>
-            `;
-            //生成html
-            render_Container(resStr);
-            //script
-            $('.container h1').click(function () {
-                showMsg('测试一下')
-            });
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(jqXHR.status)
-        },
-        complete: function () {
-            //关闭动画？
-            stopCatLoading();
-        }
-    });
-
-}
-
-async function client_analyze() {
-    //身份验证&获取数据
-    $.ajax({
-        url: `${serverHost}/api/`,
-        type: 'GET',
-        dataType: 'json',
-        contentType: "application/json; charset=UTF-8",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
-        },
-        success: function (data, textStatus, jqXHR) {
-            //获取订单
-            let resStr = `
-            <h1>假装打印出所有订单</h1>
-            `;
-            //生成html
-            render_Container(resStr);
-            //script
-            $('.container h1').click(function () {
-                showMsg('测试一下')
-            });
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(jqXHR.status)
-        },
-        complete: function () {
-            //关闭动画？
-            stopCatLoading();
-        }
-    });
-}
-
+/*
+* 所有端：
+* 返回主页
+*/
 async function backHome() {
     location.href = '/';
 }
 
+/*
+* 所有端：
+* 退出登录并返回主页
+*/
 async function logout() {
     localStorage.clear();
     sessionStorage.clear();

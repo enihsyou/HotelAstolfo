@@ -18,26 +18,14 @@ const left_nav = new Vue({
                 case '当前所有客房状态':
                     rooms_all_info();
                     break;
-                case '客房维修登记':
-                    fix_a_room();
-                    break;
                 case '客房类型设置':
                     modify_rooms_type();
-                    break;
-                case '可用客房设置':
-                    set_rooms_avail();
                     break;
                 case '预订查询与修改':
                     check_all_booking();
                     break;
                 case '所有账户管理':
                     modify_user_info();
-                    break;
-                case '销售月表':
-                    sales_per_month();
-                    break;
-                case '客户分析':
-                    client_analyze();
                     break;
                 case '返回主页':
                     backHome();
@@ -46,7 +34,7 @@ const left_nav = new Vue({
                     logout();
                     break;
                 default:
-                    showMsg('不存在的选项，请联系开发者')
+                    showMsg('该功能还只是一堆BUG(ಡωಡ)');
             }
         }
     }
