@@ -117,6 +117,7 @@ $('.signup .window .confirm').click(function () {
     let passwordAgain = $('#signupPasswordAgain').val();
     if (isEmpty(username, passwordAgain, password, passwordAgain)) {
         showMsg('请完整填写注册信息');
+        return;
     }
     if (password !== passwordAgain) {
         showMsg('两次输入密码不相符');
@@ -272,8 +273,8 @@ let searchBoxVue = new Vue({
                 showMsg('离店时间必须晚于预定时间');
                 return;
             }
-            if (priceFrom > priceTo) {
-                showMsg('最高价格必须高于最低价格');
+            if (priceFrom > priceTo || isNegative(priceFrom, priceTo)) {
+                showMsg('最高价格必须高于最低价格，且不为负数');
                 return;
             }
             $(_this).append('<span class="loading line"></span>');
