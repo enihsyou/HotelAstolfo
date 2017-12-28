@@ -51,7 +51,8 @@ class UserServiceImpl : UserService {
         = guestRepository.findByIdentification(identification) ?:
         throw 身份证不存在(identification)
 
-    override fun getGuest(phone: String, identification: String): Guest
+    override fun getGuest(phone: String,
+                          identification: String): Guest
         = getUser(phone).guests
         .find { it.identification == identification } ?:
         throw 用户未绑定身份证(phone, identification)
@@ -78,8 +79,9 @@ class UserServiceImpl : UserService {
     override fun modifyUser(phone: String, payload: Map<String, String>): User {
         val old_user = getUser(phone)
 
-        payload["password"]?.takeIf { it.isNotEmpty()}?.let { old_user.password = getCheckedPassword(it)}
-        payload["nickname"]?.takeIf { it.isNotEmpty()}?.let { old_user.nickname = it}
+        payload["password"]?.takeIf { it.isNotEmpty() }?.let { old_user.password = getCheckedPassword(it) }
+        payload["nickname"]?.takeIf { it.isNotEmpty() }?.let { old_user.nickname = it }
+        payload["role"]?.takeIf { old_user.role == User.UserRole.管理员 }?.let { old_user.role = User.UserRole.valueOf(it) }
 
         userRepository.save(old_user)
         return old_user
