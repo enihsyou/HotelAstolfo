@@ -6,7 +6,6 @@
 * */
 let serverHost = 'https://enihsyou.synology.me:8899';
 
-
 //封装消息提示
 function showMsg(msg) {
     return new Promise(async (resolve, reject) => {
@@ -36,6 +35,15 @@ function isNegative(a1, a2, ...an) {
         if (+i < 0) return true;
     }
     return false;
+}
+
+//传入时间转化为日期形式的ISO不带Z格式
+function dateTimeISOFormat(time) {
+    time = time instanceof Date ? time : new Date();
+    let year = time.getFullYear();
+    let month = time.getMonth() > 8 ? time.getMonth() + 1 : '0' + (time.getMonth() + 1);
+    let day = time.getDate() > 9 ? time.getDate() : '0' + time.getDate();
+    return `${year}-${month}-${day}T00:00:00.000`
 }
 
 //延时函数
@@ -157,19 +165,15 @@ let Cookies = {
 };
 
 //开始猫滚
-async function startCatLoading() {
-    if ($('.cat-loading').length > 0) return;
-    let loading = $(`<div class="cat-loading untouchable"></div>`);
-    $('.main').after(loading);
+function startCatLoading() {
+    let loading = $('.cat-loading');
     loading.fadeIn(500);
 }
 
 //停止猫滚
-async function stopCatLoading() {
+function stopCatLoading() {
     let loading = $('.cat-loading');
     loading.fadeOut(500);
-    await sleep(800);
-    loading.remove();
 }
 
 //啪嗒猫滚
