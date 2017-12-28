@@ -55,8 +55,8 @@ class UserController {
         = userService.getUser(phone)
 
     @PatchMapping
-    fun modifyUser(@RequestParam phone: String, @RequestBody user: User)
-        = userService.updateUser(phone, user)
+    fun modifyUser(@RequestParam phone: String, @RequestBody payload: Map<String, String>)
+        = userService.modifyUser(phone, payload)
 
     @DeleteMapping
     fun deleteUser(@RequestParam phone: String)
