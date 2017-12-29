@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import sun.text.normalizer.UCharacter.getDirection
 import java.time.LocalDateTime
 import javax.swing.BorderFactory
 
@@ -24,18 +25,17 @@ import javax.swing.BorderFactory
 interface RoomService {
     fun addRoom(room: Room): ResponseEntity<Room>
 
-    fun listRooms(
-        from: String? = null,
-        to: String? = null,
-        type: String? = null,
-        direction: String? = null,
-        priceFrom: Int? = null,
-        priceTo: Int? = null,
-        floor: Int? = null,
-        number: Int? = null,
-        broken:Boolean?=null,
-        available:Boolean?=null
-    ): List<Room>
+    fun listRooms(from: String? = null,
+                  to: String? = null,
+                  type: String? = null,
+                  direction: String? = null,
+                  priceFrom: Int? = null,
+                  priceTo: Int? = null,
+                  floor: Int? = null,
+                  number: Int? = null,
+                  broken: Boolean? = null,
+                  available: Boolean? = null): List<Room>
+
     fun getRoom(floor: Int, number: Int): Room
     fun modifyRoom(floor: Int, number: Int, payload: Map<String, String>): Room
     fun deleteRoom(floor: Int, number: Int)
@@ -51,7 +51,6 @@ interface RoomService {
     fun deleteDirection(direction: String)
 
     fun listFloors(): List<Room.RoomNumber>
-
 }
 
 @Service(value = "房间层逻辑")
@@ -75,24 +74,14 @@ class RoomServiceImpl : RoomService {
                            broken: Boolean?,
                            available: Boolean?): List<Room> {
         var result = roomRepository.findAll()
-        if (type != null) {
-            result = result.filter { it.type.type == type }
-        }
-        if (direction != null) {
-            result = result.filter { it.direction.type == direction }
-        }
-        if (floor != null) {
-            result = result.filter { it.roomNumber.floor == floor }
-        }
-        if (number != null) {
-            result = result.filter { it.roomNumber.number == number }
-        }
-        if (priceFrom != null) {
-            result = result.filter { it.price >= priceFrom }
-        }
-        if (priceTo != null) {
-            result = result.filter { it.price <= priceTo }
-        }
+        result = result
+            .filter { it.type.type == type }
+            .filter { it.direction.type == direction }
+            .filter { it.roomNumber.floor == floor }
+            .filter { it.roomNumber.number == number }
+            .filter { it.price >= priceFrom?:0 }
+            .filter { it.price <= priceTo?: Int.MAX_VALUE }
+            .filter { it.broken == broken }
         if (from != null && to != null) {
             val from2: LocalDateTime = LocalDateTime.parse(from)
             val to2: LocalDateTime = LocalDateTime.parse(to)
@@ -106,9 +95,6 @@ class RoomServiceImpl : RoomService {
 //                to2 = LocalDateTime.parse(to)
 //                result = result.filterNot { it in transactionRepository.findByLeaveDate(to2).map { it.room } }
 //            }
-        }
-        if  (broken!=null){
-            result = result.filter { it.broken == broken }
         }
 //        if (available!=null){
 //            result = result.filter { transactionRepository.findByRoomNumber(it.roomNumber.floor, it.roomNumber.number).fi }
@@ -198,7 +184,7 @@ class RoomServiceImpl : RoomService {
             ResponseEntity(type_test, HttpStatus.CONFLICT)
     }
 
-    override fun modifyDirection(direction: String, payload: Map<String, String>): RoomDirection{
+    override fun modifyDirection(direction: String, payload: Map<String, String>): RoomDirection {
         val direction_test = getDirection(direction)
 
         payload["description"]?.let { direction_test.description = it }
@@ -219,10 +205,10 @@ class RoomServiceImpl : RoomService {
         throw 房号不存在(floor, number)
 
     fun getType(type: String): RoomType
-        = roomTypeRepository.findByType(type)?:
+        = roomTypeRepository.findByType(type) ?:
         throw 房间类型不存在(type)
 
     fun getDirection(type: String): RoomDirection
-        = roomDirectionRepository.findByType(type)?:
+        = roomDirectionRepository.findByType(type) ?:
         throw 房间朝向不存在(type)
 }

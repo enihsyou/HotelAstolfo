@@ -4,7 +4,7 @@
 * enihsyou-PC   ‘https://enihsyou.synology.me:8899'
 *
 * */
-let serverHost = 'https://enihsyou.synology.me:8899';
+let serverHost = 'http://localhost:10080';
 
 //封装消息提示
 function showMsg(msg) {
