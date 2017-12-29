@@ -177,3 +177,4 @@ function toggleCatLoading() {
     if ($('.cat-loading').length > 0) stopCatLoading();
     else startCatLoading();
 }
+
