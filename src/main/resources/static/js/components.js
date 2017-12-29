@@ -664,6 +664,7 @@ async function rooms_all_info() {
                             }),
                             contentType: "application/json; charset=UTF-8",
                             success: function (data, textStatus, jqXHR) {
+
                                 showMsg('下单成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -798,7 +799,7 @@ async function check_all_booking() {
                                      :index="index"
                                      @click="checkOut">客户退房
                                 </div>
-                                <div class="checkOut btn btn-default disabled" v-else>客户退房
+                                <div class="checkOut btn btn-default disabled" v-else v-else>客户退房
                                 </div>
                             </td>
                             <td><!--等待入住显示-->
