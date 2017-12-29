@@ -49,8 +49,8 @@ class TransactionController {
         var phone: String = "",
         var guests: List<String> = emptyList(),
         var room: Room.RoomNumber = Room.RoomNumber(),
-        var from: LocalDateTime = LocalDateTime.now(),
-        var to: LocalDateTime = LocalDateTime.now()
+        var dateFrom: LocalDateTime = LocalDateTime.now(),
+        var dateTo: LocalDateTime = LocalDateTime.now()
     )
 
     @PostMapping

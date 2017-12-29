@@ -12,7 +12,7 @@ spring:
     name: astolfo_hotel
     url: jdbc:mysql://localhost/astolfo_hotel?useSSL=false
     username: root
-    password: 286956679hjy
+    password: enihsyou
   jpa:
     show-sql: true
     generate-ddl: true
