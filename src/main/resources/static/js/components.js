@@ -49,15 +49,15 @@ async function check_my_order() {
                     <td>{{timeFormat(order.dateTo)}}</td>
                     <td class="status">
                         <!--10等待入住，00已取消，11已入住，01已完成-->
-                        {{status(order.activated,order.used)}}
+                        {{status(order.activated,order.occupied)}}
                     </td>
                     <td>
                         <!--等待入住显示-->
-                        <div class="cancelOrder btn btn-default" v-if="order.activated && !order.used" :index="index"
+                        <div class="cancelOrder btn btn-default" v-if="order.activated && !order.occupied" :index="index"
                              @click="cancelBooking">取消订单
                         </div>
                         <!--已完成后显示-->
-                        <div class="commentlOrder btn btn-default" v-if="!order.activated && order.used" :index="index"
+                        <div class="commentlOrder btn btn-default" v-if="!order.activated && order.occupied" :index="index"
                              @click="addComment">评价
                         </div>
                     </td>
@@ -80,15 +80,15 @@ async function check_my_order() {
                     orderActivated: function (isActivated) {
                         return isActivated ? '有效' : '已失效'
                     },
-                    orderUsed: function (isUsed) {
-                        return isUsed ? '已入住' : '未入住'
+                    orderoccupied: function (isoccupied) {
+                        return isoccupied ? '已入住' : '未入住'
                     },
-                    status: function (activated, used) {
+                    status: function (activated, occupied) {
                         if (activated) {
-                            if (used) return '已入住';
+                            if (occupied) return '已入住';
                             else return '等待入住';
                         } else {
-                            if (used) return '已完成';
+                            if (occupied) return '已完成';
                             else return '已取消'
                         }
                     },
@@ -430,9 +430,9 @@ async function rooms_all_info() {
                             <td :title="room.type.description">{{room.type.type}}</td>
                             <td>{{room.specialty}}</td>
                             <td>{{room.price}}</td>
-                            <td>{{status(room.broken,room.used)}}</td>
+                            <td>{{status(room.broken,room.occupied)}}</td>
                             <td>
-                                <div v-if="!room.broken && !room.used" :index="index" class="btn btn-default"
+                                <div v-if="!room.broken && !room.occupied" :index="index" class="btn btn-default"
                                      @click="askBook">下单
                                 </div>
                                 <div v-else :index="index" class="btn btn-default disabled">下单</div>
@@ -528,9 +528,9 @@ async function rooms_all_info() {
                                     case 'fixing':
                                         return room.broken;
                                     case 'empty':
-                                        return !room.used;
+                                        return !room.occupied;
                                     case 'busy':
-                                        return room.used;
+                                        return room.occupied;
                                 }
                             })
                         }
@@ -553,10 +553,10 @@ async function rooms_all_info() {
                         this.rooms = res;
                         stopCatLoading();
                     },
-                    status: function (broken, used) {
+                    status: function (broken, occupied) {
                         if (broken) {
                             return '正在维修';
-                        } else if (used) {
+                        } else if (occupied) {
                             return '用户在住';
                         } else {
                             return '空闲';
@@ -736,8 +736,8 @@ async function rooms_all_info() {
 /*
 × 前台端/经理端：订单管理
 * 获取所有订单信息，可查看订单状态
-* 可筛选（四态订单） TODO
-* 可根据身份证筛选 TODO
+* 可筛选（四态订单）
+* 可根据身份证筛选
 * 可登记入住
 * 可设置取消订单
 * 可以修改订单 TODO //有较大逻辑问题
@@ -757,10 +757,25 @@ async function check_all_booking() {
         success: function (data, textStatus, jqXHR) {
             //获取订单
             let resStr = `
-                <div id="check_all_booking">
+                    <div id="check_all_booking">
             <dl>
-                <dt>所有订单：</dt>
-                <dd  class="orders">
+                <dt>
+                    <label>
+                        订单状态：
+                        <select id="oStatus" @change="switchTable">
+                            <option value="">全部</option>
+                            <option value="10">等待入住</option>
+                            <option value="00">已取消</option>
+                            <option value="11">已入住</option>
+                            <option value="01">已完成</option>
+                        </select>
+                    </label>
+                    <label>
+                        身份证号：
+                        <input type="text" @keyup="findID" placeholder="支持正则搜索">
+                    </label>
+                </dt>
+                <dd class="orders">
                     <table>
                         <tr>
                             <td>订单编号</td>
@@ -786,81 +801,43 @@ async function check_all_booking() {
                             <td>{{timeFormat(order.dateTo)}}</td>
                             <td class="status">
                                 <!--10等待入住，00已取消，11已入住，01已完成-->
-                                {{status(order.activated,order.used)}}
+                                {{status(order.activated,order.occupied)}}
                             </td>
                             <td>
                                 <!--等待入住显示-->
-                                <div class="checkIn btn btn-default" v-if="order.activated && !order.used"
+                                <div class="checkIn btn btn-default" v-if="order.activated && !order.occupied"
                                      :index="index"
                                      @click="checkIn">到店入住
                                 </div>
                                 <!--已入住后显示-->
-                                <div class="checkOut btn btn-default" v-if="order.activated && order.used"
+                                <div class="checkOut btn btn-default" v-if="order.activated && order.occupied"
                                      :index="index"
                                      @click="checkOut">客户退房
                                 </div>
-                                <div class="checkOut btn btn-default disabled" v-else v-else>客户退房
+                                <div class="checkOut2 btn btn-default disabled"
+                                     v-if="!order.activated && order.occupied">客户退房
                                 </div>
                             </td>
                             <td><!--等待入住显示-->
-                                <div class="cancelOrder btn btn-default" v-if="order.activated && !order.used"
+                                <div class="cancelOrder btn btn-default" v-if="order.activated && !order.occupied"
                                      :index="index"
                                      @click="cancelBooking">取消订单
                                 </div>
-                                <div class="cancelOrder btn btn-default disabled" v-else  :index="index">取消订单</div>
+                                <div class="cancelOrder2 btn btn-default disabled" v-else :index="index">取消订单</div>
                             </td>
                         </tr>
                     </table>
                 </dd>
             </dl>
-        </div>  
+        </div>
             `;
             //生成html
             render_Container(resStr);
             //script
-            // let data = [
-            //     {
-            //         "id": 29,
-            //         "createDate": "2017-12-28T21:48:00",
-            //         "room": {
-            //             "id": 15,
-            //             "roomNumber": {"floor": 1, "number": 1},
-            //             "type": {"id": 1, "type": "大床房", "description": "足够两个人唑在一起的大小"},
-            //             "direction": {"id": 11, "type": "南边", "description": "222"},
-            //             "specialty": "",
-            //             "price": 199,
-            //             "broken": false
-            //         },
-            //         "guests": [{"id": 27, "identification": "123321123321", "name": "hs"}],
-            //         "dateFrom": "2017-12-28T21:48:00",
-            //         "dateTo": "2017-12-28T21:48:00",
-            //         "activated": true,
-            //         "used": false
-            //     }, {
-            //         "id": 30,
-            //         "createDate": "2017-12-28T21:48:20",
-            //         "room": {
-            //             "id": 20,
-            //             "roomNumber": {"floor": 1, "number": 2},
-            //             "type": {"id": 19, "type": "超级大床房", "description": "足够二十个人唑在一起的大小"},
-            //             "direction": {"id": 18, "type": "北方", "description": "为所欲为"},
-            //             "specialty": "可以挤很多人",
-            //             "price": 1999,
-            //             "broken": false
-            //         },
-            //         "guests": [{"id": 27, "identification": "123321123321", "name": "hs"}, {
-            //             "id": 28,
-            //             "identification": "1233211233211231",
-            //             "name": "adasd"
-            //         }],
-            //         "dateFrom": "2017-12-28T21:48:20",
-            //         "dateTo": "2017-12-28T21:48:20",
-            //         "activated": true,
-            //         "used": false
-            //     }]
             let app = new Vue({
                 el: '#check_all_booking',
                 data: {
+                    allOrders: data,
                     orders: data
                 },
                 methods: {
@@ -870,17 +847,48 @@ async function check_all_booking() {
                     orderActivated: function (isActivated) {
                         return isActivated ? '有效' : '已失效'
                     },
-                    orderUsed: function (isUsed) {
-                        return isUsed ? '已入住' : '未入住'
+                    orderoccupied: function (isoccupied) {
+                        return isoccupied ? '已入住' : '未入住'
                     },
-                    status: function (activated, used) {
+                    status: function (activated, occupied) {
                         if (activated) {
-                            if (used) return '已入住';
+                            if (occupied) return '已入住';
                             else return '等待入住';
                         } else {
-                            if (used) return '已完成';
+                            if (occupied) return '已完成';
                             else return '已取消'
                         }
+                    },
+                    switchTable: function () {
+                        startCatLoading();
+                        let oStatus = $('#oStatus').children('option:selected').val();
+                        let res = this.allOrders;
+                        if (!isEmpty(oStatus)) {
+                            res = res.filter((order) => {
+                                switch (oStatus) {
+                                    //activated occupied
+                                    case '00':
+                                        return !order.activated && !order.occupied;
+                                    case '01':
+                                        return !order.activated && order.occupied;
+                                    case '10':
+                                        return order.activated && !order.occupied;
+                                    case '11':
+                                        return order.activated && order.occupied;
+                                }
+                            })
+                        }
+                        this.rooms = res;
+                        stopCatLoading(200);
+                    },
+                    findID: function (e) {
+                        let text = $(e.target).val().toUpperCase();
+                        this.orders = this.allOrders.filter((order) => {
+                            for (let guest of order.guests) {
+                                if (new RegExp(text).test(guest)) return true;
+                            }
+                            return false;
+                        })
                     },
                     cancelBooking: function (e) {
                         let index = +$(e.target).attr('index');
@@ -899,8 +907,9 @@ async function check_all_booking() {
                                 xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
-                                line.find('.status').text('已取消');
-                                line.find('.cancelOrder').hide();
+                                let tmp = app.orders[index];
+                                tmp.activated = false;
+                                app.orders.splice(index, 1, tmp);
                                 showMsg('取消订单成功');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -919,23 +928,22 @@ async function check_all_booking() {
                     checkIn: function (e) {
                         let index = +$(e.target).attr('index');
                         let bookID = app.orders[index].id;
-                        let line = $(`.orders table tr:nth-child(${index + 2})`);
                         if (!confirm(`订单${bookID}确定入住？`)) return;
                         startCatLoading();
                         $.ajax({
                             url: `${serverHost}/api/transactions?bookId=${bookID}`,
                             type: 'PATCH',
                             data: JSON.stringify({
-                                used: true
+                                occupied: true
                             }),
                             contentType: "application/json; charset=UTF-8",
                             beforeSend: function (xhr) {
                                 xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
-                                line.find('.status').text('已入住');
-                                line.find('.checkIn').hide();
-                                line.find('.checkOut').show();
+                                let tmp = app.orders[index];
+                                tmp.occupied = true;
+                                app.orders.splice(index, 1, tmp);
                                 showMsg('客户入住成功');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -968,8 +976,9 @@ async function check_all_booking() {
                                 xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
-                                line.find('.status').text('已完成');
-                                line.find('.checkOut').hide();
+                                let tmp = app.orders[index];
+                                tmp.activated = false;
+                                app.orders.splice(index, 1, tmp);
                                 showMsg('客户退房成功');
                                 //TODO
                                 //结账界面
@@ -1146,7 +1155,7 @@ async function modify_rooms_type() {
                         <td><input class="modRSpe" type="text" :value="room.specialty"></td>
                         <td><input class="modRpri" type="number" min="0" :value="room.price"></td>
                         <td><select class="modRBro">
-                            <option value="true" :selected="room.broken === true">需维修</option>
+                            <option value="true" :selected="room.broken === true">正在维修</option>
                             <option value="false" :selected="room.broken === false">无需维修</option>
                         </select>
                         </td>
@@ -1174,7 +1183,7 @@ async function modify_rooms_type() {
                         <td><input type="number" min="0" id="newRPrice" title="开放新房间价格"
                                    placeholder="新房间价格"></td>
                         <td><select id="newRBroken" title="开放新房间是否损坏">
-                            <option value="true">需维修</option>
+                            <option value="true">正在维修</option>
                             <option value="false" selected>无需维修</option>
                         </select>
                         </td>
@@ -1558,7 +1567,7 @@ async function modify_rooms_type() {
                         });
                     },
                     broken: function (isBroken) {
-                        return isBroken ? '需维修' : '无需维修';
+                        return isBroken ? '正在维修' : '无需维修';
                     }
                 }
             })

@@ -147,6 +147,7 @@
     margin-bottom: 1em;
     text-align: center;
 }
+
 .container #rooms_all_info .bookWindow .bookList {
     position: absolute;
     top: 15%;
@@ -158,12 +159,27 @@
     background-color: white;
     border-radius: 1em;
     box-shadow: 1.2em 1.2em 5em .5em rgba(41, 41, 41, 0.3);
+    overflow-x: hidden;
+    overflow-y: auto;
     display: none;
 }
 
 .container #modify_rooms_type div table {
     position: relative;
     margin-bottom: 3em;
+}
+
+.container #check_all_booking table tr td:nth-last-child(2) {
+    border-left: 1px solid rgba(100, 100, 100, .8);
+}
+
+.container #check_all_booking dt label {
+    display: inline-block;
+    vertical-align: center;
+    margin:0 2em 1em 0;
+}
+.container #check_all_booking dt select {
+    height: 2em;
 }
 
 .container #modify_user_info .addAccount table {
