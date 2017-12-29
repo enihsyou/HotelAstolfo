@@ -330,9 +330,11 @@ let searchListVue = new Vue({
         selectedIndex: -1
     },
     methods: {
-        //查看房间评价 TODO
+        //查看房间评价
         showComments: function () {
-
+            //TODO
+            //等待接口
+            showMsg('还没做别点了')
         },
         showIDs: function (e) {
             if (sessionStorage.isLogin !== 'true') {
@@ -404,7 +406,8 @@ let searchListVue = new Vue({
                 error: function (jqXHR, textStatus, errorThrown) {
                     let msg = '预订失败';
                     switch (jqXHR.status) {
-
+                        case 423:
+                            msg+='：该房间已被占用'
                     }
                     showMsg(msg);
                 },

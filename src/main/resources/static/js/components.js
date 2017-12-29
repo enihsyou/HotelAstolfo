@@ -77,12 +77,6 @@ async function check_my_order() {
                     timeFormat: function (time) {
                         return new Date(time).toLocaleString();
                     },
-                    orderActivated: function (isActivated) {
-                        return isActivated ? '有效' : '已失效'
-                    },
-                    orderoccupied: function (isoccupied) {
-                        return isoccupied ? '已入住' : '未入住'
-                    },
                     status: function (activated, occupied) {
                         if (activated) {
                             if (occupied) return '已入住';
@@ -109,8 +103,9 @@ async function check_my_order() {
                                 xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
-                                line.find('.status').text('已取消');
-                                line.find('.cancelOrder').hide();
+                                let tmp = this.orders[index];
+                                tmp.activated = false;
+                                this.orders.splice(index, 1, tmp);
                                 showMsg('取消订单成功');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -228,7 +223,6 @@ async function modify_my_info() {
             //生成html
             render_Container(resStr);
             //初始化界面
-            constraintID($('#newID'));
             const app = new Vue({
                 el: '#modify_my_info',
                 data: {
@@ -345,6 +339,7 @@ async function modify_my_info() {
                     }
                 }
             });
+            constraintID($('#newID'));
         },
         error: function (jqXHR, textStatus, errorThrown) {
             showMsg(jqXHR.status)
@@ -541,7 +536,6 @@ async function rooms_all_info() {
                         }
                         if (!isEmpty(sType)) {
                             res = res.filter((room) => {
-                                console.log(room.type);
                                 return room.type.type === sType;
                             })
                         }
@@ -670,8 +664,10 @@ async function rooms_all_info() {
                             error: function (jqXHR, textStatus, errorThrown) {
                                 let msg = '下单失败';
                                 switch (jqXHR.status) {
+                                    case 409:
+                                        msg += '：订单时间冲突';
                                     default:
-                                        msg += ':网络错误';
+                                        msg += '：网络错误';
                                 }
                                 showMsg(msg)
                             },
@@ -757,7 +753,7 @@ async function check_all_booking() {
         success: function (data, textStatus, jqXHR) {
             //获取订单
             let resStr = `
-                    <div id="check_all_booking">
+                <div id="check_all_booking">
             <dl>
                 <dt>
                     <label>
@@ -772,7 +768,7 @@ async function check_all_booking() {
                     </label>
                     <label>
                         身份证号：
-                        <input type="text" @keyup="findID" placeholder="支持正则搜索">
+                        <input type="text" id="searchID" @keyup="switchTable" placeholder="支持正则搜索">
                     </label>
                 </dt>
                 <dd class="orders">
@@ -844,12 +840,6 @@ async function check_all_booking() {
                     timeFormat: function (time) {
                         return new Date(time).toLocaleString();
                     },
-                    orderActivated: function (isActivated) {
-                        return isActivated ? '有效' : '已失效'
-                    },
-                    orderoccupied: function (isoccupied) {
-                        return isoccupied ? '已入住' : '未入住'
-                    },
                     status: function (activated, occupied) {
                         if (activated) {
                             if (occupied) return '已入住';
@@ -860,7 +850,6 @@ async function check_all_booking() {
                         }
                     },
                     switchTable: function () {
-                        startCatLoading();
                         let oStatus = $('#oStatus').children('option:selected').val();
                         let res = this.allOrders;
                         if (!isEmpty(oStatus)) {
@@ -876,19 +865,18 @@ async function check_all_booking() {
                                     case '11':
                                         return order.activated && order.occupied;
                                 }
-                            })
+                            });
                         }
-                        this.rooms = res;
-                        stopCatLoading(200);
-                    },
-                    findID: function (e) {
-                        let text = $(e.target).val().toUpperCase();
-                        this.orders = this.allOrders.filter((order) => {
+                        let text = $('#searchID').val().toUpperCase();
+                        res = res.filter((order) => {
                             for (let guest of order.guests) {
-                                if (new RegExp(text).test(guest)) return true;
+                                if (new RegExp(text).test(guest.identification)) {
+                                    return true;
+                                }
                             }
                             return false;
-                        })
+                        });
+                        this.orders = res;
                     },
                     cancelBooking: function (e) {
                         let index = +$(e.target).attr('index');
