@@ -360,11 +360,10 @@ async function modify_my_info() {
 /*
 * 前台端/经理端：客房管理
 * 列出所有房间信息
-* 可筛选（查看可用房） TODO
-* 可报修 TODO
-* 可帮助用户预定 TODO
-* 可直接登记身份证散客入住（前台下单） TODO
-* 可控房（经理下单）TODO
+* 可筛选（多条件筛选） TODO
+* 可报修
+* 可登记客户预定（管理层下单） TODO
+* 可直接登记身份证散客入住（管理层下单） TODO
 */
 async function rooms_all_info() {
     $.ajax({
@@ -378,43 +377,12 @@ async function rooms_all_info() {
         success: function (data, textStatus, jqXHR) {
             //获取订单
             let resStr = `
-            <div id="rooms_all_info">
-                <dl>
-                    <dt>所有房间信息：</dt>
-                    <dd>
-                        <table>
-                            <tr>
-                                <td>楼层</td>
-                                <td>房号</td>
-                                <td>朝向</td>
-                                <td>房间类型</td>
-                                <td>特色</td>
-                                <td>价格</td>
-                                <td><!--操作--></td>
-                            </tr>
-                            <tr v-for="room in rooms" v-cloak>
-                                <td>{{room.roomNumber.floor}}</td>
-                                <td>{{room.roomNumber.number}}</td>
-                                <td :title="room.direction.description">{{room.direction.type}}</td>
-                                <td :title="room.type.description">{{room.type.type}}</td>
-                                <td>{{room.specialty}}</td>
-                                <td>{{room.price}}</td>
-                                <td></td>
-                            </tr>
-                        </table>
-                    </dd>
-                </dl>
-            </div>
+            
             `;
             //生成html
             render_Container(resStr);
             //script
-            const app = new Vue({
-                el: '#rooms_all_info',
-                data: {
-                    rooms: data
-                }
-            });
+
         },
         error: function (jqXHR, textStatus, errorThrown) {
             showMsg(jqXHR.status)
@@ -430,6 +398,7 @@ async function rooms_all_info() {
 × 前台端/经理端：订单管理
 * 获取所有订单信息，可查看订单状态
 * 可筛选（四态订单） TODO
+* 可根据身份证筛选 TODO
 * 可登记入住
 * 可设置取消订单
 * 可以修改订单 TODO //有较大逻辑问题

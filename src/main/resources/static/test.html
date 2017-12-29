@@ -16,17 +16,283 @@
 <div class="main">
     <div class="left-nav untouchable"></div>
     <div class="container">
-
+        <div id="rooms_all_info">
+            <dl>
+                <dt>
+                    <label>
+                        房间状态：
+                        <select @change="switchTable">
+                            <option value="">全部</option>
+                            <option value="empty">当前空余</option>
+                        </select>
+                    </label>
+                    <label>
+                        房间朝向：
+                        <select @change="switchTable">
+                            <option value="">任意</option>
+                            <option v-for="direction in info.directions" value="direction" v-cloak>{{direction}}
+                            </option>
+                        </select>
+                    </label>
+                    <label>
+                        房间类型：
+                        <select @change="switchTable">
+                            <option value="">任意</option>
+                            <option v-for="type in info.types" value="type" v-cloak>{{type}}</option>
+                        </select>
+                    </label>
+                </dt>
+                <dd>
+                    <table>
+                        <tr>
+                            <td>楼层-房号</td>
+                            <td>朝向</td>
+                            <td>房间类型</td>
+                            <td>特色</td>
+                            <td>价格</td>
+                            <td>房间状态</td>
+                            <td><!--预定--></td>
+                            <td><!--报修--></td>
+                        </tr>
+                        <tr v-for="(room,index) in rooms" v-cloak>
+                            <td>{{room.roomNumber.floor}}-{{room.roomNumber.number}}</td>
+                            <td :title="room.direction.description">{{room.direction.type}}</td>
+                            <td :title="room.type.description">{{room.type.type}}</td>
+                            <td>{{room.specialty}}</td>
+                            <td>{{room.price}}</td>
+                            <td>{{status(room.broken,room.used)}}</td>
+                            <td>
+                                <div v-if="!room.broken && !room.used" :index="index" class="btn btn-default"
+                                     @click="askBook">下单
+                                </div>
+                                <div v-else :index="index" class="btn btn-default disabled">下单</div>
+                            </td>
+                            <td>
+                                <div v-if="!room.broken" :index="index" class="btn btn-default" @click="askFix">报修</div>
+                                <div v-else class="btn btn-default disabled">维修中</div>
+                            </td>
+                        </tr>
+                    </table>
+                </dd>
+            </dl>
+            <div class="bookWindow untouchable">
+                <div class="content">
+                    <button type="button" class="close" @click="close" aria-label="Close">
+                        <span id="closeContent" aria-hidden="true">&times;</span>
+                    </button>
+                    <div>请选择预定类型</div>
+                    <div class="btn btn-default" @click="userBook">登记客户预定</div>
+                    <div class="btn btn-default" @click="tourBook">散客入住</div>
+                </div>
+                <div class="bookList userBookList">
+                    <button type="button" class="close" @click="close" aria-label="Close">
+                        <span id="closeUserBookList" aria-hidden="true">&times;</span>
+                    </button>
+                    <dl>
+                        <dt>入住时间：</dt>
+                        <dd>
+                            <input id="orderStart" type="date">
+                            ~
+                            <input id="orderEnd" type="date">
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>入住人：</dt>
+                        <dd>
+                            <table>
+                                <tr>
+                                    <td>姓名</td>
+                                    <td>身份证号</td>
+                                    <td></td>
+                                </tr>
+                                <tr v-for="(tour,index) in tours" v-cloak="">
+                                    <td>{{tour.name}}</td>
+                                    <td>{{tour.id}}</td>
+                                    <td>
+                                        <div class="btn btn-default" :index="index" @click="delTour">删除</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input id="newTourName" type="text"></td>
+                                    <td><input id="newTourID" type="text"></td>
+                                    <td>
+                                        <div class="btn btn-default" @click="addTour">添加</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <div class="btn btn-default" @click="submitBook">提交订单</div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<div class="cat-loading untouchable"></div>
 <div class="footer">
+    <p class="untouchable">Designed&created by
+        <span title="1517440121">黄春翔</span>/
+        <span title="1517030317">黄术</span>/
+        <span title="1512480226">黄君扬</span>
+    </p>
 </div>
 <script src="js/vue.js"></script>
 <script src="js/jquery-3.2.1.js"></script>
 <script src="js/tools.js"></script>
 <script>
+    let data = [{
+        "id": 15,
+        "roomNumber": {"floor": 1, "number": 1},
+        "type": {"id": 1, "type": "大床房", "description": "足够两个人唑在一起的大小"},
+        "direction": {"id": 11, "type": "南边", "description": "222"},
+        "specialty": "",
+        "price": 199,
+        "broken": false,
+        used: true
+    }, {
+        "id": 15,
+        "roomNumber": {"floor": 1, "number": 1},
+        "type": {"id": 1, "type": "大床房", "description": "足够两个人唑在一起的大小"},
+        "direction": {"id": 11, "type": "南边", "description": "222"},
+        "specialty": "",
+        "price": 199,
+        "broken": false,
+        used: false
+    }];
+    const app = new Vue({
+        el: '#rooms_all_info',
+        data: {
+            allRooms: data,
+            rooms: data,
+            info: {},
+            tours: []
+        },
+        methods: {
+            switchTable: function () {
+                startCatLoading();
+                // TODO
+                stopCatLoading();
+            },
+            status: function (broken, used) {
+                if (broken) {
+                    return '正在维修';
+                } else if (used) {
+                    return '用户在住';
+                } else {
+                    return '空闲';
+                }
+            },
+            askFix: function (e) {
+                let index = +$(e.target).attr('index');
+                let fixFloor = app.rooms[index].roomNumber.floor;
+                let fixNumber = app.rooms[index].roomNumber.number;
+                // let line = $(`.orders table tr:nth-child(${index + 2})`);
+                if (!confirm(`确定报修${fixFloor}楼${fixNumber}号房间？`)) return;
+                startCatLoading();
+                $.ajax({
+                    url: `${serverHost}/api/rooms?floor=${fixFloor}&number=${fixNumber}`,
+                    type: 'PATCH',
+                    data: {
+                        broken: true
+                    },
+                    contentType: "application/json; charset=UTF-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        let tmp = app.rooms[index];
+                        tmp.broken = true;
+                        app.rooms.splice(index, 1, tmp);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        showMsg(jqXHR.status)
+                    },
+                    complete: function () {
+                        //关闭动画？
+                        stopCatLoading();
+                    }
+                });
+            },
+            askBook: function () {
+                $('.bookWindow').fadeIn(333);
+            },
+            userBook: function () {
+                $('.bookWindow .bookList').slideDown(333);
+                $('#orderStart').val(dateTimeISOFormat(new Date()).slice(0, 10))
+                    .attr('disabled', false);
+            },
+            tourBook: function () {
+                $('.bookWindow .bookList').slideDown(333);
+                $('#orderStart').val(dateTimeISOFormat(new Date()).slice(0, 10))
+                    .attr('disabled', true);
+            },
+            addTour: function () {
+                let newTourName = $('#newTourName');
+                let newTourID = $('#newTourID');
+                if (isEmpty(newTourName.val(), newTourID.val())) {
+                    showMsg('请完整填写信息');
+                    return;
+                }
+                this.tours.push({
+                    name: newTourName.val(),
+                    id: newTourID.val(),
+                });
+                newTourName.val('');
+                newTourID.val('')
+            },
+            delTour:function (e) {
 
+            },
+            submitBook: function () {
 
+            },
+            close: function (e) {
+                let button = $(e.target);
+                let thisWindow = button.parent().parent();
+                switch (button.attr('id')) {
+                    case 'closeContent':
+                        thisWindow.parent().fadeOut(333);
+                        break;
+                    case 'closeUserBookList':
+                    case 'closeTourBookList':
+                        thisWindow.slideUp(333);
+                        thisWindow.parent().slideUp(333);
+                        this.tours = [];
+                        break;
+                }
+            }
+        },
+        computed: {
+            emptyRooms: function () {
+                return this.allRooms.filter(e => {
+                    return !e.used;
+                });
+            }
+        }
+    });
+    $.ajax({
+        url: `${serverHost}/api/rooms/load`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: "application/json; charset=UTF-8",
+        success: function (data, textStatus, jqXHR) {
+            app.info = data;
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            let msg = '初始化筛选失败';
+            switch (jqXHR.status) {
+                default:
+                    msg += ':网络错误';
+            }
+            showMsg(msg)
+        },
+        complete: function () {
+        }
+    });
 </script>
 </body>
 </html>
