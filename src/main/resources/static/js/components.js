@@ -1693,7 +1693,7 @@ async function modify_user_info() {
                         }
                         startCatLoading();
                         $.ajax({
-                            url: `${serverHost}/api/users/make${role}.val()`,
+                            url: `${serverHost}/api/users/make${role.val()}`,
                             type: 'POST',
                             contentType: "application/json; charset=UTF-8",
                             data: JSON.stringify({
