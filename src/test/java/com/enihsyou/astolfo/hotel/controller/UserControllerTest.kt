@@ -7,14 +7,14 @@ import org.junit.Test
 
 class UserControllerTest {
 
-//    @Test
-//    fun lotto_resource_returns_200_with_expected_id_and_winners() {
-//
-//        `when`().get("http://localhost:10080/api/rooms/")
-//            .then().statusCode(200)
-//            .body("lotto.lottoId", equalTo(5),
-//            "lotto.winners.winnerId",equals(23))
-//    }
+    @Test
+    fun lotto_resource_returns_200_with_expected_id_and_winners() {
+
+        `when`().get("http://localhost:10080/api/rooms/")
+            .then().statusCode(200)
+            .body("lotto.lottoId", equalTo(5),
+            "lotto.winners.winnerId",equals(23))
+    }
 
     @Test
     fun test() {
