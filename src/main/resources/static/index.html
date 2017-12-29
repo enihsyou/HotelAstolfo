@@ -181,7 +181,7 @@
                 <td>{{room.price}}</td>
                 <td>
                     <div class="confirm btn btn-default" v-if="!room.broken && !room.occupied" :index="index" @click="showIDs" v-cloak>立即预定</div>
-                    <div class="confirm btn btn-default disabled" v-else :index="index" v-cloak>立即预定</div>
+                    <div class="btn btn-default disabled" v-else :index="index" v-cloak>立即预定</div>
                 </td>
                 <td>
                     <div class="confirm btn btn-default" :index="index" @click="showComments" v-cloak>查看评价</div>
