@@ -179,12 +179,12 @@ $(function init() {
     //初始化首页搜索
     let time = new Date();
     let year = time.getFullYear();
-    let month = time.getMonth();
-    let day = time.getDay() > 9 ? time.getDay() : '0' + time.getDay();
+    let month = time.getMonth() + 1;
+    let day = time.getDate() > 9 ? time.getDate() : '0' + time.getDate();
     $('#bookingStart').val(`${year}-${month}-${day}`)
         .attr('min', `${year}-${month}-${day}`)
         .attr('max', `${year + 1}-${month}-${day}`);
-    let nday = (time.getDay() + 1) > 9 ? (time.getDay() + 1) : '0' + (time.getDay() + 1);
+    let nday = (time.getDate() + 1) > 9 ? (time.getDate() + 1) : '0' + (time.getDate() + 1);
     $('#bookingEnd').val(`${year}-${month}-${nday}`)
         .attr('min', `${year}-${month}-${nday}`)
         .attr('max', `${year + 1}-${month}-${nday}`);
@@ -209,6 +209,7 @@ $(function init() {
         }
     });
     //初始化顶栏
+    startCatLoading();
     reqLogin(sessionStorage.username || localStorage.username, sessionStorage.password || localStorage.password)
         .then((data) => {
             //将接受到的数据解析
@@ -220,7 +221,8 @@ $(function init() {
                 showMsg(`自动登录失败:${error}`);
             }
             $('.login-btn').show();
-        });
+        })
+        .then(stopCatLoading);
     //初始化登录与注册格式
     $("#inputUserName").mask("999-9999-9999");
     $("#signupUsername").mask("999-9999-9999");
@@ -283,8 +285,8 @@ let searchBoxVue = new Vue({
                 type: 'GET',
                 contentType: "application/json; charset=UTF-8",
                 data: {
-                    from: from.length > 0 && to.length > 0 ? new Date(from).toISOString().replace('Z', '') : undefined,
-                    to: from.length > 0 && to.length > 0 ? new Date(to).toISOString().replace('Z', '') : undefined,
+                    from: dateTimeISOFormat(new Date(from)),
+                    to: dateTimeISOFormat(new Date(to)),
                     type: type.length > 0 ? type : undefined,
                     priceFrom: priceFrom > 0 && priceTo > 0 ? priceFrom : undefined,
                     priceTo: priceFrom > 0 && priceTo > 0 ? priceTo : undefined,
@@ -329,7 +331,7 @@ let searchListVue = new Vue({
     },
     methods: {
         //查看房间评价 TODO
-        showComments:function () {
+        showComments: function () {
 
         },
         showIDs: function (e) {
@@ -378,12 +380,13 @@ let searchListVue = new Vue({
             }
             startCatLoading();
             $('.selectID .close span').trigger('click');
+
             $.ajax({
                 url: `${serverHost}/api/transactions`,
                 type: 'POST',
                 data: JSON.stringify({
-                    dateFrom: new Date($('#bookingStart').val()).toISOString().replace('Z', ''),
-                    dateTo: new Date($('#bookingEnd').val()).toISOString().replace('Z', ''),
+                    dateFrom: dateTimeISOFormat(new Date($('#bookingStart').val())),
+                    dateTo: dateTimeISOFormat(new Date($('#bookingEnd').val())),
                     phone: sessionStorage.username,
                     guests: selectedIDs,
                     room: {
