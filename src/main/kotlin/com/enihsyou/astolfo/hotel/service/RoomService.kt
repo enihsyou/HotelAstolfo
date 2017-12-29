@@ -74,14 +74,25 @@ class RoomServiceImpl : RoomService {
                            broken: Boolean?,
                            available: Boolean?): List<Room> {
         var result = roomRepository.findAll()
+        if (type != null) {
         result = result
             .filter { it.type.type == type }
-            .filter { it.direction.type == direction }
-            .filter { it.roomNumber.floor == floor }
-            .filter { it.roomNumber.number == number }
-            .filter { it.price >= priceFrom?:0 }
-            .filter { it.price <= priceTo?: Int.MAX_VALUE }
-            .filter { it.broken == broken }
+        }
+        if (direction != null) {
+            result = result.filter { it.direction.type == direction }
+        }
+        if (floor != null) {
+            result = result.filter { it.roomNumber.floor == floor }
+        }
+        if (number != null) {
+            result = result.filter { it.roomNumber.number == number }
+        }
+        if (priceFrom != null) {
+            result = result.filter { it.price >= priceFrom }
+        }
+        if (priceTo != null) {
+            result = result.filter { it.price <= priceTo }
+        }
         if (from != null && to != null) {
             val from2: LocalDateTime = LocalDateTime.parse(from)
             val to2: LocalDateTime = LocalDateTime.parse(to)
@@ -95,6 +106,9 @@ class RoomServiceImpl : RoomService {
 //                to2 = LocalDateTime.parse(to)
 //                result = result.filterNot { it in transactionRepository.findByLeaveDate(to2).map { it.room } }
 //            }
+        }
+        if  (broken!=null){
+            result = result.filter { it.broken == broken }
         }
 //        if (available!=null){
 //            result = result.filter { transactionRepository.findByRoomNumber(it.roomNumber.floor, it.roomNumber.number).fi }
