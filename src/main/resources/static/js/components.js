@@ -512,10 +512,10 @@ async function rooms_all_info() {
                 methods: {
                     switchTable: function () {
                         startCatLoading();
-                        let sStatus = $('#sStatus').children('option:selected').val();
-                        let sFloor = $('#sFloor').children('option:selected').val();
-                        let sDir = $('#sDir').children('option:selected').val();
-                        let sType = $('#sType').children('option:selected').val();
+                        let sStatus = $('#sStatus').val();
+                        let sFloor = $('#sFloor').val();
+                        let sDir = $('#sDir').val();
+                        let sType = $('#sType').val();
                         let res = this.allRooms;
                         if (!isEmpty(sStatus)) {
                             res = res.filter((room) => {
@@ -850,7 +850,7 @@ async function check_all_booking() {
                         }
                     },
                     switchTable: function () {
-                        let oStatus = $('#oStatus').children('option:selected').val();
+                        let oStatus = $('#oStatus').val();
                         let res = this.allOrders;
                         if (!isEmpty(oStatus)) {
                             res = res.filter((order) => {
@@ -1415,8 +1415,8 @@ async function modify_rooms_type() {
                     addRoom: function () {
                         let newRFloor = $('#newRFloor').val();
                         let newRNum = $('#newRNum').val();
-                        let newRDir = $('#newRDir').children('option:selected').text();
-                        let newRType = $('#newRType').children('option:selected').text();
+                        let newRDir = $('#newRDir').text();
+                        let newRType = $('#newRType').text();
                         let newRSpecial = $('#newRSpecial').val();
                         let newRPrice = $('#newRPrice').val();
                         let newRBroken = $('#newRBroken').val();
@@ -1683,7 +1683,7 @@ async function modify_user_info() {
                         let nickname = $('#newAccNick').val();
                         let password = $('#newAccPWD').val();
                         let passwordAgain = $('#newAccPWDR').val();
-                        let role = $('#newAccRole').children('option:selected');
+                        let role = $('#newAccRole');
                         if (isEmpty(username, passwordAgain, password, passwordAgain)) {
                             showMsg('请完整填写注册信息');
                         }
