@@ -37,6 +37,12 @@
     border: 1px solid darkgrey;
 }
 
+.container table span {
+    text-align: left;
+    display: inline-block;
+    width: 100%;
+}
+
 .container table tr {
     height: 4em;
     border-bottom: 1px solid grey;
@@ -48,6 +54,7 @@
 
 .container table td {
     max-width: 4em;
+    overflow: hidden auto;
 }
 
 .container table td:last-child {

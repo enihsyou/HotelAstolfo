@@ -328,6 +328,10 @@ let searchListVue = new Vue({
         selectedIndex: -1
     },
     methods: {
+        //查看房间评价 TODO
+        showComments:function () {
+
+        },
         showIDs: function (e) {
             if (sessionStorage.isLogin !== 'true') {
                 showMsg('请先登录！').then(
@@ -377,7 +381,6 @@ let searchListVue = new Vue({
             $.ajax({
                 url: `${serverHost}/api/transactions`,
                 type: 'POST',
-                dataType: 'json',
                 data: JSON.stringify({
                     dateFrom: new Date($('#bookingStart').val()).toISOString().replace('Z', ''),
                     dateTo: new Date($('#bookingEnd').val()).toISOString().replace('Z', ''),
