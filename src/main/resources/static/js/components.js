@@ -614,8 +614,7 @@ async function rooms_all_info() {
                             name: newTourName.val(),
                             id: newTourID.val(),
                         });
-                        newTourName.val('');
-                        newTourID.val('')
+                        clearVal(newTourName,newTourID);
                     },
                     delTour: function (e) {
                         let index = +$(e.target).attr('index');
@@ -658,7 +657,7 @@ async function rooms_all_info() {
                             }),
                             contentType: "application/json; charset=UTF-8",
                             success: function (data, textStatus, jqXHR) {
-
+                                $('#closeUserBookList').trigger('click');
                                 showMsg('下单成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -666,6 +665,7 @@ async function rooms_all_info() {
                                 switch (jqXHR.status) {
                                     case 409:
                                         msg += '：订单时间冲突';
+                                        break;
                                     default:
                                         msg += '：网络错误';
                                 }
@@ -1220,8 +1220,7 @@ async function modify_rooms_type() {
                                     type: newType,
                                     description: newTypeDes
                                 });
-                                $('#newType').val('');
-                                $('#newTypeDes').val('');
+                                clearVal($('#newType'),$('#newTypeDes'));
                                 showMsg('添加成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -1330,8 +1329,7 @@ async function modify_rooms_type() {
                                     type: newDir,
                                     description: newDirDes
                                 });
-                                $('#newDir').val('');
-                                $('#newDirDes').val('');
+                                clearVal($('#newDir'),$('#newDirDes'));
                                 showMsg('添加成功！');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -1463,6 +1461,7 @@ async function modify_rooms_type() {
                                     specialty: newRSpecial,
                                     price: newRPrice
                                 });
+                                clearVal(('#newRFloor'),$('#newRNum'),$('#newRDir'),('#newRType'),$('#newRSpecial'),$('#newRPrice'),$('#newRBroken'));
                                 showMsg('添加成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -1710,7 +1709,9 @@ async function modify_user_info() {
                                     register_date: new Date().toISOString(),
                                     role: role.text(),
                                     guests: []
-                                })
+                                });
+                                clearVal($('#newAccName'), $('#newAccNick'), $('#newAccPWD'), $('#newAccPWDR'));
+                                showMsg(`添加 [${role.text()}]${nickname} 成功`)
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
                                 let msg;
