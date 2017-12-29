@@ -44,7 +44,7 @@ $('.login .window .confirm').click(function () {
         return;
     }
     let _this = this;
-    let username = $('#inputUserName').val().replace(/-/g, '');
+    let username = $('#inputUserName').val();
     let password = $('#inputPassword').val();
     if (username.length > 0 && password.length > 0) {
         $(_this).append('<span class="loading line"></span>');
@@ -111,7 +111,7 @@ $('.signup .window .confirm').click(function () {
         return;
     }
     let _this = this;
-    let username = $('#signupUsername').val().replace(/-/g, '');
+    let username = $('#signupUsername').val();
     let nickname = $('#signupNickname').val();
     let password = $('#signupPassword').val();
     let passwordAgain = $('#signupPasswordAgain').val();
@@ -214,6 +214,7 @@ $(function init() {
         .then((data) => {
             //将接受到的数据解析
             sessionStorage.nickname = data.nickname;
+            sessionStorage.isLogin = true;
             $('.user-info .user-btn').html(sessionStorage.nickname || localStorage.nickname);
             $('.user-info ').show();
         }, (error) => {
@@ -224,8 +225,7 @@ $(function init() {
         })
         .then(stopCatLoading);
     //初始化登录与注册格式
-    $("#inputUserName").mask("999-9999-9999");
-    $("#signupUsername").mask("999-9999-9999");
+    constraintTel($("#inputUserName"),$("#signupUsername"));
     //初始化键盘快捷键
     $('.form-horizontal').keypress(function (e) {
         if (e.keyCode === 13) {

@@ -2,9 +2,10 @@
 /*
 * Ali-2G:       'http://47.100.117.174:8899'
 * enihsyou-PC   ‘https://enihsyou.synology.me:8899'
+* Default       'http://localhost:10080'
 *
 * */
-let serverHost = 'http://localhost:10080';
+let serverHost = 'https://enihsyou.synology.me:8899';
 
 //封装消息提示
 function showMsg(msg) {
@@ -39,11 +40,31 @@ function isNegative(a1, a2, ...an) {
 
 //传入时间转化为日期形式的ISO不带Z格式
 function dateTimeISOFormat(time) {
-    time = time instanceof Date ? time : new Date();
+    if (!time instanceof Date) {
+        console.error(`dateTimeISOFormat:传入值(${time})类型不正确，已更正为当前时间！`);
+        time = new Date();
+    }
     let year = time.getFullYear();
     let month = time.getMonth() > 8 ? time.getMonth() + 1 : '0' + (time.getMonth() + 1);
     let day = time.getDate() > 9 ? time.getDate() : '0' + time.getDate();
     return `${year}-${month}-${day}T00:00:00.000`
+}
+
+//mask约束定义
+$.mask.definitions['X'] = '[0-9Xx]';
+
+//身份证约束
+function constraintID(jqObj1, jqObj2, ...jqObjN) {
+    for (let jqObj of arguments) {
+        if (jqObj instanceof $) jqObj.mask("99999999999999999X");
+    }
+}
+
+//手机号约束
+function constraintTel(jqObj1, jqObj2, ...jqObjN) {
+    for (let jqObj of arguments) {
+        if (jqObj instanceof $) jqObj.mask("99999999999");
+    }
 }
 
 //延时函数
@@ -119,61 +140,16 @@ function reqLogin(username, password) {
     });
 }
 
-//用于处理Cookie
-let Cookies = {
-    getItem: function (sKey) {
-        return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(sKey).replace(/[\-.+*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
-    },
-    setItem: function (sKey, sValue, vEnd, sPath, sDomain, bSecure) {
-        if (!sKey || /^(?:expires|max-age|path|domain|secure)$/i.test(sKey)) {
-            return false;
-        }
-        let sExpires = "";
-        if (vEnd) {
-            switch (vEnd.constructor) {
-                case Number:
-                    sExpires = vEnd === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + vEnd;
-                    break;
-                case String:
-                    sExpires = "; expires=" + vEnd;
-                    break;
-                case Date:
-                    sExpires = "; expires=" + vEnd.toUTCString();
-                    break;
-            }
-        }
-        document.cookie = encodeURIComponent(sKey) + "=" + encodeURIComponent(sValue) + sExpires + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : "");
-        return true;
-    },
-    removeItem: function (sKey, sPath, sDomain) {
-        if (!sKey || !this.hasItem(sKey)) {
-            return false;
-        }
-        document.cookie = encodeURIComponent(sKey) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "");
-        return true;
-    },
-    hasItem: function (sKey) {
-        return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(sKey).replace(/[\-.+*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
-    },
-    keys: /* optional method: you can safely remove it! */ function () {
-        let aKeys = document.cookie.replace(/((?:^|\s*;)[^=]+)(?=;|$)|^\s*|\s*(?:=[^;]*)?(?:\1|$)/g, "").split(/\s*(?:=[^;]*)?;\s*/);
-        for (let nIdx = 0; nIdx < aKeys.length; nIdx++) {
-            aKeys[nIdx] = decodeURIComponent(aKeys[nIdx]);
-        }
-        return aKeys;
-    }
-};
-
 //开始猫滚
-function startCatLoading() {
+function startCatLoading(time) {
     let loading = $('.cat-loading');
-    loading.fadeIn(500);
+    loading.fadeIn(time || 200);
 }
 
 //停止猫滚
-function stopCatLoading() {
+function stopCatLoading(time) {
     let loading = $('.cat-loading');
-    loading.fadeOut(500);
+    loading.fadeOut(time || 500);
 }
 
 //啪嗒猫滚

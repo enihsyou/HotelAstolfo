@@ -64,6 +64,7 @@ $(function init() {
         location.href = '/';
     }
     else {
+        startCatLoading(100);
         reqLogin(username, password).then(
             (data) => {
                 sessionStorage.nickname = data.nickname;
@@ -90,6 +91,6 @@ $(function init() {
                     }
                 )
             }
-        );
+        ).then(stopCatLoading);
     }
 });

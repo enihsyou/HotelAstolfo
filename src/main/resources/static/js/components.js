@@ -228,8 +228,7 @@ async function modify_my_info() {
             //生成html
             render_Container(resStr);
             //初始化界面
-            $.mask.definitions['X']='[0-9Xx]';
-            $('#newID').mask("999999-9999-99-99-999X");
+            constraintID($('#newID'));
             const app = new Vue({
                 el: '#modify_my_info',
                 data: {
@@ -275,7 +274,7 @@ async function modify_my_info() {
                     //添加身份证信息
                     addID: function () {
                         let newG = $('#newG').val();
-                        let newID = $('#newID').val().replace(/-/g,'').toLocaleUpperCase();
+                        let newID = $('#newID').val().toLocaleUpperCase();
                         if (isEmpty(newG, newID)) {
                             showMsg('请完整填写新旅客信息');
                             return;
@@ -360,10 +359,10 @@ async function modify_my_info() {
 /*
 * 前台端/经理端：客房管理
 * 列出所有房间信息
-* 可筛选（多条件筛选） TODO
+* 可筛选（多条件筛选）
 * 可报修
-* 可登记客户预定（管理层下单） TODO
-* 可直接登记身份证散客入住（管理层下单） TODO
+* 可登记客户预定（管理层下单）
+* 可直接登记身份证散客入住（管理层下单）
 */
 async function rooms_all_info() {
     $.ajax({
@@ -377,12 +376,351 @@ async function rooms_all_info() {
         success: function (data, textStatus, jqXHR) {
             //获取订单
             let resStr = `
-            
+                <div id="rooms_all_info">
+            <dl>
+                <dt>
+                    <label>
+                        房间状态：
+                        <select id="sStatus" @change="switchTable">
+                            <option value="">全部</option>
+                            <option value="empty">当前空余</option>
+                            <option value="busy">已经入住</option>
+                            <option value="fixing">正在维修</option>
+                        </select>
+                    </label>
+                    <label>
+                        楼层号：
+                        <select id="sFloor" @change="switchTable">
+                            <option value="">任意</option>
+                            <option v-for="(room,index) in info.rooms" :value="index" v-cloak>{{index}}
+                            </option>
+                        </select>
+                    </label>
+                    <label>
+                        房间类型：
+                        <select id="sType" @change="switchTable">
+                            <option value="">任意</option>
+                            <option v-for="type in info.types" :value="type" v-cloak>{{type}}</option>
+                        </select>
+                    </label>
+                    <label>
+                        房间朝向：
+                        <select id="sDir" @change="switchTable">
+                            <option value="">任意</option>
+                            <option v-for="direction in info.directions" :value="direction" v-cloak>{{direction}}
+                            </option>
+                        </select>
+                    </label>
+                </dt>
+                <dd>
+                    <table>
+                        <tr>
+                            <td>楼层-房号</td>
+                            <td>朝向</td>
+                            <td>房间类型</td>
+                            <td>特色</td>
+                            <td>价格</td>
+                            <td>房间状态</td>
+                            <td><!--预定--></td>
+                            <td><!--报修--></td>
+                        </tr>
+                        <tr v-for="(room,index) in rooms" v-cloak>
+                            <td>{{room.roomNumber.floor}}-{{room.roomNumber.number}}</td>
+                            <td :title="room.direction.description">{{room.direction.type}}</td>
+                            <td :title="room.type.description">{{room.type.type}}</td>
+                            <td>{{room.specialty}}</td>
+                            <td>{{room.price}}</td>
+                            <td>{{status(room.broken,room.used)}}</td>
+                            <td>
+                                <div v-if="!room.broken && !room.used" :index="index" class="btn btn-default"
+                                     @click="askBook">下单
+                                </div>
+                                <div v-else :index="index" class="btn btn-default disabled">下单</div>
+                            </td>
+                            <td>
+                                <div v-if="!room.broken" :index="index" class="btn btn-default" @click="askFix">报修</div>
+                                <div v-else class="btn btn-default disabled">维修中</div>
+                            </td>
+                        </tr>
+                    </table>
+                </dd>
+            </dl>
+            <div class="bookWindow untouchable">
+                <div class="content">
+                    <button type="button" class="close" @click="close" aria-label="Close">
+                        <span id="closeContent" aria-hidden="true">&times;</span>
+                    </button>
+                    <div>请选择预定类型</div>
+                    <div class="btn btn-default" @click="userBook">登记客户预定</div>
+                    <div class="btn btn-default" @click="tourBook">散客入住</div>
+                </div>
+                <div class="bookList userBookList">
+                    <button type="button" class="close" @click="close" aria-label="Close">
+                        <span id="closeUserBookList" aria-hidden="true">&times;</span>
+                    </button>
+                    <dl>
+                        <dt>入住时间：</dt>
+                        <dd>
+                            <input id="orderStart" type="date">
+                            ~
+                            <input id="orderEnd" type="date">
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>入住人：</dt>
+                        <dd>
+                            <table>
+                                <tr>
+                                    <td>姓名</td>
+                                    <td>身份证号</td>
+                                    <td></td>
+                                </tr>
+                                <tr v-for="(tour,index) in tours" v-cloak="">
+                                    <td>{{tour.name}}</td>
+                                    <td>{{tour.id}}</td>
+                                    <td>
+                                        <div class="btn btn-default" :index="index" @click="delTour">删除</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input id="newTourName" type="text"></td>
+                                    <td><input id="newTourID" type="text"></td>
+                                    <td>
+                                        <div class="btn btn-default" @click="addTour">添加</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <div class="btn btn-default" @click="submitBook">提交订单</div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
             `;
             //生成html
             render_Container(resStr);
             //script
-
+            const app = new Vue({
+                el: '#rooms_all_info',
+                data: {
+                    allRooms: data,
+                    rooms: data,
+                    info: {},
+                    tours: [],
+                    curFloor: -1,
+                    curNumber: -1
+                },
+                methods: {
+                    switchTable: function () {
+                        startCatLoading();
+                        let sStatus = $('#sStatus').children('option:selected').val();
+                        let sFloor = $('#sFloor').children('option:selected').val();
+                        let sDir = $('#sDir').children('option:selected').val();
+                        let sType = $('#sType').children('option:selected').val();
+                        let res = this.allRooms;
+                        if (!isEmpty(sStatus)) {
+                            res = res.filter((room) => {
+                                switch (sStatus) {
+                                    case 'fixing':
+                                        return room.broken;
+                                    case 'empty':
+                                        return !room.used;
+                                    case 'busy':
+                                        return room.used;
+                                }
+                            })
+                        }
+                        if (!isEmpty(sFloor)) {
+                            res = res.filter((room) => {
+                                return room.roomNumber.floor === +sFloor;
+                            })
+                        }
+                        if (!isEmpty(sType)) {
+                            res = res.filter((room) => {
+                                console.log(room.type);
+                                return room.type.type === sType;
+                            })
+                        }
+                        if (!isEmpty(sDir)) {
+                            res = res.filter((room) => {
+                                return room.direction.type === sDir;
+                            })
+                        }
+                        this.rooms = res;
+                        stopCatLoading();
+                    },
+                    status: function (broken, used) {
+                        if (broken) {
+                            return '正在维修';
+                        } else if (used) {
+                            return '用户在住';
+                        } else {
+                            return '空闲';
+                        }
+                    },
+                    askFix: function (e) {
+                        let index = +$(e.target).attr('index');
+                        let fixFloor = app.rooms[index].roomNumber.floor;
+                        let fixNumber = app.rooms[index].roomNumber.number;
+                        // let line = $(`.orders table tr:nth-child(${index + 2})`);
+                        if (!confirm(`确定报修${fixFloor}楼${fixNumber}号房间？`)) return;
+                        startCatLoading();
+                        $.ajax({
+                            url: `${serverHost}/api/rooms?floor=${fixFloor}&number=${fixNumber}`,
+                            type: 'PATCH',
+                            data: JSON.stringify({
+                                broken: true
+                            }),
+                            contentType: "application/json; charset=UTF-8",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
+                            },
+                            success: function (data, textStatus, jqXHR) {
+                                let tmp = app.rooms[index];
+                                tmp.broken = true;
+                                app.rooms.splice(index, 1, tmp);
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                showMsg(jqXHR.status)
+                            },
+                            complete: function () {
+                                //关闭动画？
+                                stopCatLoading();
+                            }
+                        });
+                    },
+                    askBook: function (e) {
+                        $('.bookWindow').fadeIn(333);
+                        let index = +$(e.target).attr('index');
+                        this.curFloor = app.rooms[index].roomNumber.floor;
+                        this.curNumber = app.rooms[index].roomNumber.number;
+                    },
+                    userBook: function () {
+                        $('.bookWindow .bookList').slideDown(333);
+                        $('#orderStart').val(dateTimeISOFormat(new Date()).slice(0, 10))
+                            .attr('disabled', false);
+                    },
+                    tourBook: function () {
+                        $('.bookWindow .bookList').slideDown(333);
+                        $('#orderStart').val(dateTimeISOFormat(new Date()).slice(0, 10))
+                            .attr('disabled', true);
+                    },
+                    addTour: function () {
+                        let newTourName = $('#newTourName');
+                        let newTourID = $('#newTourID');
+                        if (isEmpty(newTourName.val(), newTourID.val())) {
+                            showMsg('请完整填写信息');
+                            return;
+                        }
+                        this.tours.push({
+                            name: newTourName.val(),
+                            id: newTourID.val(),
+                        });
+                        newTourName.val('');
+                        newTourID.val('')
+                    },
+                    delTour: function (e) {
+                        let index = +$(e.target).attr('index');
+                        this.tours.splice(index, 1);
+                    },
+                    submitBook: function () {
+                        let orderStart = $('#orderStart').val();
+                        let orderEnd = $('#orderEnd').val();
+                        if (isEmpty(orderStart, orderEnd)) {
+                            showMsg('请正确填写预订时间');
+                            return;
+                        }
+                        if (new Date(orderStart) >= new Date(orderEnd)) {
+                            showMsg('离店时间必须晚于预定时间');
+                            return;
+                        }
+                        if (isEmpty(this.tours)) {
+                            showMsg('请至少添加一名旅客信息');
+                            return;
+                        }
+                        if (isNegative(this.curFloor, this.curNumber)) {
+                            showMsg('系统错误，请刷新页面重试');
+                            return;
+                        }
+                        startCatLoading();
+                        $.ajax({
+                            url: `${serverHost}/api/transactions`,
+                            type: 'POST',
+                            data: JSON.stringify({
+                                dateFrom: dateTimeISOFormat(new Date(orderStart)),
+                                dateTo: dateTimeISOFormat(new Date(orderEnd)),
+                                phone: sessionStorage.username,
+                                guests: this.tours.map((tour) => {
+                                    return tour.id;
+                                }),
+                                room: {
+                                    floor: this.curFloor,
+                                    number: this.curNumber
+                                }
+                            }),
+                            contentType: "application/json; charset=UTF-8",
+                            success: function (data, textStatus, jqXHR) {
+                                showMsg('下单成功！')
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                let msg = '下单失败';
+                                switch (jqXHR.status) {
+                                    default:
+                                        msg += ':网络错误';
+                                }
+                                showMsg(msg)
+                            },
+                            complete: function () {
+                                stopCatLoading()
+                            }
+                        });
+                    },
+                    close: function (e) {
+                        let button = $(e.target);
+                        let thisWindow = button.parent().parent();
+                        switch (button.attr('id')) {
+                            case 'closeContent':
+                                thisWindow.parent().fadeOut(333);
+                                break;
+                            case 'closeUserBookList':
+                            case 'closeTourBookList':
+                                thisWindow.slideUp(333);
+                                thisWindow.parent().slideUp(333);
+                                this.tours = [];
+                                this.curFloor = -1;
+                                this.curNumber = -1;
+                                break;
+                        }
+                    }
+                }
+            });
+            constraintID($('#newTourID'));
+            //更新筛选信息
+            startCatLoading();
+            $.ajax({
+                url: `${serverHost}/api/rooms/load`,
+                type: 'GET',
+                dataType: 'json',
+                contentType: "application/json; charset=UTF-8",
+                success: function (data, textStatus, jqXHR) {
+                    app.info = data;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    let msg = '初始化筛选项失败';
+                    switch (jqXHR.status) {
+                        default:
+                            msg += ':网络错误';
+                    }
+                    showMsg(msg)
+                },
+                complete: function () {
+                    stopCatLoading();
+                }
+            });
         },
         error: function (jqXHR, textStatus, errorThrown) {
             showMsg(jqXHR.status)
@@ -421,8 +759,8 @@ async function check_all_booking() {
                 <div id="check_all_booking">
             <dl>
                 <dt>所有订单：</dt>
-                <dd>
-                    <table class="orders">
+                <dd  class="orders">
+                    <table>
                         <tr>
                             <td>订单编号</td>
                             <td>房间楼层号与类型</td>
@@ -458,7 +796,9 @@ async function check_all_booking() {
                                 <!--已入住后显示-->
                                 <div class="checkOut btn btn-default" v-if="order.activated && order.used"
                                      :index="index"
-                                     @click="checkOut">退房
+                                     @click="checkOut">客户退房
+                                </div>
+                                <div class="checkOut btn btn-default disabled" v-else>客户退房
                                 </div>
                             </td>
                             <td><!--等待入住显示-->
@@ -466,6 +806,7 @@ async function check_all_booking() {
                                      :index="index"
                                      @click="cancelBooking">取消订单
                                 </div>
+                                <div class="cancelOrder btn btn-default disabled" v-else  :index="index">取消订单</div>
                             </td>
                         </tr>
                     </table>
@@ -593,6 +934,7 @@ async function check_all_booking() {
                             success: function (data, textStatus, jqXHR) {
                                 line.find('.status').text('已入住');
                                 line.find('.checkIn').hide();
+                                line.find('.checkOut').show();
                                 showMsg('客户入住成功');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -1143,11 +1485,19 @@ async function modify_rooms_type() {
                         let line = $(`.room table tr:nth-child(${index + 2})`);
                         let modRFloor = app.rooms[index].roomNumber.floor;
                         let modRNumber = app.rooms[index].roomNumber.number;
-                        let modRDir = line.find('.modRDir option:selected').text();
-                        let modRType = line.find('.modRType option:selected').text();
+                        let modRDir = line.find('.modRDir option:selected').text().trim();
+                        let modRType = line.find('.modRType option:selected').text().trim();
                         let modRSpe = line.find('.modRSpe').val();
                         let modRpri = line.find('.modRpri').val();
                         let modRBro = line.find('.modRBro option:selected').val() === 'true';
+                        if (isEmpty(modRpri)) {
+                            showMsg('请正确填写信息');
+                            return;
+                        }
+                        if (isNegative(modRpri)) {
+                            showMsg('价格不能为负数');
+                            return;
+                        }
                         if (!confirm(`确定修改${modRFloor}层${modRNumber}号房间的信息？`)) return;
                         startCatLoading();
                         $.ajax({
@@ -1165,10 +1515,6 @@ async function modify_rooms_type() {
                                 xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
-                                app.directions.splice(index, 1, {
-                                    type: modRFloor,
-                                    description: modRSpe
-                                });
                                 showMsg('修改成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -1291,7 +1637,7 @@ async function modify_user_info() {
                             <tr>
                                 <td>账户名（手机号）</td>
                                 <td>账户昵称</td>
-                                <td>密码<span>*不填写则不修改</span></td>
+                                <td>密码</td>
                                 <td>账户类型</td>
                                 <td>创建时间</td>
                                 <td>绑定旅客</td>
@@ -1328,7 +1674,6 @@ async function modify_user_info() {
             //生成html
             render_Container(resStr);
             //script
-            $("#newAccName").mask("999-9999-9999");
             let app = new Vue({
                 el: '#modify_user_info',
                 data: {
@@ -1336,7 +1681,7 @@ async function modify_user_info() {
                 },
                 methods: {
                     addAcc: function () {
-                        let username = $('#newAccName').val().replace(/-/g, '');
+                        let username = $('#newAccName').val();
                         let nickname = $('#newAccNick').val();
                         let password = $('#newAccPWD').val();
                         let passwordAgain = $('#newAccPWDR').val();
@@ -1397,20 +1742,20 @@ async function modify_user_info() {
                         $.ajax({
                             url: `${serverHost}/api/users?phone=${username}`,
                             type: 'PATCH',
-                            data: {
+                            data: JSON.stringify({
                                 password: password.length > 0 ? password : undefined,
                                 nickname: nickname,
                                 role: role
-                            },
+                            }),
                             contentType: "application/json; charset=UTF-8",
                             beforeSend: function (xhr) {
                                 xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
                             },
                             success: function (data, textStatus, jqXHR) {
-
+                                showMsg('修改成功');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-
+                                showMsg('修改失败');
                             },
                             complete: function () {
                                 stopCatLoading();
@@ -1447,6 +1792,7 @@ async function modify_user_info() {
                     }
                 }
             });
+            constraintTel($("#newAccName"));
         },
         error: function (jqXHR, textStatus, errorThrown) {
             showMsg(jqXHR.status)
