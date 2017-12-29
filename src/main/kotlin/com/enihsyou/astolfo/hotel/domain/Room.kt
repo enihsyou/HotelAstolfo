@@ -1,10 +1,13 @@
 package com.enihsyou.astolfo.hotel.domain
 
+import com.enihsyou.astolfo.hotel.repository.TransactionRepository
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.NaturalId
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
+import org.springframework.beans.factory.annotation.Autowired
 import java.io.Serializable
+import java.time.LocalDateTime
 import javax.persistence.Embeddable
 import javax.persistence.Embedded
 import javax.persistence.Entity
@@ -40,10 +43,16 @@ data class Room(
 
     @OneToMany
     @JsonIgnore
-    var transactions: MutableList<Transaction>? = null,
+    var transactions: MutableList<Transaction> = mutableListOf(),
 
     var broken: Boolean = false
 ) {
+
+    val occupied
+        get() = transactions.any {
+            val now = LocalDateTime.now()
+            it.dateFrom < now && it.dateTo > now
+        }
 
     @Embeddable
     data class RoomNumber(

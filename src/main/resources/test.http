@@ -2,7 +2,7 @@
 
 
 ###
-POST http://localhost:10080/api/users/make
+POST http://localhost:10080/api/users/make/admin
 Content-Type: application/json;charset=utf8
 Authorization:Basic dGVzdDoyMzMz
 # 注册必须提供手机号phoneNumber和密码password,默认权限为注册用户,
@@ -10,7 +10,7 @@ Authorization:Basic dGVzdDoyMzMz
 # 注册前台 投到/api/users/make/employee下面
 
 {
-  "phoneNumber": "18800000001",
+  "phoneNumber": "18800000002",
   "password": "2333",
   "nickname": "昵称"
 }
@@ -148,7 +148,7 @@ Content-Type: application/json
 }
 ###
 POST http://localhost:10080/api/users/make
-Content-Type: application/json // <1>
+Content-Type: application/json
 
 {
   "phoneNumber": "18800000001",

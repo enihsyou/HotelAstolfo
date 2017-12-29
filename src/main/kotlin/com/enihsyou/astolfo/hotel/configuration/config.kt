@@ -3,8 +3,10 @@ package com.enihsyou.astolfo.hotel.configuration
 import com.enihsyou.astolfo.hotel.domain.User
 import com.enihsyou.astolfo.hotel.exception.没权限
 import com.enihsyou.astolfo.hotel.exception.用户不存在
+import com.enihsyou.astolfo.hotel.exception.用户名和密码不匹配
 import com.enihsyou.astolfo.hotel.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.GenericFilterBean
 import java.io.IOException
@@ -27,6 +29,7 @@ class MyFilter : GenericFilterBean() {
 
     @Throws(IOException::class, ServletException::class)
     override fun doFilter(req: ServletRequest, res: ServletResponse, chain: FilterChain) {
+        return chain.doFilter(req, res)
 
         val request = req as HttpServletRequest
         val response = res as HttpServletResponse
@@ -38,31 +41,42 @@ class MyFilter : GenericFilterBean() {
             chain.doFilter(req, res)
         } else {
             val s = request.servletPath
-            if (authHeader == null || !authHeader.startsWith("Basic ")) {
-                if (s == "/api/users/make") return chain.doFilter(req, res)
-                if (s == "/api/users/make/admin" || s == "/api/users/make/employee")
-                    throw 没权限()
-                if (s.startsWith("/api/rooms/load")) return chain.doFilter(req, res)
-                else throw 没权限()
+
+            if (!s.startsWith("/api")) {
+                println("访问$s , 跳过")
+                return chain.doFilter(req, res)
             }
+            println("访问$s")
+            if (s == "/api/users/make" || s == "/api/users/login" || s == "/api/users/logout") {
 
+            } else if (s == "/api/rooms" || s.startsWith("/api/rooms/load")) {
 
-            val input = authHeader.substring(6)
-            val (phone, _) = Base64.getDecoder().decode(input).toString(Charset.defaultCharset()).split(":")
+            } else if (authHeader == null || !authHeader.startsWith("Basic ")) {
+                return response.sendError(HttpStatus.UNAUTHORIZED.value(), "访问$s ${没权限()}")
+            } else {
+                val input = authHeader.substring(6)
+                val (phone, password) = Base64.getDecoder().decode(input).toString(Charset.defaultCharset()).split(":")
 
+                val user = userRepository.findByPhoneNumber(phone) ?:
+                    return response.sendError(HttpStatus.UNAUTHORIZED.value(), "访问$s ${用户不存在(phone)}")
+                if (user.password != password)
+                    return response.sendError(HttpStatus.UNAUTHORIZED.value(), "访问$s ${用户名和密码不匹配()}")
+                when {
+                    s.startsWith("/api/users") -> {
+                        if (s == "/api/users/make/admin" || s == "/api/users/make/employee")
+                            if (user.role == User.UserRole.管理员) {
 
-            val user = userRepository.findByPhoneNumber(phone) ?: throw 用户不存在(phone)
-            when {
-                s.startsWith("/api/users")      -> {
-                    if (s == "/api/users/make") return chain.doFilter(req, res)
-                    if (s == "/api/users/make/admin" || s == "/api/users/make/employee")
-                        if (user.role == User.UserRole.管理员)
-                            return chain.doFilter(req, res)
-                        else throw 没权限()
+                            } else {
+                                return response.sendError(HttpStatus.UNAUTHORIZED.value(), "访问$s ${没权限()}")
+                            }
+                    }
+
+                    else                       -> {
+                        if (user.role == User.UserRole.未注册) {
+                            return response.sendError(HttpStatus.UNAUTHORIZED.value(), "访问$s ${没权限()}")
+                        }
+                    }
                 }
-
-                s.startsWith("/api/rooms/load") -> return chain.doFilter(req, res)
-                else                            -> if (user.role == User.UserRole.注册用户 || user.role == User.UserRole.未注册) throw 没权限()
             }
             chain.doFilter(req, res)
         }

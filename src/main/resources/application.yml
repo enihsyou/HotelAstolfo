@@ -24,7 +24,7 @@ spring:
     properties:
       hibernate:
 #          import_files: hotel_data.sql
-        show_sql: true
+        show_sql: false
         use_sql_comments: true
         format_sql: true
   session:
