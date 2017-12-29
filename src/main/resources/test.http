@@ -386,6 +386,5 @@ Authorization: Basic MTg4ODg4ODg4ODg6MjMzMw==
 }
 
 ###
-GET http://localhost:10080/test
-Authorization: Basic YWRtaW46MjMzMw==
+GET http://localhost:10080/api/rooms/
 ###

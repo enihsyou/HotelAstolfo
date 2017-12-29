@@ -1,7 +1,10 @@
 package com.enihsyou.astolfo.hotel.controller
 
+import com.enihsyou.astolfo.hotel.configuration.checkAuthorization
 import com.enihsyou.astolfo.hotel.domain.Guest
 import com.enihsyou.astolfo.hotel.domain.User
+import com.enihsyou.astolfo.hotel.exception.用户不存在
+import com.enihsyou.astolfo.hotel.exception.用户名和密码不匹配
 import com.enihsyou.astolfo.hotel.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -55,8 +58,13 @@ class UserController {
         = userService.getUser(phone)
 
     @PatchMapping
-    fun modifyUser(@RequestParam phone: String, @RequestBody payload: Map<String, String>)
-        = userService.modifyUser(phone, payload)
+    fun modifyUser(@RequestParam phone: String, @RequestBody payload: Map<String, String>, @RequestHeader("Authorization") header: RequestHeader) {
+        val (user_phone, password) = checkAuthorization(header.value)
+        val user = getUser(user_phone)
+        if (user.password != password)
+           throw 用户名和密码不匹配()
+        userService.modifyUser(phone, payload, user)
+    }
 
     @DeleteMapping
     fun deleteUser(@RequestParam phone: String)
@@ -88,8 +96,8 @@ class UserController {
         = userService.modifyGuest(identification, payload)
 
     @DeleteMapping("/guests")
-    fun deleteGuest(@RequestBody guest: Guest)
-        = userService.deleteGuest(guest)
+    fun deleteGuest(@RequestParam("identification") identification: String)
+        = userService.deleteGuest(identification)
 
 
     @GetMapping("/transactions")

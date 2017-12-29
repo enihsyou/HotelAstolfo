@@ -4,6 +4,7 @@ import com.enihsyou.astolfo.hotel.controller.TransactionController
 import com.enihsyou.astolfo.hotel.domain.Guest
 import com.enihsyou.astolfo.hotel.domain.Transaction
 import com.enihsyou.astolfo.hotel.exception.房间已损坏
+import com.enihsyou.astolfo.hotel.exception.房间已被占用
 import com.enihsyou.astolfo.hotel.exception.订单不存在
 import com.enihsyou.astolfo.hotel.exception.订单时间冲突
 import com.enihsyou.astolfo.hotel.repository.GuestRepository
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
-import sun.text.normalizer.UCharacter.getDirection
 import java.time.LocalDateTime
 
 interface TransactionService {
@@ -31,15 +31,19 @@ interface TransactionService {
     ): List<Transaction>
 
     fun singleBook(body: TransactionController.BookBody): ResponseEntity<Unit>
-    fun modifyRoom(bookId: Int,
-                   payload: Map<String, String>): Transaction
+    fun modifyRoom(
+        bookId: Int,
+        payload: Map<String, String>
+    ): Transaction
 }
 
 @Service(value = "订单层逻辑")
 class TransactionServiceImpl : TransactionService {
 
-    override fun modifyRoom(bookId: Int,
-                            payload: Map<String, String>): Transaction {
+    override fun modifyRoom(
+        bookId: Int,
+        payload: Map<String, String>
+    ): Transaction {
         if (!transactionRepository.exists(bookId)) throw 订单不存在(bookId)
         val transaction = transactionRepository.findOne(bookId)
         for ((key, value) in payload)
@@ -57,7 +61,7 @@ class TransactionServiceImpl : TransactionService {
                     transaction.activated = value.toBoolean()
 
                 "used"      ->
-                    transaction.used = value.toBoolean()
+                    transaction.occupied = value.toBoolean()
 
                 "guests"    ->
                     transaction.guests = value.also { println(it) }.split(",").mapNotNull { guestRepository.findByIdentification(it) }.toMutableList()
@@ -72,14 +76,23 @@ class TransactionServiceImpl : TransactionService {
         val room = roomService.getRoom(body.room.floor, body.room.number)
         val guests = mutableListOf<Guest>()
         body.guests.forEach {
-            userService.getGuest(user.phoneNumber, it)
-                .let { guests.add(it) }
+            //            userService.getGuest(user.phoneNumber, it)
+//                .let { guests.add(it) }
+            val guest = guestRepository.findByIdentification(it)
+            if (guest == null) {
+                val g = Guest()
+                guestRepository.save(g)
+                guests.add(g)
+            } else {
+                guests.add(guest)
+            }
         }
         val tranList = transactionRepository.findByUser(user)
-
-        if (room.broken == true) throw 房间已损坏(room.roomNumber.floor, room.roomNumber.number)
+        if  (room.occupied) throw 房间已被占用(room.roomNumber.floor, room.roomNumber.number)
+        if (room.broken) throw 房间已损坏(room.roomNumber.floor, room.roomNumber.number)
         if (tranList.any { body.from <= it.dateFrom && it.dateTo <= body.to }) throw 订单时间冲突(body.from, body.to)
         val transaction = Transaction(dateFrom = body.from, dateTo = body.to, user = user, room = room, guests = guests)
+        room.transactions.add(transaction)
         transactionRepository.save(transaction)
         return ResponseEntity(HttpStatus.CREATED)
     }

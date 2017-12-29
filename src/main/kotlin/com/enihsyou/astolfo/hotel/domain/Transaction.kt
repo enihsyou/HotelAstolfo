@@ -51,5 +51,5 @@ data class Transaction(
     var activated: Boolean = true,
 
     /*旅客是否来入住了*/
-    var used: Boolean = false
+    var occupied: Boolean = false
 )

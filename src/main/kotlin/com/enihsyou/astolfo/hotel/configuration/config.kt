@@ -54,8 +54,7 @@ class MyFilter : GenericFilterBean() {
             } else if (authHeader == null || !authHeader.startsWith("Basic ")) {
                 return response.sendError(HttpStatus.UNAUTHORIZED.value(), "访问$s ${没权限()}")
             } else {
-                val input = authHeader.substring(6)
-                val (phone, password) = Base64.getDecoder().decode(input).toString(Charset.defaultCharset()).split(":")
+                val (phone, password) = checkAuthorization(authHeader)
 
                 val user = userRepository.findByPhoneNumber(phone) ?:
                     return response.sendError(HttpStatus.UNAUTHORIZED.value(), "访问$s ${用户不存在(phone)}")
@@ -81,4 +80,10 @@ class MyFilter : GenericFilterBean() {
             chain.doFilter(req, res)
         }
     }
+}
+
+fun checkAuthorization(authHeader: String): Pair<String, String> {
+    val input = authHeader.substring(6)
+    val (phone, password) = Base64.getDecoder().decode(input).toString(Charset.defaultCharset()).split(":")
+    return Pair(phone, password)
 }

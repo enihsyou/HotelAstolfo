@@ -1,11 +1,9 @@
 package com.enihsyou.astolfo.hotel.domain
 
-import com.enihsyou.astolfo.hotel.repository.TransactionRepository
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.NaturalId
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
-import org.springframework.beans.factory.annotation.Autowired
 import java.io.Serializable
 import java.time.LocalDateTime
 import javax.persistence.Embeddable
@@ -50,8 +48,8 @@ data class Room(
 
     val occupied
         get() = transactions.any {
-            val now = LocalDateTime.now()
-            it.dateFrom < now && it.dateTo > now
+            //val now = LocalDateTime.now()
+            (it.activated && it.occupied)
         }
 
     @Embeddable

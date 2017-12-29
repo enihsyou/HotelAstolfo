@@ -27,7 +27,7 @@ interface UserService {
     fun listUsers(): List<User>
     fun createUser(phoneNumber: String, password: String, nickname: String = "", role: User.UserRole): User
     fun getUser(phone: String): User
-    fun modifyUser(phone: String, payload: Map<String, String>): User
+    fun modifyUser(phone: String, payload: Map<String, String>, doing: User): User
     fun deleteUser(phone: String)
 
     fun listTransactions(phone: String): List<Transaction>
@@ -37,7 +37,7 @@ interface UserService {
     fun getGuest(phone: String, identification: String): Guest
     fun addGuest(phone: String, guest: Guest): ResponseEntity<Guest>
     fun modifyGuest(identification: String, payload: Map<String, String>): Guest
-    fun deleteGuest(guest: Guest)
+    fun deleteGuest(identification: String)
 }
 
 @Service(value = "用户层逻辑")
@@ -51,8 +51,10 @@ class UserServiceImpl : UserService {
         = guestRepository.findByIdentification(identification) ?:
         throw 身份证不存在(identification)
 
-    override fun getGuest(phone: String,
-                          identification: String): Guest
+    override fun getGuest(
+        phone: String,
+        identification: String
+    ): Guest
         = getUser(phone).guests
         .find { it.identification == identification } ?:
         throw 用户未绑定身份证(phone, identification)
@@ -63,25 +65,21 @@ class UserServiceImpl : UserService {
     override fun deleteUser(phone: String)
         = userRepository.delete(getUser(phone))
 
-    override fun modifyGuest(identification: String, payload: Map<String, String>): Guest {
-        val guest = getGuest(identification)
-
-        payload["name"]?.let { guest.name = it }
-        return guest
-    }
-
-    override fun deleteGuest(guest: Guest)
-        = guestRepository.delete(guest)
-
     override fun getUser(phone: String): User
         = existUser(phone)
 
-    override fun modifyUser(phone: String, payload: Map<String, String>): User {
+    override fun modifyUser(phone: String, payload: Map<String, String>, doing: User): User {
         val old_user = getUser(phone)
 
-        payload["password"]?.takeIf { it.isNotEmpty() }?.let { old_user.password = getCheckedPassword(it) }
-        payload["nickname"]?.takeIf { it.isNotEmpty() }?.let { old_user.nickname = it }
-        payload["role"]?.takeIf { old_user.role == User.UserRole.管理员 }?.let { old_user.role = User.UserRole.valueOf(it) }
+        payload["password"]
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { old_user.password = getCheckedPassword(it) }
+        payload["nickname"]
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { old_user.nickname = it }
+        payload["role"]
+            ?.takeIf { doing.role == User.UserRole.管理员 }
+            ?.let { old_user.role = User.UserRole.valueOf(it) }
 
         userRepository.save(old_user)
         return old_user
@@ -114,6 +112,18 @@ class UserServiceImpl : UserService {
         existUser(phone).let {
             return guestRepository.findByUserId(it.id).toList()
         }
+    }
+
+    override fun modifyGuest(identification: String, payload: Map<String, String>): Guest {
+        val guest = getGuest(identification)
+
+        payload["name"]?.let { guest.name = it }
+        return guest
+    }
+
+    override fun deleteGuest(identification: String) {
+        val guest = getGuest(identification)
+        guest.user.forEach { it.guests.remove(guest) }
     }
 
     private fun getCheckedPassword(password: String): String {

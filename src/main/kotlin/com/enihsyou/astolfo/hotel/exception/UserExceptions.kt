@@ -53,4 +53,6 @@ class 没权限 :
     RuntimeException("没权限")
 
 @ResponseStatus(value = HttpStatus.LOCKED)
-class 房间已损坏(floor: Int, number: Int) : RuntimeException("房间已损坏")
+class 房间已损坏(floor: Int, number: Int) : RuntimeException("房间<$floor-$number>已损坏")
+@ResponseStatus(value = HttpStatus.LOCKED)
+class 房间已被占用(floor: Int, number: Int) : RuntimeException("房间<$floor-$number>已被占用")
