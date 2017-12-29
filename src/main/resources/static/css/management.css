@@ -117,6 +117,10 @@
     position: fixed;
 }
 
+.container #rooms_all_info .bookWindow dt {
+    position: relative;
+}
+
 .container #rooms_all_info dt select {
     height: 2em;
     font-weight: normal;

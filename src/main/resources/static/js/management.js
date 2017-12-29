@@ -44,6 +44,7 @@ const left_nav = new Vue({
                     break;
                 default:
                     showMsg('该功能还只是一堆BUG(ಡωಡ)');
+                    stopCatLoading();
             }
         }
     }
