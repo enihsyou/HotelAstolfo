@@ -45,6 +45,7 @@ spring:
 endpoints:
   loggers:
     enabled: true
+
 server:
   address: 0.0.0.0
   port: 10080
@@ -57,11 +58,9 @@ banner:
   image:
     width: 80
     margin: 0
-logging:
-  level: warn
-#security:
-#  basic:
-#    enabled: true
+security:
+  basic:
+    enabled: false
 #    path: /api/**
 #    realm: Astolfo
 #  enable-csrf: false

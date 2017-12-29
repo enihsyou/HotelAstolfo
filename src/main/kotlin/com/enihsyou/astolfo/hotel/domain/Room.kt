@@ -5,7 +5,6 @@ import org.hibernate.annotations.NaturalId
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import java.io.Serializable
-import java.time.LocalDateTime
 import javax.persistence.Embeddable
 import javax.persistence.Embedded
 import javax.persistence.Entity
@@ -42,14 +41,14 @@ data class Room(
     @OneToMany
     @JsonIgnore
     var transactions: MutableList<Transaction> = mutableListOf(),
-
+    //todo 添加一个新条目，信息的创建时间和失效时间，每次更改信息 创建新的，删除旧的
     var broken: Boolean = false
 ) {
 
     val occupied
         get() = transactions.any {
             //val now = LocalDateTime.now()
-            (it.activated && it.occupied)
+            (it.activated && it.used)
         }
 
     @Embeddable
