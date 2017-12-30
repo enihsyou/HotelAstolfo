@@ -177,17 +177,8 @@ $(function init() {
     //开始标题滚动
     titleScroller();
     //初始化首页搜索
-    let time = new Date();
-    let year = time.getFullYear();
-    let month = time.getMonth() + 1;
-    let day = time.getDate() > 9 ? time.getDate() : '0' + time.getDate();
-    $('#bookingStart').val(`${year}-${month}-${day}`)
-        .attr('min', `${year}-${month}-${day}`)
-        .attr('max', `${year + 1}-${month}-${day}`);
-    let nday = (time.getDate() + 1) > 9 ? (time.getDate() + 1) : '0' + (time.getDate() + 1);
-    $('#bookingEnd').val(`${year}-${month}-${nday}`)
-        .attr('min', `${year}-${month}-${nday}`)
-        .attr('max', `${year + 1}-${month}-${nday}`);
+    $('#bookingStart').val(dateTimeISOFormat(new Date()).slice(0, 10));
+    $('#bookingEnd').val(dateTimeISOFormat(new Date(new Date().getTime() + 24 * 3600 * 1000)).slice(0, 10));
     //获取首页搜索选项
     $.ajax({
         url: `${serverHost}/api/rooms/load`,
@@ -225,7 +216,7 @@ $(function init() {
         })
         .then(stopCatLoading);
     //初始化登录与注册格式
-    constraintTel($("#inputUserName"),$("#signupUsername"));
+    constraintTel($("#inputUserName"), $("#signupUsername"));
     //初始化键盘快捷键
     $('.form-horizontal').keypress(function (e) {
         if (e.keyCode === 13) {
@@ -327,14 +318,16 @@ let searchListVue = new Vue({
     data: {
         rooms: [],
         ids: [],
-        selectedIndex: -1
+        selectedIndex: -1,
+        comments:[]
     },
     methods: {
         //查看房间评价
-        showComments: function () {
-            //TODO
-            //等待接口
-            showMsg('还没做别点了')
+        showComments: function (e) {
+            startCatLoading();
+            this.comments=this.rooms[+$(e.target).attr('index')].comments;
+            $('.searchList .commentList').slideDown(333);
+            stopCatLoading();
         },
         showIDs: function (e) {
             if (sessionStorage.isLogin !== 'true') {
@@ -360,7 +353,7 @@ let searchListVue = new Vue({
                 },
                 success: function (data, textStatus, jqXHR) {
                     searchListVue.ids = data;
-                    searchListVue.selectedIndex = $(e.target).attr('index');
+                    searchListVue.selectedIndex = +$(e.target).attr('index');
                     $('.searchList .selectID').fadeIn();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -374,7 +367,7 @@ let searchListVue = new Vue({
         submitBook: function () {
             let selectedIDs = [];
             $(".selectID input:checked").each(function () {
-                selectedIDs.push(+$(this).attr('identification'));
+                selectedIDs.push($(this).attr('identification'));
             });
             if (isEmpty(selectedIDs)) {
                 showMsg('请至少选择一位旅客');
@@ -382,7 +375,6 @@ let searchListVue = new Vue({
             }
             startCatLoading();
             $('.selectID .close span').trigger('click');
-
             $.ajax({
                 url: `${serverHost}/api/transactions`,
                 type: 'POST',
@@ -406,8 +398,11 @@ let searchListVue = new Vue({
                 error: function (jqXHR, textStatus, errorThrown) {
                     let msg = '预订失败';
                     switch (jqXHR.status) {
+                        case 409:
+                            msg+=':该时段已有用户入住';
+                            break;
                         case 423:
-                            msg+='：该房间已被占用'
+                            msg += '：该房间已被占用'
                     }
                     showMsg(msg);
                 },
@@ -416,12 +411,20 @@ let searchListVue = new Vue({
                 }
             })
         },
+        timeFormat: function (time) {
+            return new Date(time).toLocaleString();
+        },
         close: function (e) {
-            $(e.target).parent().parent().slideUp();
-            if ($(e.target).attr('id') === 'closeSearchList') {
-                $('.slider_container').css('filter', 'none');
-                $('.searchBox').css('left', '10%');
+            let button = $(e.target);
+            let thisWindow = $(e.target).parent().parent();
+            switch (button.attr('id')) {
+                case 'closeSearchList':
+                    $('.slider_container').css('filter', 'none');
+                    $('.searchBox').css('left', '10%');
+                    break;
             }
+            thisWindow.slideUp();
+            thisWindow.find('.close span').trigger('click');
         }
     }
 });

@@ -78,6 +78,66 @@
     width: 4em;
 }
 
+.container #check_my_order .commentList {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 70%;
+    background-color: white;
+    border-radius: 1em;
+    box-shadow: 1.2em 1.2em 5em .5em rgba(41, 41, 41, 0.3);
+    display: none;
+}
+
+.container #check_my_order .commentList .content {
+    width: 100%;
+    height: 80%;
+}
+
+.container #check_my_order .commentList .noCom {
+    width: 100%;
+    height: 80%;
+    padding-top: 50%;
+    font-size: 2em;
+    text-align: center;
+}
+
+.container #check_my_order .commentList .addCom {
+    position: absolute;
+    display: inline-block;
+    width: 100%;
+    height: 20%;
+    bottom: 0
+}
+.container #check_my_order .commentList .addCom input{
+    height: 2.5em;
+    width: calc(100% - 90px);
+    float: left;
+}
+
+.container #check_my_order .commentList .addCom .btn {
+    float: right;
+}
+
+.container #check_my_order .commentList .addCom dl {
+    margin: 2em 1em 0 1em;
+    width: calc(100% - 2em);
+    padding: 1em .5em .5em .5em;
+}
+
+.container #check_my_order .commentList .content dl {
+    margin: 2em 1em 0 1em;
+    width: calc(100% - 2em);
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, .75);
+    padding: 1em .5em .5em .5em;
+}
+
+.container #check_my_order .commentList .date {
+    text-align: right;
+}
+
 .container #modify_my_info dt {
     font-weight: bold;
     padding-bottom: .5em;

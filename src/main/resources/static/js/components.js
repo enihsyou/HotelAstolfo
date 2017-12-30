@@ -12,7 +12,7 @@ function render_Container(template) {
 * 用户端：我的订单
 * 获取当前所有订单
 * 可取消订单
-* 评价已完成订单 TODO
+* 评价已完成订单
 */
 async function check_my_order() {
     $.ajax({
@@ -53,16 +53,43 @@ async function check_my_order() {
                     </td>
                     <td>
                         <!--等待入住显示-->
-                        <div class="cancelOrder btn btn-default" v-if="order.activated && !order.occupied" :index="index"
+                        <div class="cancelOrder btn btn-default" v-if="order.activated && !order.occupied"
+                             :index="index"
                              @click="cancelBooking">取消订单
                         </div>
                         <!--已完成后显示-->
-                        <div class="commentlOrder btn btn-default" v-if="!order.activated && order.occupied" :index="index"
-                             @click="addComment">评价
+                        <!--<div class="commentlOrder btn btn-default" v-if="!order.activated && order.occupied"-->
+                        <!--:index="index"-->
+                        <!--@click="addComment">评价-->
+                        <!--</div>-->
+                        <div class="commentlOrder btn btn-default"
+                             :index="index"
+                             @click="showCommentList">评价
                         </div>
                     </td>
                 </tr>
             </table>
+            <div class="commentList">
+                <button type="button" class="close" @click="close" aria-label="Close">
+                    <span id="closeCommentList" aria-hidden="true">&times;</span>
+                </button>
+                <div v-if="comments.length === 0" class="noCom">该房间还没有评论！</div>
+                <div v-else class="content">
+                    <dl v-for="comment in comments">
+                        <dt>{{comment.user.nickname}}:</dt>
+                        <dd>{{comment.body}}</dd>
+                        <dd class="date">{{timeFormat(comment.createDate)}}</dd>
+                    </dl>
+                </div>
+                <div class="addCom">
+                    <dl>
+                        <dd><input id="addCom" type="text" placeholder="客官感受如何？">
+                            <div class="btn btn-default" @click="addComment">添加评论
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
         </div>
             `;
             //生成html
@@ -71,7 +98,9 @@ async function check_my_order() {
             let app = new Vue({
                 el: '#check_my_order',
                 data: {
-                    orders: data
+                    orders: data,
+                    comments: [],
+                    selectedIndex: -1,
                 },
                 methods: {
                     timeFormat: function (time) {
@@ -121,11 +150,59 @@ async function check_my_order() {
                             }
                         });
                     },
+                    showCommentList: function (e) {
+                        this.selectedIndex = +$(e.target).attr('index');
+                        this.comments = this.orders[this.selectedIndex].room.comments;
+                        $('#check_my_order').children('.commentList').slideDown();
+                        if (this.orders[this.selectedIndex].commentId === null) {
+                            $('#addCom').attr('placeholder', '哎呀已经评论过了呢')
+                                .prop('disabled', true)
+                                .css('width', '100%')
+                                .css('text-align', 'center');
+                            $('.commentList .addCom .btn').hide();
+                        }
+                    },
                     addComment: function () {
-                        //TODO
-                        //等待接口
+                        let text = $('#addCom').val();
+                        if (isEmpty(text)) {
+                            showMsg('评论内容不能为空');
+                            return;
+                        }
+                        startCatLoading();
+                        $.ajax({
+                            url: `${serverHost}/api/comments/?transactionId=${this.orders[this.selectedIndex].id}`,
+                            type: 'POST',
+                            data: JSON.stringify({
+                                body: text
+                            }),
+                            contentType: "application/json; charset=UTF-8",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username + ":" + sessionStorage.password || localStorage.password));
+                            },
+                            success: function (data, textStatus, jqXHR) {
+                                app.orders[app.selectedIndex].room.comments.push({
+                                    body: text,
+                                    user: {
+                                        nickname: sessionStorage.nickname
+                                    }
+                                })
+                                ;
+                                showMsg('评论成功');
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                showMsg(jqXHR.status)
+                            },
+                            complete: function () {
+                                stopCatLoading();
+                            }
+                        })
+                    },
+                    close: function (e) {
+                        let button = $(e.target);
+                        let thisWindow = $(e.target).parent().parent();
+                        thisWindow.slideUp();
+                        thisWindow.find('.close span').trigger('click');
                     }
-
                 }
             })
         },
@@ -614,7 +691,7 @@ async function rooms_all_info() {
                             name: newTourName.val(),
                             id: newTourID.val(),
                         });
-                        clearVal(newTourName,newTourID);
+                        clearVal(newTourName, newTourID);
                     },
                     delTour: function (e) {
                         let index = +$(e.target).attr('index');
@@ -692,6 +769,7 @@ async function rooms_all_info() {
                                 this.curNumber = -1;
                                 break;
                         }
+                        thisWindow.find('.close span').trigger('click');
                     }
                 }
             });
@@ -968,8 +1046,7 @@ async function check_all_booking() {
                                 tmp.activated = false;
                                 app.orders.splice(index, 1, tmp);
                                 showMsg('客户退房成功');
-                                //TODO
-                                //结账界面
+                                //结账界面 TODO
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
                                 let msg = '客户退房失败';
@@ -1220,7 +1297,7 @@ async function modify_rooms_type() {
                                     type: newType,
                                     description: newTypeDes
                                 });
-                                clearVal($('#newType'),$('#newTypeDes'));
+                                clearVal($('#newType'), $('#newTypeDes'));
                                 showMsg('添加成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -1329,7 +1406,7 @@ async function modify_rooms_type() {
                                     type: newDir,
                                     description: newDirDes
                                 });
-                                clearVal($('#newDir'),$('#newDirDes'));
+                                clearVal($('#newDir'), $('#newDirDes'));
                                 showMsg('添加成功！');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -1461,7 +1538,7 @@ async function modify_rooms_type() {
                                     specialty: newRSpecial,
                                     price: newRPrice
                                 });
-                                clearVal(('#newRFloor'),$('#newRNum'),$('#newRDir'),('#newRType'),$('#newRSpecial'),$('#newRPrice'),$('#newRBroken'));
+                                clearVal(('#newRFloor'), $('#newRNum'), $('#newRDir'), ('#newRType'), $('#newRSpecial'), $('#newRPrice'), $('#newRBroken'));
                                 showMsg('添加成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {

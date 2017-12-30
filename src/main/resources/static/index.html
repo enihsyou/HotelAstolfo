@@ -180,7 +180,9 @@
                 <td>{{room.specialty}}</td>
                 <td>{{room.price}}</td>
                 <td>
-                    <div class="confirm btn btn-default" v-if="!room.broken && !room.occupied" :index="index" @click="showIDs" v-cloak>立即预定</div>
+                    <div class="confirm btn btn-default" v-if="!room.broken && !room.occupied" :index="index"
+                         @click="showIDs" v-cloak>立即预定
+                    </div>
                     <div class="btn btn-default disabled" v-else :index="index" v-cloak>立即预定</div>
                 </td>
                 <td>
@@ -208,6 +210,19 @@
                     <button class="btn btn-default confirm untouchable" @click="submitBook">确定</button>
                 </dd>
             </dl>
+        </div>
+        <div class="commentList">
+            <button type="button" class="close" @click="close" aria-label="Close">
+                <span id="closeCommentList" aria-hidden="true">&times;</span>
+            </button>
+            <div v-if="comments.length === 0" class="noCom">该房间还没有评论！</div>
+            <div v-else class="content">
+                <dl v-for="comment in comments">
+                    <dt>{{comment.user.nickname}}:</dt>
+                    <dd>{{comment.body}}</dd>
+                    <dd class="date">{{timeFormat(comment.createDate)}}</dd>
+                </dl>
+            </div>
         </div>
     </div>
 </div>
