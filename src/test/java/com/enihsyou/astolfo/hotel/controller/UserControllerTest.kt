@@ -5,7 +5,7 @@ import org.hamcrest.Matchers
 import org.junit.Test
 
 
-class UserControllerTest (var phoneNumber: String ){
+class UserControllerTest internal constructor(){
 
 //    @Test
 //    fun lotto_resource_returns_200_with_expected_id_and_winners() {
@@ -17,19 +17,19 @@ class UserControllerTest (var phoneNumber: String ){
 //    }
 //    var path="https://enihsyou.synology.me:8899/api/users/make";
 
+    internal var phoneNumber: String
+
     init {
-        phoneNumber=randomPhoneNumber
+        this.phoneNumber = randomPhoneNumber
     }
-
-
 
     val randomPhoneNumber: String
         get() {
-            var ans = "1"
+            var phoneNumber = "1"
             for (i in 0..9) {
-                ans += (Math.random() * 10).toInt()
+                phoneNumber += Math.random().toInt() * 10
             }
-            return ans
+            return phoneNumber
         }
 
     @Test
