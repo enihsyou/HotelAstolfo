@@ -1,6 +1,7 @@
 package com.enihsyou.astolfo.hotel.service
 
 import com.enihsyou.astolfo.hotel.domain.Comment
+import com.enihsyou.astolfo.hotel.exception.订单不存在
 import com.enihsyou.astolfo.hotel.exception.评论不存在
 import com.enihsyou.astolfo.hotel.exception.评论已存在不可修改
 import com.enihsyou.astolfo.hotel.repository.CommentRepository
@@ -18,17 +19,39 @@ interface CommentService {
     fun createComment(transaction: Int, comment: Comment)
     fun showTransactionComment(transaction: Int): Comment
     fun listRoomComment(room: Int): List<Map<String, Any>>
+    fun getComment(commentId: Int): Map<String, Any>
 }
 
 @Service(value = "评论层逻辑")
 class CommentServiceImpl : CommentService {
 
+    override fun getComment(commentId: Int): Map<String, Any> {
+        if (commentRepository.exists(commentId)) {
+            val comment = commentRepository.findOne(commentId)
+            return comment.let {
+                val usr = userRepository.findOne(it.userId)
+                mutableMapOf(
+                    "id" to it.id,
+                    "body" to it.body,
+                    "user" to mapOf(
+                        "id" to usr.id,
+                        "nickname" to usr.nickname,
+                        "role" to usr.role.name
+                    ),
+                    "createDate" to it.createdDate
+                )
+            }
+        } else throw 评论不存在(commentId)
+    }
+
     override fun showTransactionComment(transaction: Int): Comment {
-        val transaction1 = transactionRepository.findOne(transaction)
-        if (commentRepository.exists(transaction1.commentId))
-            return commentRepository.findOne(transaction1.commentId)
-        else
-            throw 评论不存在(transaction)
+        if (transactionRepository.exists(transaction)) {
+            val transaction1 = transactionRepository.findOne(transaction)
+            if (commentRepository.exists(transaction1.commentId))
+                return commentRepository.findOne(transaction1.commentId)
+            else
+                throw 评论不存在(transaction)
+        } else throw 订单不存在(transaction)
     }
 
     override fun listRoomComment(room: Int): List<Map<String, Any>> {

@@ -34,5 +34,10 @@ class CommentController {
     @GetMapping("/room")
     fun showRoomComment(@RequestParam roomId: Int)
         = commentService.listRoomComment(roomId)
+
+    @GetMapping
+    fun getComment(@RequestParam commentId: Int)
+        = commentService.getComment(commentId)
+
 }
 

@@ -865,16 +865,61 @@ Content-Type: application/json
 
 == 评论管理
 
+.由ID获取评论
+[source, http]
+GET http://localhost:10080/api/comments/?commentId=1
+
+返回
+
+[source, json]
+{
+  "id": 1,
+  "body": "abc",
+  "user": {
+    "id": 3,
+    "nickname": "一娃",
+    "role": "注册用户"
+  },
+  "createDate": "2017-12-30T15:21:18"
+}
+
+
 .列出评论
 列出房间号上的评论列表，多条
 [source,http]
 GET http://localhost:10080/api/comments/room?roomId=8
 
+返回
+[source, json]
+[
+  {
+    "id": 1,
+    "body": "abc",
+    "user": {
+      "id": 3,
+      "nickname": "一娃",
+      "role": "注册用户"
+    },
+    "createDate": "2017-12-30T15:21:18"
+  }
+]
+
 列出订单号上的评论，0或者1
-GET http://localhost:10080/api/comments/transaction?transactionId=17
+[source, http]
+GET http://localhost:10080/api/comments/transaction?transactionId=1
+
+返回
+[source, json]
+{
+  "id": 1,
+  "body": "abc",
+  "userId": 3,
+  "createdDate": "2017-12-30T15:21:18"
+}
+
 
 .创建评论
-以订单为基础创建评论
+以订单为基础创建评论，绑定到订单的用户身上
 [source, http]
 ----
 POST http://localhost:10080/api/comments/?transactionId=17
