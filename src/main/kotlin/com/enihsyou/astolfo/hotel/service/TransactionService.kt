@@ -61,7 +61,7 @@ class TransactionServiceImpl : TransactionService {
                     transaction.activated = value.toBoolean()
 
                 "used"      ->
-                    transaction.occupied = value.toBoolean()
+                    transaction.used = value.toBoolean()
 
                 "guests"    ->
                     transaction.guests = value.also { println(it) }.split(",").mapNotNull { guestRepository.findByIdentification(it) }.toMutableList()
@@ -87,13 +87,18 @@ class TransactionServiceImpl : TransactionService {
                 guests.add(guest)
             }
         }
+        //todo 添加匿名账号身份，经理散客入住订单添加到这个匿名账户上
         val tranList = transactionRepository.findByUser(user)
-        if  (room.occupied) throw 房间已被占用(room.roomNumber.floor, room.roomNumber.number)
-        if (room.broken) throw 房间已损坏(room.roomNumber.floor, room.roomNumber.number)
-        if (tranList.any { body.from <= it.dateFrom && it.dateTo <= body.to }) throw 订单时间冲突(body.from, body.to)
-        val transaction = Transaction(dateFrom = body.from, dateTo = body.to, user = user, room = room, guests = guests)
+        if (room.occupied)
+            throw 房间已被占用(room.roomNumber.floor, room.roomNumber.number)
+        if (room.broken)
+            throw 房间已损坏(room.roomNumber.floor, room.roomNumber.number)
+        if (tranList.any { body.dateFrom <= it.dateFrom && it.dateTo <= body.dateTo })
+            throw 订单时间冲突(body.dateFrom, body.dateTo)
+        val transaction = Transaction(dateFrom = body.dateFrom, dateTo = body.dateTo, user = user, room = room, guests = guests)
         room.transactions.add(transaction)
         transactionRepository.save(transaction)
+        guests.forEach { it.transactions.add(transaction) }
         return ResponseEntity(HttpStatus.CREATED)
     }
 

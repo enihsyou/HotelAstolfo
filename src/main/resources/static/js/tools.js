@@ -5,7 +5,7 @@
 * Default       'http://localhost:10080'
 *
 * */
-let serverHost = 'http://localhost:10080';
+let serverHost = 'https://enihsyou.synology.me:8899';
 
 //封装消息提示
 function showMsg(msg) {
@@ -50,7 +50,14 @@ function dateTimeISOFormat(time) {
     return `${year}-${month}-${day}T00:00:00.000`
 }
 
-//mask约束定义
+//清空jqObj.val()
+function clearVal(jqObj1, jqObj2, ...jqObjN) {
+    for (let jqObj of arguments) {
+        if (jqObj instanceof $) jqObj.val();
+    }
+}
+
+//mask约束规则
 $.mask.definitions['X'] = '[0-9Xx]';
 
 //身份证约束

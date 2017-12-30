@@ -1,17 +1,19 @@
 package com.enihsyou.astolfo.hotel.domain
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters
 import java.time.LocalDateTime
 import javax.persistence.Convert
 import javax.persistence.Entity
+import javax.persistence.ForeignKey
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.ManyToMany
 import javax.persistence.ManyToOne
+import javax.persistence.OneToOne
 import javax.persistence.Table
 
 @Entity
@@ -21,13 +23,11 @@ data class Transaction(
     var id: Int = 0,
 
     @CreatedDate
-    @CreationTimestamp
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
     var createDate: LocalDateTime = LocalDateTime.now(),
 
     @ManyToOne
     @CreatedBy
-    @JsonIgnore
     /*这个用户创建的订单*/
     var user: User = User(),
 
@@ -37,6 +37,7 @@ data class Transaction(
 
     /*入住这些旅客*/
     @ManyToMany
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     var guests: MutableList<Guest> = mutableListOf(),
 
     /*预定开始日期*/
@@ -51,5 +52,7 @@ data class Transaction(
     var activated: Boolean = true,
 
     /*旅客是否来入住了*/
-    var occupied: Boolean = false
+    var used: Boolean = false,
+
+    var commentId: Int? = null
 )

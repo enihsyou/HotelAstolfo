@@ -20,7 +20,7 @@ interface RoomRepository : PagingAndSortingRepository<Room, Int> {
 
 //    @Query(value = "SELECT R FROM Room R LEFT JOIN R.transactions T with T.activated=false or (T.dateTo <?1 OR T.dateFrom >?2)")
 //    fun findByTransactionsDateBetween(@Param("from") from: LocalDateTime,
-//                          @Param("to") to: LocalDateTime,
+//                          @Param("to") dateTo: LocalDateTime,
 //                          pageable: Pageable): List<Room>
 
     fun findByPriceBetween(@Param("from") from: Int,

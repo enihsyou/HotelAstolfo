@@ -1,7 +1,9 @@
 package com.enihsyou.astolfo.hotel.controller
 
+import io.restassured.RestAssured.`when`
 import io.restassured.RestAssured.given
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.equalTo
 import org.junit.Test
 
 

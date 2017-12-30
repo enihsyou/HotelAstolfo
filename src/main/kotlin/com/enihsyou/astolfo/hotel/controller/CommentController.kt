@@ -1,0 +1,38 @@
+package com.enihsyou.astolfo.hotel.controller
+
+import com.enihsyou.astolfo.hotel.domain.Comment
+import com.enihsyou.astolfo.hotel.service.CommentService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.RestController
+
+
+@CrossOrigin
+@RestController("评论接口控制器")
+@RequestMapping("/api/comments")
+class CommentController {
+
+    @Autowired lateinit var commentService: CommentService
+
+    /*评论系统*/
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createComment(@RequestParam transactionId: Int, @RequestBody comment: Comment)
+        = commentService.createComment(transactionId, comment)
+
+    @GetMapping("/transaction")
+    fun showTransactionComment(@RequestParam transactionId: Int)
+        = commentService.showTransactionComment(transactionId)
+
+    @GetMapping("/room")
+    fun showRoomComment(@RequestParam roomId: Int)
+        = commentService.listRoomComment(roomId)
+}
+

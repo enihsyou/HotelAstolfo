@@ -1,7 +1,7 @@
 package com.enihsyou.astolfo.hotel.domain
 
-import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.NaturalId
+import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters
 import java.time.LocalDateTime
 import javax.persistence.AttributeConverter
@@ -33,7 +33,7 @@ data class User(
     @Column(nullable = false)
     var password: String = "",
 
-    @CreationTimestamp
+    @CreatedDate
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
     val register_date: LocalDateTime = LocalDateTime.now(),
 
@@ -45,7 +45,7 @@ data class User(
     var guests: MutableList<Guest> = mutableListOf()
 ) {
     enum class UserRole {
-        管理员, 前台, 注册用户, 未注册
+        经理, 前台, 注册用户, 未注册
     }
 
     class UserRoleConverter : AttributeConverter<UserRole, String> {

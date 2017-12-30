@@ -48,8 +48,8 @@ Content-Type: application/json // <1>
   "guests": []
 }
 
-.前台、管理员
-从 `/users/make/admin` 注册的就是管理员
+.前台、经理
+从 `/users/make/admin` 注册的就是经理
 
 从 `/users/make/employee` 注册的就是前台
 
@@ -113,6 +113,88 @@ Content-Type: application/json
 
 == 用户信息
 
+.列出用户信息
+[source,http]
+GET http://localhost:10080/api/users/
+
+返回
+[source, json]
+[
+  {
+    "id": 1,
+    "phoneNumber": "18888888888",
+    "nickname": "老子最大",
+    "password": "124640bf2792a0cdce2c04e13326d67bf013bac6ce546616b04888e7c4e68631",
+    "register_date": "2017-12-30T14:20:07",
+    "role": "经理",
+    "guests": []
+  },
+  {
+    "id": 2,
+    "phoneNumber": "17788888888",
+    "nickname": "前台小姐姐",
+    "password": "124640bf2792a0cdce2c04e13326d67bf013bac6ce546616b04888e7c4e68631",
+    "register_date": "2017-12-30T14:20:43",
+    "role": "前台",
+    "guests": []
+  },
+  {
+    "id": 3,
+    "phoneNumber": "18800000001",
+    "nickname": "一娃",
+    "password": "124640bf2792a0cdce2c04e13326d67bf013bac6ce546616b04888e7c4e68631",
+    "register_date": "2017-12-30T14:21:22",
+    "role": "注册用户",
+    "guests": [
+      {
+        "id": 12,
+        "identification": "111111200001013333",
+        "name": "宋娘"
+      },
+      {
+        "id": 13,
+        "identification": "111111200001013334",
+        "name": "宋二娘"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "phoneNumber": "18800000002",
+    "nickname": "二娃",
+    "password": "124640bf2792a0cdce2c04e13326d67bf013bac6ce546616b04888e7c4e68631",
+    "register_date": "2017-12-30T14:21:32",
+    "role": "注册用户",
+    "guests": [
+      {
+        "id": 14,
+        "identification": "111111200001013335",
+        "name": "宋三娘"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "phoneNumber": "18800000003",
+    "nickname": "三娃",
+    "password": "124640bf2792a0cdce2c04e13326d67bf013bac6ce546616b04888e7c4e68631",
+    "register_date": "2017-12-30T14:21:38",
+    "role": "注册用户",
+    "guests": [
+      {
+        "id": 12,
+        "identification": "111111200001013333",
+        "name": "宋娘"
+      }
+    ]
+  }
+]
+
+
+
+
+
+
 .获取用户信息
 使用phone参数，获得的是和登录返回的信息相同，可用于更新信息之后重新获取
 [source, http]
@@ -127,7 +209,7 @@ GET http://localhost:10080/api/users/get?phone=18800000001
       "nickname" : "temp",
       "password" : "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
       "register_date" : "2017-12-26T19:33:03",
-      "role" : "管理员"
+      "role" : "经理"
     } ]
   },
   "_links" : {
@@ -387,7 +469,7 @@ GET http://localhost:10080/api/rooms/types
 ]
 
 .添加房间类型定义。
-限制为只有管理员经理才能操作
+限制为只有经理经理才能操作
 [source, http]
 ----
 POST http://localhost:10080/api/rooms/types
@@ -478,64 +560,57 @@ GET http://localhost:10080/api/rooms/
 [source, json]
 [
   {
-    "id": 4,
+    "id": 8,
     "roomNumber": {
       "floor": 1,
       "number": 1
     },
     "type": {
-      "id": 3,
+      "id": 6,
       "type": "大床房",
-      "description": "足够两个人唑在一起的大小"
+      "description": "冬暖夏狼"
     },
     "direction": {
-      "id": 2,
-      "type": "东",
-      "description": "冬暖夏狼",
-      "room": []
+      "id": 7,
+      "type": "东方",
+      "description": "车万"
     },
-    "specialty": "141234",
-    "price": 101
+    "specialty": "小房间",
+    "price": 143,
+    "broken": false,
+    "comments": [
+      {
+        "id": 1,
+        "body": "abc",
+        "userId": 3,
+        "createdDate": "2017-12-30T15:21:18"
+      }
+    ],
+    "createdDate": "2017-12-30T14:32:27.287",
+    "occupied": false
   },
   {
-    "id": 11,
+    "id": 9,
     "roomNumber": {
-      "floor": 0,
-      "number": 0
+      "floor": 1,
+      "number": 2
     },
     "type": {
-      "id": 3,
+      "id": 6,
       "type": "大床房",
-      "description": "足够两个人唑在一起的大小"
+      "description": "冬暖夏狼"
     },
     "direction": {
-      "id": 2,
-      "type": "东",
-      "description": "冬暖夏狼",
-      "room": []
+      "id": 7,
+      "type": "东方",
+      "description": "车万"
     },
-    "specialty": "一个介绍",
-    "price": 123
-  },
-  {
-    "id": 12,
-    "roomNumber": {
-      "floor": 3,
-      "number": 1
-    },
-    "type": {
-      "id": 3,
-      "type": "大床房",
-      "description": "足够两个人唑在一起的大小"
-    },
-    "direction": {
-      "id": 2,
-      "type": "东",
-      "description": "冬暖夏狼",
-      "room": []
-    },
-    "specialty": "一个介绍",
-    "price": 143
+    "specialty": "小房间",
+    "price": 133,
+    "broken": false,
+    "comments": [],
+    "createdDate": "2017-12-30T14:32:41.222",
+    "occupied": false
   }
 ]
 
@@ -584,13 +659,14 @@ Content-Type: application/json
 
 {
   "type": "大床房",
-  "direction": "东",
-  "specialty": "一个介绍",
-  "price": "143",
+  "direction": "东方",
+  "specialty": "小房间",
+  "price": "123",
   "roomNumber": {
-    "floor": 3,
-    "number": 1
-  }
+    "floor": 1,
+    "number": 4
+  },
+  "broken":true
 }
 ----
 
@@ -647,41 +723,99 @@ GET http://localhost:10080/api/transactions/list
 [source, json]
 [
   {
-    "id": 20,
-    "createDate": "2017-12-24T14:44:09",
+    "id": 17,
+    "createDate": "2017-12-30T14:42:11",
+    "user": {
+      "id": 3,
+      "phoneNumber": "18800000001",
+      "nickname": "一娃",
+      "password": "124640bf2792a0cdce2c04e13326d67bf013bac6ce546616b04888e7c4e68631",
+      "register_date": "2017-12-30T14:21:22",
+      "role": "注册用户",
+      "guests": [
+        {
+          "id": 12,
+          "identification": "111111200001013333",
+          "name": "宋娘"
+        },
+        {
+          "id": 13,
+          "identification": "111111200001013334",
+          "name": "宋二娘"
+        },
+        {
+          "id": 14,
+          "identification": "111111200001013335",
+          "name": "宋三娘"
+        }
+      ]
+    },
     "room": {
-      "id": 4,
+      "id": 8,
       "roomNumber": {
         "floor": 1,
         "number": 1
       },
       "type": {
-        "id": 3,
+        "id": 6,
         "type": "大床房",
-        "description": "足够两个人唑在一起的大小"
-      },
-      "direction": {
-        "id": 2,
-        "type": "东",
         "description": "冬暖夏狼"
       },
-      "specialty": "141234",
-      "price": 101
+      "direction": {
+        "id": 7,
+        "type": "东方",
+        "description": "车万"
+      },
+      "specialty": "小房间",
+      "price": 143,
+      "broken": false,
+      "comments": [],
+      "createdDate": "2017-12-30T14:32:27.287",
+      "occupied": false
     },
     "guests": [
       {
-        "id": 14,
-        "identification": "130622199901017537",
+        "id": 12,
+        "identification": "111111200001013333",
         "name": "宋娘"
+      },
+      {
+        "id": 13,
+        "identification": "111111200001013334",
+        "name": "宋二娘"
       }
     ],
-    "dateFrom": "2017-12-24T14:44:03",
-    "dateTo": "2017-12-24T14:44:03",
-    "activated": false,
-    "used": false
+    "dateFrom": "2017-12-30T14:42:11",
+    "dateTo": "2017-12-30T14:42:11",
+    "activated": true,
+    "used": false,
+    "comment": null
   }
 ]
 
+提供的关键词有
+
+phone 属于谁的订单
+
+createFrom 订单的创建范围左区间
+
+createTo 订单的创建范围右区间
+
+validFrom 订单有效期左区间，就是预定开始日期
+
+validTo 订单有效期右区间，预定离店时间
+
+type 房间类型
+
+direction 房间朝向
+
+priceFrom 价格起点，包含
+
+priceTo [priceFrom, priceTo]区间
+
+floor 房间楼层
+
+number 楼层内的第几个房间
 
 .新增订单
 用户预订
@@ -691,11 +825,11 @@ POST http://localhost:10080/api/transactions
 Content-Type: application/json
 
 {
-  "dateFrom": "2017-12-22T16:57:10",
-  "dateTo": "2017-12-23T16:57:10",
+  "dataFrom": "2017-12-22T16:57:10",
+  "dataTo": "2017-12-23T16:57:10",
   "phone": "18800000001",
   "guests": [
-    "130622199901017537"
+    "111111200001013333", "111111200001013334"
   ],
   "room": {
     "floor": 1,
@@ -728,4 +862,26 @@ Content-Type: application/json
 }
 ----
 
+
+== 评论管理
+
+.列出评论
+列出房间号上的评论列表，多条
+[source,http]
+GET http://localhost:10080/api/comments/room?roomId=8
+
+列出订单号上的评论，0或者1
+GET http://localhost:10080/api/comments/transaction?transactionId=17
+
+.创建评论
+以订单为基础创建评论
+[source, http]
+----
+POST http://localhost:10080/api/comments/?transactionId=17
+Content-Type: application/json
+
+{
+  "body":"翻滚"
+}
+----
 

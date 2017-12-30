@@ -30,12 +30,12 @@ const left_nav = new Vue({
                 case '账户管理':
                     modify_user_info();
                     break;
-                case '销售月表':
-                    sales_per_month();
-                    break;
-                case '客户分析':
-                    client_analyze();
-                    break;
+                // case '销售月表':
+                //     sales_per_month();
+                //     break;
+                // case '客户分析':
+                //     client_analyze();
+                //     break;
                 case '返回主页':
                     backHome();
                     break;
@@ -44,6 +44,7 @@ const left_nav = new Vue({
                     break;
                 default:
                     showMsg('该功能还只是一堆BUG(ಡωಡ)');
+                    stopCatLoading();
             }
         }
     }

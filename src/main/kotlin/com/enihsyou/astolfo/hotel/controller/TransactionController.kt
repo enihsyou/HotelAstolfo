@@ -31,7 +31,7 @@ class TransactionController {
     @Autowired lateinit var roomDirectionRepository: RoomDirectionRepository
     @GetMapping("/list")
     fun listByDate(
-        @RequestParam("phone", required = false) userPhone: String? = null,
+        @RequestParam("phone", required = false) user_phone: String? = null,
         @RequestParam("createFrom", required = false) createFrom: LocalDateTime? = null,
         @RequestParam("createTo", required = false) createTo: LocalDateTime? = null,
         @RequestParam("validFrom", required = false) validFrom: LocalDateTime? = null,
@@ -43,14 +43,14 @@ class TransactionController {
         @RequestParam("floor", required = false) floor: Int? = null,
         @RequestParam("number", required = false) number: Int? = null
     ): List<Transaction>
-        = transactionService.listTransactions(userPhone, createFrom, createTo, validFrom, validTo, type, direction, priceFrom, priceTo, floor, number)
+        = transactionService.listTransactions(user_phone, createFrom, createTo, validFrom, validTo, type, direction, priceFrom, priceTo, floor, number)
 
     class BookBody(
         var phone: String = "",
         var guests: List<String> = emptyList(),
         var room: Room.RoomNumber = Room.RoomNumber(),
-        var from: LocalDateTime = LocalDateTime.now(),
-        var to: LocalDateTime = LocalDateTime.now()
+        var dateFrom: LocalDateTime = LocalDateTime.now(),
+        var dateTo: LocalDateTime = LocalDateTime.now()
     )
 
     @PostMapping

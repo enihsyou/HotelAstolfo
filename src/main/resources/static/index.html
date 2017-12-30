@@ -136,7 +136,7 @@
             </label>
             <label class="col-xs-12" for="bookingDirection">房间朝向：
                 <select class="form-control" id="bookingDirection">
-                    <option v-for="edirection in direction" :value="direction" v-cloak>{{edirection}}</option>
+                    <option v-for="edirection in direction" :value="edirection" v-cloak>{{edirection}}</option>
                     <option value="" selected>任意</option>
                 </select>
             </label>
@@ -169,7 +169,8 @@
                 <td>房间类型</td>
                 <td>特色</td>
                 <td>价格</td>
-                <td><!--操作--></td>
+                <td><!--立即预订--></td>
+                <td><!--查看评价--></td>
             </tr>
             <tr v-for="(room,index) in rooms" v-cloak>
                 <td>{{room.roomNumber.floor}}</td>
@@ -179,7 +180,11 @@
                 <td>{{room.specialty}}</td>
                 <td>{{room.price}}</td>
                 <td>
-                    <div class="confirm btn btn-default" :index="index" @click="showIDs" v-cloak>预定</div>
+                    <div class="confirm btn btn-default" v-if="!room.broken && !room.occupied" :index="index" @click="showIDs" v-cloak>立即预定</div>
+                    <div class="btn btn-default disabled" v-else :index="index" v-cloak>立即预定</div>
+                </td>
+                <td>
+                    <div class="confirm btn btn-default" :index="index" @click="showComments" v-cloak>查看评价</div>
                 </td>
             </tr>
         </table>
@@ -214,10 +219,10 @@
         <span title="1512480226">黄君扬</span>
     </p>
 </div>
-<script src="js/jquery-3.2.1.js"></script>
-<script src="js/jquery.maskedinput.js"></script>
-<script src="js/vue.js"></script>
-<script src="js/js-sha256.js"></script>
+<script src="libjs/jquery-3.2.1.js"></script>
+<script src="libjs/jquery.maskedinput.js"></script>
+<script src="libjs/vue.js"></script>
+<script src="libjs/js-sha256.js"></script>
 <script src="js/tools.js"></script>
 <script src="js/index.js"></script>
 </body>

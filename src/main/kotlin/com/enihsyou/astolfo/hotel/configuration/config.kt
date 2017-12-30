@@ -63,7 +63,7 @@ class MyFilter : GenericFilterBean() {
                 when {
                     s.startsWith("/api/users") -> {
                         if (s == "/api/users/make/admin" || s == "/api/users/make/employee")
-                            if (user.role == User.UserRole.管理员) {
+                            if (user.role == User.UserRole.经理) {
 
                             } else {
                                 return response.sendError(HttpStatus.UNAUTHORIZED.value(), "访问$s ${没权限()}")
