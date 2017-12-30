@@ -1,5 +1,6 @@
 package com.enihsyou.astolfo.hotel.controller
 
+import com.enihsyou.astolfo.hotel.domain.Comment
 import com.enihsyou.astolfo.hotel.domain.Room
 import com.enihsyou.astolfo.hotel.domain.RoomDirection
 import com.enihsyou.astolfo.hotel.domain.RoomType
@@ -91,7 +92,6 @@ class RoomController {
     @GetMapping("/floors")
     fun listFloors()
         = roomService.listFloors()
-
 
     /*初始化信息获取*/
     @GetMapping("/load")

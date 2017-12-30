@@ -1,6 +1,7 @@
 package com.enihsyou.astolfo.hotel.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import org.hibernate.annotations.NaturalId
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import javax.persistence.Entity
@@ -22,6 +23,7 @@ data class Guest(
     var user: MutableList<User> = mutableListOf(),
 
     /*身份证号码*/
+    @NaturalId
     var identification: String = "",
 
     /*姓名*/

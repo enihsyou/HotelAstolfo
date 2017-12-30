@@ -89,7 +89,7 @@ class TransactionServiceImpl : TransactionService {
         }
         //todo 添加匿名账号身份，经理散客入住订单添加到这个匿名账户上
         val tranList = transactionRepository.findByUser(user)
-        if  (room.occupied)
+        if (room.occupied)
             throw 房间已被占用(room.roomNumber.floor, room.roomNumber.number)
         if (room.broken)
             throw 房间已损坏(room.roomNumber.floor, room.roomNumber.number)
@@ -98,6 +98,7 @@ class TransactionServiceImpl : TransactionService {
         val transaction = Transaction(dateFrom = body.dateFrom, dateTo = body.dateTo, user = user, room = room, guests = guests)
         room.transactions.add(transaction)
         transactionRepository.save(transaction)
+        guests.forEach { it.transactions.add(transaction) }
         return ResponseEntity(HttpStatus.CREATED)
     }
 

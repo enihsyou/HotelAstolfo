@@ -3,7 +3,6 @@ package com.enihsyou.astolfo.hotel.controller
 import com.enihsyou.astolfo.hotel.configuration.checkAuthorization
 import com.enihsyou.astolfo.hotel.domain.Guest
 import com.enihsyou.astolfo.hotel.domain.User
-import com.enihsyou.astolfo.hotel.exception.用户不存在
 import com.enihsyou.astolfo.hotel.exception.用户名和密码不匹配
 import com.enihsyou.astolfo.hotel.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
@@ -39,7 +38,7 @@ class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     fun makeAdmin(@RequestBody user: User)
         = user.run {
-        userService.createUser(phoneNumber, password, nickname, role = User.UserRole.管理员)
+        userService.createUser(phoneNumber, password, nickname, role = User.UserRole.经理)
     }
 
     @PostMapping("/make/employee")

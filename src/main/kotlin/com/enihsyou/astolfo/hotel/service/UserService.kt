@@ -78,7 +78,7 @@ class UserServiceImpl : UserService {
             ?.takeIf { it.isNotEmpty() }
             ?.let { old_user.nickname = it }
         payload["role"]
-            ?.takeIf { doing.role == User.UserRole.管理员 }
+            ?.takeIf { doing.role == User.UserRole.经理 }
             ?.let { old_user.role = User.UserRole.valueOf(it) }
 
         userRepository.save(old_user)
@@ -98,10 +98,11 @@ class UserServiceImpl : UserService {
         val user = existUser(phone)
         if (guestRepository.findByIdentification(iden) == null) {
             val new_guest = Guest(identification = iden, name = guest.name, user = mutableListOf())
-            user.guests.add(new_guest)
-            new_guest.user.add(user)
 
+            new_guest.user.add(user)
             guestRepository.save(new_guest)
+
+            user.guests.add(new_guest)
             userRepository.save(user)
             return ResponseEntity(HttpStatus.CREATED)
         } else
