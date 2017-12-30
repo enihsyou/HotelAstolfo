@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service
 interface CommentService {
     fun createComment(transaction: Int, comment: Comment)
     fun showTransactionComment(transaction: Int): Comment
-    fun listRoomComment(room: Int): List<Comment>
+    fun listRoomComment(room: Int): List<Map<String, Any>>
 }
 
 @Service(value = "评论层逻辑")
@@ -31,10 +31,23 @@ class CommentServiceImpl : CommentService {
             throw 评论不存在(transaction)
     }
 
-    override fun listRoomComment(room: Int): List<Comment> {
+    override fun listRoomComment(room: Int): List<Map<String, Any>> {
         val findOne = roomRepository.findOne(room)
-
-        return findOne.comments.toList()
+        val comments = mutableListOf<Map<String, Any>>()
+        findOne.comments.map {
+            val usr = userRepository.findOne(it.userId)
+            mutableMapOf(
+                "id" to it.id,
+                "body" to it.body,
+                "user" to mapOf(
+                    "id" to usr.id,
+                    "nickname" to usr.nickname,
+                    "role" to usr.role.name
+                ),
+                "createDate" to it.createdDate
+            )
+        }.forEach { comments += it }
+        return comments.toList()
     }
 
     override fun createComment(transaction: Int, comment: Comment) {

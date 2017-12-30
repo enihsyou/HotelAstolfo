@@ -374,6 +374,8 @@ Authorization: Basic MTg4ODg4ODg4ODg6MjMzMw==
 ###
 GET http://localhost:10080/api/comments/room?roomId=8
 ###
+GET http://localhost:10080/api/comments/transaction??transactionId=1
+###
 POST http://localhost:10080/api/comments/?transactionId=1
 Content-Type: application/json
 

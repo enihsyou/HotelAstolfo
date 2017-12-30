@@ -1,5 +1,6 @@
 package com.enihsyou.astolfo.hotel.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.NaturalId
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters
@@ -31,6 +32,7 @@ data class User(
     var nickname: String = "",
 
     @Column(nullable = false)
+    @JsonIgnore
     var password: String = "",
 
     @CreatedDate
