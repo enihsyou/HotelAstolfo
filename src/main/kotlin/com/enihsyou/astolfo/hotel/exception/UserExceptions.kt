@@ -1,6 +1,5 @@
 package com.enihsyou.astolfo.hotel.exception
 
-import com.enihsyou.astolfo.hotel.domain.Transaction
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
 import java.time.LocalDateTime
@@ -60,6 +59,7 @@ class 房间已损坏(floor: Int, number: Int) :
 @ResponseStatus(value = HttpStatus.LOCKED)
 class 房间已被占用(floor: Int, number: Int) :
     RuntimeException("房间<$floor-$number>已被占用")
+
 @ResponseStatus(value = HttpStatus.LOCKED)
 class 评论已存在不可修改(transaction: Int) :
     RuntimeException("订单<$transaction>的评论已存在, 不可修改")
@@ -67,3 +67,7 @@ class 评论已存在不可修改(transaction: Int) :
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
 class 评论不存在(id: Int) :
     RuntimeException("评论号<$id>不存在")
+
+@ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
+class 已有订单的房间不能删除(floor: Int, number: Int) :
+    RuntimeException("房间<$floor-$number>已被使用，不能删除")
