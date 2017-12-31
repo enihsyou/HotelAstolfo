@@ -5,7 +5,7 @@
 * Default       'http://localhost:10080'
 *
 * */
-let serverHost = 'https://enihsyou.synology.me:8899';
+let serverHost = '';
 
 //封装消息提示
 function showMsg(msg) {
