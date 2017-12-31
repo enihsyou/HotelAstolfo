@@ -355,7 +355,7 @@ let searchListVue = new Vue({
                 dataType: 'json',
                 contentType: "application/json; charset=UTF-8",
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username) + ":" + (sessionStorage.password || localStorage.password));
+                    xhr.setRequestHeader("Authorization", "Basic " + btoa((sessionStorage.username || localStorage.username) + ":" + (sessionStorage.password || localStorage.password)));
                 },
                 success: function (data, textStatus, jqXHR) {
                     searchListVue.ids = data;
@@ -401,7 +401,7 @@ let searchListVue = new Vue({
                 }),
                 contentType: "application/json; charset=UTF-8",
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username || localStorage.username) + ":" + (sessionStorage.password || localStorage.password));
+                    xhr.setRequestHeader("Authorization", "Basic " + btoa((sessionStorage.username || localStorage.username) + ":" + (sessionStorage.password || localStorage.password)));
                 },
                 success: function (data, textStatus, jqXHR) {
                     showMsg('预定成功')
