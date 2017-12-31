@@ -70,6 +70,7 @@ $('.login .window .confirm').click(function () {
                     localStorage.username = username;
                     localStorage.password = password;
                     localStorage.nickname = data.nickname;
+                    localStorage.role = data.role;
                 }
                 sessionStorage.username = username;
                 sessionStorage.password = password;
@@ -83,7 +84,7 @@ $('.login .window .confirm').click(function () {
                 showMsg(`亲爱的${data.nickname},欢迎你回到阿福旅店！`);
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                let msg;
+                let msg='登录失败：';
                 switch (jqXHR.status) {
                     case 404:
                         msg = '当前用户不存在';
@@ -146,13 +147,13 @@ $('.signup .window .confirm').click(function () {
             showMsg(`亲爱的${data.nickname},欢迎你来到阿福旅店！`);
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            let msg;
+            let msg='注册失败：';
             switch (jqXHR.status) {
                 case 409:
                     msg = '用户已存在';
                     break;
                 default:
-                    msg = '网络错误'
+                    msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
             }
             showMsg(msg);
         },
@@ -189,12 +190,12 @@ $(function init() {
             searchBoxVue.update(data);
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            let msg = '初始化搜索栏失败';
+            let msg = '初始化搜索栏失败：';
             switch (jqXHR.status) {
                 default:
-                    msg += ':网络错误';
+                    msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
             }
-            showMsg(msg)
+            showMsg(msg);
         },
         complete: function () {
         }
@@ -294,7 +295,12 @@ let searchBoxVue = new Vue({
                     searchListVue.rooms = data;
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    showMsg('网络错误！');
+                    let msg='搜索失败：';
+                    switch (jqXHR.status) {
+                        default:
+                            msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
+                    }
+                    showMsg(msg);
                 },
                 complete: function () {
                     $(_this).children('.loading').remove();
@@ -357,7 +363,12 @@ let searchListVue = new Vue({
                     $('.searchList .selectID').fadeIn();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    showMsg(jqXHR.status)
+                    let msg='获取用户信息失败：';
+                    switch (jqXHR.status) {
+                        default:
+                            msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
+                    }
+                    showMsg(msg);
                 },
                 complete: function () {
                     stopCatLoading();
@@ -396,13 +407,16 @@ let searchListVue = new Vue({
                     showMsg('预定成功')
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    let msg = '预订失败';
+                    let msg = '预订失败：';
                     switch (jqXHR.status) {
                         case 409:
                             msg+=':该时段已有用户入住';
                             break;
                         case 423:
                             msg += '：该房间已被占用'
+                            break;
+                        default:
+                            msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
                     }
                     showMsg(msg);
                 },

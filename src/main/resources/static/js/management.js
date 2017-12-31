@@ -71,7 +71,7 @@ $(function init() {
                 sessionStorage.nickname = data.nickname;
                 sessionStorage.role = data.role;
                 switch (sessionStorage.role) {
-                    case '管理员':
+                    case '经理':
                         left_nav.userType = '经理：' + nickname;
                         left_nav.items = manager_user_items;
                         break;
