@@ -96,5 +96,16 @@ class RoomControllerTestControllerTest internal constructor() {
                 .statusCode(200)
 
     }
+    @Test
+    fun get_room_status_returns_200_if_success() {
+        val getString = "https://enihsyou.synology.me:8899/api/rooms/"
+        given().get(getString).then()
+                .also { it.log().all() }
+                .assertThat()
+                .statusCode(200)
+    }
+
+
+
 
 }
