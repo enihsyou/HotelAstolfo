@@ -68,12 +68,12 @@ $('.login .window .confirm').click(function () {
                 }*/
                 if ($(".checkbox input").prop('checked')) {
                     localStorage.username = username;
-                    localStorage.password = password;
+                    localStorage.password = sha256(password);
                     localStorage.nickname = data.nickname;
                     localStorage.role = data.role;
                 }
                 sessionStorage.username = username;
-                sessionStorage.password = password;
+                sessionStorage.password = sha256(password);
                 sessionStorage.nickname = data.nickname;
                 sessionStorage.role = data.role;
                 sessionStorage.isLogin = true;

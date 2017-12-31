@@ -439,7 +439,16 @@ async function modify_my_info() {
             constraintID($('#newID'));
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(jqXHR.status)
+            let msg = '获取列表详情失败：';
+            switch (jqXHR.status) {
+                case 401:
+                    msg += '密码已失效，请重新登陆';
+                    logout();
+                    break;
+                default:
+                    msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
+            }
+            showMsg(msg);
         },
         complete: function () {
             //关闭动画？
@@ -823,7 +832,16 @@ async function rooms_all_info() {
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(jqXHR.status)
+            let msg = '获取列表详情失败：';
+            switch (jqXHR.status) {
+                case 401:
+                    msg += '密码已失效，请重新登陆';
+                    logout();
+                    break;
+                default:
+                    msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
+            }
+            showMsg(msg);
         },
         complete: function () {
             //关闭动画？
@@ -1101,7 +1119,16 @@ async function check_all_booking() {
             })
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(jqXHR.status)
+            let msg = '获取列表详情失败：';
+            switch (jqXHR.status) {
+                case 401:
+                    msg += '密码已失效，请重新登陆';
+                    logout();
+                    break;
+                default:
+                    msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
+            }
+            showMsg(msg);
         },
         complete: function () {
             //关闭动画？
@@ -1661,7 +1688,16 @@ async function modify_rooms_type() {
             })
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(jqXHR.status)
+            let msg = '获取列表详情失败：';
+            switch (jqXHR.status) {
+                case 401:
+                    msg += '密码已失效，请重新登陆';
+                    logout();
+                    break;
+                default:
+                    msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
+            }
+            showMsg(msg);
         },
         complete: function () {
             //关闭动画？
@@ -1901,7 +1937,16 @@ async function modify_user_info() {
             constraintTel($("#newAccName"));
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(jqXHR.status)
+            let msg = '获取列表详情失败：';
+            switch (jqXHR.status) {
+                case 401:
+                    msg += '密码已失效，请重新登陆';
+                    logout();
+                    break;
+                default:
+                    msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
+            }
+            showMsg(msg);
         },
         complete: function () {
             //关闭动画？
@@ -1935,7 +1980,16 @@ async function sales_per_month() {
             //script
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(jqXHR.status)
+            let msg = '获取列表详情失败：';
+            switch (jqXHR.status) {
+                case 401:
+                    msg += '密码已失效，请重新登陆';
+                    logout();
+                    break;
+                default:
+                    msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
+            }
+            showMsg(msg);
         },
         complete: function () {
             //关闭动画？
@@ -1969,7 +2023,16 @@ async function client_analyze() {
             //script
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(jqXHR.status)
+            let msg = '获取列表详情失败：';
+            switch (jqXHR.status) {
+                case 401:
+                    msg += '密码已失效，请重新登陆';
+                    logout();
+                    break;
+                default:
+                    msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
+            }
+            showMsg(msg);
         },
         complete: function () {
             //关闭动画？
