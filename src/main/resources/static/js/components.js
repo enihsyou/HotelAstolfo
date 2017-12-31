@@ -138,12 +138,13 @@ async function check_my_order() {
                                 showMsg('取消订单成功');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '取消订单失败';
+                                let msg = '取消订单失败：';
                                 switch (jqXHR.status) {
                                     default:
-                                        msg += ':网络错误';
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
                                 showMsg(msg);
+
                             },
                             complete: function () {
                                 stopCatLoading();
@@ -190,7 +191,12 @@ async function check_my_order() {
                                 showMsg('评论成功');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                showMsg(jqXHR.status)
+                                let msg = '评论失败：';
+                                switch (jqXHR.status) {
+                                    default:
+                                        msg += jqXHR.responseJSON.message || '网络错误';
+                                }
+                                showMsg(msg);
                             },
                             complete: function () {
                                 stopCatLoading();
@@ -207,7 +213,12 @@ async function check_my_order() {
             })
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showMsg(jqXHR.status)
+            let msg = '获取失败：';
+            switch (jqXHR.status) {
+                default:
+                    msg += jqXHR.responseJSON.message || '网络错误';
+            }
+            showMsg(msg);
         },
         complete: function () {
             //关闭动画？
@@ -335,7 +346,12 @@ async function modify_my_info() {
                                 showMsg('修改成功！');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                showMsg('修改失败！');
+                                let msg = '修改失败：';
+                                switch (jqXHR.status) {
+                                    default:
+                                        msg += jqXHR.responseJSON.message || '网络错误';
+                                }
+                                showMsg(msg);
                             },
                             complete: function () {
                                 stopCatLoading();
@@ -371,11 +387,13 @@ async function modify_my_info() {
                                 })
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '添加新旅客失败';
+                                let msg = '添加新旅客失败：';
                                 switch (jqXHR.status) {
                                     case 409:
-                                        msg += ',已存在该旅客';
+                                        msg += '已存在该旅客';
                                         break;
+                                    default:
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
                                 showMsg(msg);
                             },
@@ -403,9 +421,10 @@ async function modify_my_info() {
                                 showMsg('删除旅客成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '删除旅客失败';
+                                let msg = '删除旅客失败：';
                                 switch (jqXHR.status) {
-
+                                    default:
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
                                 showMsg(msg);
                             },
@@ -656,7 +675,12 @@ async function rooms_all_info() {
                                 app.rooms.splice(index, 1, tmp);
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                showMsg(jqXHR.status)
+                                let msg = '报修失败：';
+                                switch (jqXHR.status) {
+                                    default:
+                                        msg += jqXHR.responseJSON.message || '网络错误';
+                                }
+                                showMsg(msg);
                             },
                             complete: function () {
                                 //关闭动画？
@@ -738,15 +762,15 @@ async function rooms_all_info() {
                                 showMsg('下单成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '下单失败';
+                                let msg = '下单失败：';
                                 switch (jqXHR.status) {
                                     case 409:
-                                        msg += '：订单时间冲突';
+                                        msg += '订单时间冲突';
                                         break;
                                     default:
-                                        msg += '：网络错误';
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
-                                showMsg(msg)
+                                showMsg(msg);
                             },
                             complete: function () {
                                 stopCatLoading()
@@ -785,12 +809,12 @@ async function rooms_all_info() {
                     app.info = data;
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    let msg = '初始化筛选项失败';
+                    let msg = '初始化筛选项失败：';
                     switch (jqXHR.status) {
                         default:
-                            msg += ':网络错误';
+                            msg += jqXHR.responseJSON.message || '网络错误';
                     }
-                    showMsg(msg)
+                    showMsg(msg);
                 },
                 complete: function () {
                     stopCatLoading();
@@ -979,10 +1003,10 @@ async function check_all_booking() {
                                 showMsg('取消订单成功');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '取消订单失败';
+                                let msg = '取消订单失败：';
                                 switch (jqXHR.status) {
                                     default:
-                                        msg += ':网络错误';
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
                                 showMsg(msg);
                             },
@@ -1013,10 +1037,10 @@ async function check_all_booking() {
                                 showMsg('客户入住成功');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '客户入住失败';
+                                let msg = '客户入住失败：';
                                 switch (jqXHR.status) {
                                     default:
-                                        msg += ':网络错误';
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
                                 showMsg(msg);
                             },
@@ -1049,10 +1073,10 @@ async function check_all_booking() {
                                 //结账界面 TODO
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '客户退房失败';
+                                let msg = '客户退房失败：';
                                 switch (jqXHR.status) {
                                     default:
-                                        msg += ':网络错误';
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
                                 showMsg(msg);
                             },
@@ -1301,7 +1325,7 @@ async function modify_rooms_type() {
                                 showMsg('添加成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '添加失败';
+                                let msg = '添加失败：';
                                 switch (jqXHR.status) {
                                     case 400:
                                         msg += '格式错误';
@@ -1309,6 +1333,8 @@ async function modify_rooms_type() {
                                     case 409:
                                         msg += '已存在该类型';
                                         break;
+                                    default:
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
                                 showMsg(msg);
                             },
@@ -1342,9 +1368,10 @@ async function modify_rooms_type() {
                                 showMsg('修改成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '修改失败';
+                                let msg = '修改失败：';
                                 switch (jqXHR.status) {
-
+                                    default:
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
                                 showMsg(msg);
                             },
@@ -1370,9 +1397,10 @@ async function modify_rooms_type() {
                                 showMsg('删除成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '删除失败';
+                                let msg = '删除失败：';
                                 switch (jqXHR.status) {
-
+                                    default:
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
                                 showMsg(msg);
                             },
@@ -1410,10 +1438,13 @@ async function modify_rooms_type() {
                                 showMsg('添加成功！');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '添加失败';
+                                let msg = '添加失败：';
                                 switch (jqXHR.status) {
                                     case 409:
                                         msg += '已存在该方位';
+                                        break;
+                                    default:
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
                                 showMsg(msg);
                             },
@@ -1447,9 +1478,10 @@ async function modify_rooms_type() {
                                 showMsg('修改成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '修改失败';
+                                let msg = '修改失败：';
                                 switch (jqXHR.status) {
-
+                                    default:
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
                                 showMsg(msg);
                             },
@@ -1476,9 +1508,10 @@ async function modify_rooms_type() {
                                 showMsg('删除成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '删除失败';
+                                let msg = '删除失败：';
                                 switch (jqXHR.status) {
-
+                                    default:
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
                                 showMsg(msg);
                             },
@@ -1542,10 +1575,13 @@ async function modify_rooms_type() {
                                 showMsg('添加成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '添加失败';
+                                let msg = '添加失败：';
                                 switch (jqXHR.status) {
                                     case 409:
                                         msg += '已存在该房间';
+                                        break;
+                                    default:
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
                                 showMsg(msg);
                             },
@@ -1592,9 +1628,10 @@ async function modify_rooms_type() {
                                 showMsg('修改成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '修改失败';
+                                let msg = '修改失败：';
                                 switch (jqXHR.status) {
-
+                                    default:
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
                                 showMsg(msg);
                             },
@@ -1619,9 +1656,10 @@ async function modify_rooms_type() {
                                 showMsg('删除成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '删除失败';
+                                let msg = '删除失败：';
                                 switch (jqXHR.status) {
-
+                                    default:
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
                                 showMsg(msg);
                             },
@@ -1791,13 +1829,13 @@ async function modify_user_info() {
                                 showMsg(`添加 [${role.text()}]${nickname} 成功`)
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg;
+                                let msg = '添加失败：';
                                 switch (jqXHR.status) {
                                     case 409:
                                         msg = '用户已存在';
                                         break;
                                     default:
-                                        msg = '网络错误'
+                                        msg += jqXHR.responseJSON.message || '网络错误';
                                 }
                                 showMsg(msg);
                             },
@@ -1831,7 +1869,12 @@ async function modify_user_info() {
                                 showMsg('修改成功');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                showMsg('修改失败');
+                                let msg='修改失败：';
+                                switch (jqXHR.status){
+                                    default:
+                                        msg+=jqXHR.responseJSON.message||'网络错误';
+                                }
+                                showMsg(msg);
                             },
                             complete: function () {
                                 stopCatLoading();
@@ -1855,9 +1898,10 @@ async function modify_user_info() {
                                 showMsg('删除成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                let msg = '删除失败';
-                                switch (jqXHR.status) {
-
+                                let msg='删除失败：';
+                                switch (jqXHR.status){
+                                    default:
+                                        msg+=jqXHR.responseJSON.message||'网络错误';
                                 }
                                 showMsg(msg);
                             },

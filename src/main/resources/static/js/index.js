@@ -67,12 +67,12 @@ $('.login .window .confirm').click(function () {
                     "guests": []
                 }*/
                 if ($(".checkbox input").prop('checked')) {
-                    localStorage.username = data.phoneNumber;
-                    localStorage.password = data.password;
+                    localStorage.username = username;
+                    localStorage.password = password;
                     localStorage.nickname = data.nickname;
                 }
-                sessionStorage.username = data.phoneNumber;
-                sessionStorage.password = data.password;
+                sessionStorage.username = username;
+                sessionStorage.password = password;
                 sessionStorage.nickname = data.nickname;
                 sessionStorage.role = data.role;
                 sessionStorage.isLogin = true;
@@ -135,8 +135,8 @@ $('.signup .window .confirm').click(function () {
         }),
         success: function (data, textStatus, jqXHR) {
             $('.window .close').trigger('click');
-            sessionStorage.username = data.phoneNumber;
-            sessionStorage.password = data.password;
+            sessionStorage.username = username;
+            sessionStorage.username = password;
             sessionStorage.nickname = data.nickname;
             sessionStorage.role = data.role;
             sessionStorage.isLogin = true;
