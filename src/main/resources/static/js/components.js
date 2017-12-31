@@ -1499,8 +1499,8 @@ async function modify_rooms_type() {
                     addRoom: function () {
                         let newRFloor = $('#newRFloor').val();
                         let newRNum = $('#newRNum').val();
-                        let newRDir = $('#newRDir').text();
-                        let newRType = $('#newRType').text();
+                        let newRDir = $('#newRDir').val();
+                        let newRType = $('#newRType').val();
                         let newRSpecial = $('#newRSpecial').val();
                         let newRPrice = $('#newRPrice').val();
                         let newRBroken = $('#newRBroken').val();
@@ -1798,11 +1798,11 @@ async function modify_user_info() {
                                     nickname: nickname,
                                     password: password,
                                     register_date: new Date().toISOString(),
-                                    role: role.text(),
+                                    role: role.val(),
                                     guests: []
                                 });
                                 clearVal($('#newAccName'), $('#newAccNick'), $('#newAccPWD'), $('#newAccPWDR'));
-                                showMsg(`添加 [${role.text()}]${nickname} 成功`)
+                                showMsg(`添加 [${role.val()}]${nickname} 成功`)
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
                                 let msg = '添加失败：';
