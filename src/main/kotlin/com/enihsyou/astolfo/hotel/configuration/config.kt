@@ -29,7 +29,7 @@ class MyFilter : GenericFilterBean() {
 
     @Throws(IOException::class, ServletException::class)
     override fun doFilter(req: ServletRequest, res: ServletResponse, chain: FilterChain) {
-        return chain.doFilter(req, res)
+//        return chain.doFilter(req, res)
 
         val request = req as HttpServletRequest
         val response = res as HttpServletResponse
@@ -47,34 +47,29 @@ class MyFilter : GenericFilterBean() {
                 return chain.doFilter(req, res)
             }
             println("访问$s")
-            if (s == "/api/users/make" || s == "/api/users/login" || s == "/api/users/logout") {
+            when {
+                s in listOf(
+                    "/api/users/login",
+                    "/api/users/logout",
+                    "/api/users/make",
+                    "/api/rooms", // 假设这里只有GET方法
+                    "/api/rooms/load",
+                    "/api/rooms/load2") -> return chain.doFilter(req, res)
 
-            } else if (s == "/api/rooms" || s.startsWith("/api/rooms/load")) {
+                s.startsWith("/api/") -> {
+                    if (authHeader == null || !authHeader.startsWith("Basic "))
+                        return response.sendError(HttpStatus.UNAUTHORIZED.value(), "访问$s ${没权限()}")
 
-            } else if (authHeader == null || !authHeader.startsWith("Basic ")) {
-                return response.sendError(HttpStatus.UNAUTHORIZED.value(), "访问$s ${没权限()}")
-            } else {
-                val (phone, password) = checkAuthorization(authHeader)
+                    val (phone, password) = checkAuthorization(authHeader)
 
-                val user = userRepository.findByPhoneNumber(phone) ?:
-                    return response.sendError(HttpStatus.UNAUTHORIZED.value(), "访问$s ${用户不存在(phone)}")
-                if (user.password != password)
-                    return response.sendError(HttpStatus.UNAUTHORIZED.value(), "访问$s ${用户名和密码不匹配()}")
-                when {
-                    s.startsWith("/api/users") -> {
-                        if (s == "/api/users/make/admin" || s == "/api/users/make/employee")
-                            if (user.role == User.UserRole.经理) {
-
-                            } else {
-                                return response.sendError(HttpStatus.UNAUTHORIZED.value(), "访问$s ${没权限()}")
-                            }
-                    }
-
-                    else                       -> {
-                        if (user.role == User.UserRole.未注册) {
+                    val user = userRepository.findByPhoneNumber(phone) ?:
+                        return response.sendError(HttpStatus.UNAUTHORIZED.value(), "访问$s ${用户不存在(phone)}")
+                    if (user.password != password)
+                        return response.sendError(HttpStatus.UNAUTHORIZED.value(), "访问$s ${用户名和密码不匹配()}")
+                    if (s == "/api/users/make/admin" || s == "/api/users/make/employee")
+                        if (user.role != User.UserRole.经理)
                             return response.sendError(HttpStatus.UNAUTHORIZED.value(), "访问$s ${没权限()}")
-                        }
-                    }
+
                 }
             }
             chain.doFilter(req, res)
