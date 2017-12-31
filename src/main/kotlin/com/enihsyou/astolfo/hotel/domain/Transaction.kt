@@ -8,7 +8,6 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters
 import java.time.LocalDateTime
 import javax.persistence.Convert
 import javax.persistence.Entity
-import javax.persistence.ForeignKey
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.ManyToMany
@@ -29,7 +28,7 @@ data class Transaction(
     @ManyToOne
     @CreatedBy
     /*这个用户创建的订单*/
-    var user: User = User(),
+    var user: User = User(guests = mutableListOf()),
 
     @ManyToOne
     /*预定的这个房间*/  //现在只支持单个房间
@@ -46,13 +45,14 @@ data class Transaction(
 
     /*预定结束日期*/
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
-    var dateTo: LocalDateTime = LocalDateTime.MAX,
+    var dateTo: LocalDateTime = LocalDateTime.now(),
 
-    /*订单还在有效期*/
-    var activated: Boolean = true,
+    /*订单还有效*/
+    var activated: Boolean = false,
 
     /*旅客是否来入住了*/
     var used: Boolean = false,
 
-    var commentId: Int? = null
+    @OneToOne
+    var comment: Comment? = null
 )

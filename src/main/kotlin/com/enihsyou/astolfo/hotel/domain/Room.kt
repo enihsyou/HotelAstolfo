@@ -55,10 +55,12 @@ data class Room(
 ) {
 
     val occupied
-        get() = transactions.any {
-            //val now = LocalDateTime.now()
-            (it.activated && it.used)
-        }
+        = transactions.any { it.activated || it.used }
+
+    fun occupied(from: LocalDateTime, to: LocalDateTime)
+        =        transactions.filter { it.dateFrom >= from && it.dateTo <= to }
+            .any { it.activated || it.used }
+
 
     @Embeddable
     data class RoomNumber(

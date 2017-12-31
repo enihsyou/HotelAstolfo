@@ -46,8 +46,8 @@ class CommentServiceImpl : CommentService {
     override fun showTransactionComment(transaction: Int): Comment {
         if (transactionRepository.exists(transaction)) {
             val transaction1 = transactionRepository.findOne(transaction)
-            if (commentRepository.exists(transaction1.commentId))
-                return commentRepository.findOne(transaction1.commentId)
+            if (transaction1.comment != null)
+                return transaction1.comment!!
             else
                 throw 评论不存在(transaction)
         } else throw 订单不存在(transaction)
@@ -74,7 +74,7 @@ class CommentServiceImpl : CommentService {
     override fun createComment(transaction: Int, comment: Comment) {
         /*先找到订单*/
         val findOne = transactionRepository.findOne(transaction)
-        if (findOne.commentId != null)
+        if (findOne.comment != null)
             throw 评论已存在不可修改(transaction)
 
         /*设置评论的创建者*/
@@ -84,7 +84,7 @@ class CommentServiceImpl : CommentService {
         val save = commentRepository.save(comment)
 
         /*修改关系*/
-        findOne.commentId = save.id
+        findOne.comment = save
         findOne.room.comments.add(save)
         transactionRepository.save(findOne)
         roomRepository.save(findOne.room)

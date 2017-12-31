@@ -15,14 +15,14 @@ import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.ManyToMany
+import javax.persistence.OneToMany
 import javax.persistence.Table
 
 
 @Entity
 @Table(name = "USER")
 data class User(
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     var id: Int = 0,
 
     @NaturalId
@@ -43,9 +43,10 @@ data class User(
     @Convert(converter = UserRoleConverter::class)
     var role: UserRole = UserRole.未注册,
 
-    @ManyToMany(cascade = [CascadeType.ALL])
+    @ManyToMany
     var guests: MutableList<Guest> = mutableListOf()
 ) {
+
     enum class UserRole {
         经理, 前台, 注册用户, 未注册
     }
@@ -59,5 +60,4 @@ data class User(
             return attribute.toString()
         }
     }
-
 }

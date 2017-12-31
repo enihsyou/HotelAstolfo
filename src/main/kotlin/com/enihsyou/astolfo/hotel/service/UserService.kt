@@ -124,7 +124,11 @@ class UserServiceImpl : UserService {
 
     override fun deleteGuest(identification: String) {
         val guest = getGuest(identification)
-        guest.user.forEach { it.guests.remove(guest) }
+        guest.user.forEach {
+            if (it.guests.remove(guest))
+                userRepository.save(guest.user)
+        }
+        guestRepository.save(guest)
     }
 
     private fun getCheckedPassword(password: String): String {

@@ -862,6 +862,12 @@ Content-Type: application/json
 }
 ----
 
+.结账
+[source, http]
+POST http://localhost:10080/api/transactions/checkout?bookId=34
+
+返回价格
+
 
 == 评论管理
 
