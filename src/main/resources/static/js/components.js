@@ -38,7 +38,7 @@ async function check_my_order() {
                     <td><!--操作--></td>
                 </tr>
                 <tr v-for="(order,index) in orders" v-cloak>
-                    <td :title="'订单创建时间：'+timeFormat(order.createDate)">{{order.id}}</td>
+                    <td :title="'订单创建时间：'+timeFormat(order.createdDate)">{{order.id}}</td>
                     <td :title="order.room.type.type">
                         {{order.room.roomNumber.floor}}-{{order.room.roomNumber.number}}-{{order.room.type.type}}
                     </td>
@@ -78,7 +78,7 @@ async function check_my_order() {
                     <dl v-for="comment in comments">
                         <dt>{{comment.user.nickname}}:</dt>
                         <dd>{{comment.body}}</dd>
-                        <dd class="date">{{timeFormat(comment.createDate)}}</dd>
+                        <dd class="date">{{timeFormat(comment.createdDate)}}</dd>
                     </dl>
                 </div>
                 <div class="addCom">
@@ -888,7 +888,7 @@ async function check_all_booking() {
                             </td>
                         </tr>
                         <tr v-for="(order,index) in orders" v-cloak>
-                            <td :title="'订单创建时间：'+timeFormat(order.createDate)">{{order.id}}</td>
+                            <td :title="'订单创建时间：'+timeFormat(order.createdDate)">{{order.id}}</td>
                             <td :title="order.room.type.type">
                                 {{order.room.roomNumber.floor}}-{{order.room.roomNumber.number}}-{{order.room.type.type}}
                             </td>
