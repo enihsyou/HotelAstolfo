@@ -1347,7 +1347,7 @@ async function modify_rooms_type() {
                                 let msg = '修改失败：';
                                 switch (jqXHR.status) {
                                     case 500:
-                                        msg+='有房间使用了该类型参数，请先删除对应房间';
+                                        msg += '有房间使用了该类型参数，请先删除对应房间';
                                         break;
                                     default:
                                         msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
@@ -1460,7 +1460,7 @@ async function modify_rooms_type() {
                                 let msg = '修改失败：';
                                 switch (jqXHR.status) {
                                     case 500:
-                                        msg+='有房间使用了该方位参数，请先删除对应房间';
+                                        msg += '有房间使用了该方位参数，请先删除对应房间';
                                         break;
                                     default:
                                         msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
@@ -1553,7 +1553,7 @@ async function modify_rooms_type() {
                                     specialty: newRSpecial,
                                     price: newRPrice
                                 });
-                                clearVal(('#newRFloor'), $('#newRNum'), $('#newRDir'), ('#newRType'), $('#newRSpecial'), $('#newRPrice'), $('#newRBroken'));
+                                clearVal($('#newRFloor'), $('#newRNum'), $('#newRSpecial'), $('#newRPrice'));
                                 showMsg('添加成功！')
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -1613,7 +1613,7 @@ async function modify_rooms_type() {
                                 let msg = '修改失败：';
                                 switch (jqXHR.status) {
                                     case 500:
-                                        msg+='该房间存在订单，禁止删除';
+                                        msg += '该房间存在订单，禁止删除';
                                         break;
                                     default:
                                         msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
@@ -1806,8 +1806,8 @@ async function modify_user_info() {
                                     phoneNumber: username,
                                     nickname: nickname,
                                     password: password,
-                                    register_date: new Date().toISOString(),
-                                    role: role.val(),
+                                    register_date: new Date().toISOString().slice(0, 22),
+                                    role: role.children('option:selected').text(),
                                     guests: []
                                 });
                                 clearVal($('#newAccName'), $('#newAccNick'), $('#newAccPWD'), $('#newAccPWDR'));

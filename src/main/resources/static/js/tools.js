@@ -56,7 +56,7 @@ function clearVal(jqObj1, jqObj2, ...jqObjN) {
     for (let jqObj of arguments) {
         if (jqObj instanceof $) jqObj.val('');
         else {
-            console.error(`${jqObj}不是jqObj类型`);
+            console.error(`clearVal:${jqObj}不是jqObj类型`);
         }
     }
 }
@@ -69,7 +69,7 @@ function constraintID(jqObj1, jqObj2, ...jqObjN) {
     for (let jqObj of arguments) {
         if (jqObj instanceof $) jqObj.mask("99999999999999999X");
         else {
-            console.error(`${jqObj}不是jqObj类型`);
+            console.error(`constraintID:${jqObj}不是jqObj类型`);
         }
     }
 }
@@ -79,7 +79,7 @@ function constraintTel(jqObj1, jqObj2, ...jqObjN) {
     for (let jqObj of arguments) {
         if (jqObj instanceof $) jqObj.mask("99999999999");
         else {
-            console.error(`${jqObj}不是jqObj类型`);
+            console.error(`constraintTel:${jqObj}不是jqObj类型`);
         }
     }
 }
