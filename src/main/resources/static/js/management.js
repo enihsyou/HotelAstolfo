@@ -48,7 +48,7 @@ const left_nav = new Vue({
 });
 
 let ordinary_user_items = ['我的订单', '个人信息', '返回主页', '登出'];
-let receptionist_user_items = ['客房管理', '订单管理', '房态图', '返回主页', '登出'];
+let receptionist_user_items = ['客房管理', '订单管理', '返回主页', '登出'];
 let manager_user_items = ['客房管理', '订单管理', '客房类型设置', '账户管理', '销售月表', '客户分析', '返回主页', '登出'];
 
 //初始化
@@ -59,7 +59,7 @@ $(function init() {
     let nickname = sessionStorage.nickname || localStorage.nickname;
     if (sessionStorage.isLogin !== 'true') {
         //未登录则返回主页
-        location.href = '/';
+        // location.href = '/';
     }
     else {
         startCatLoading(100);
