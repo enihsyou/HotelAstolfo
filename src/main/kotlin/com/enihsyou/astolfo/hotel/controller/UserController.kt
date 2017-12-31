@@ -57,12 +57,12 @@ class UserController {
         = userService.getUser(phone)
 
     @PatchMapping
-    fun modifyUser(@RequestParam phone_to_modify: String, @RequestBody payload: Map<String, String>, @RequestHeader("Authorization") header: String) {
+    fun modifyUser(@RequestParam phone: String, @RequestBody payload: Map<String, String>, @RequestHeader("Authorization") header: String) {
         val (user_phone, password) = checkAuthorization(header)
         val up_user = getUser(user_phone) // 是这个人操作的
         if (up_user.password != password)
             throw 用户名和密码不匹配()
-        userService.modifyUser(phone_to_modify, payload, up_user)
+        userService.modifyUser(phone, payload, up_user)
     }
 
     @DeleteMapping
