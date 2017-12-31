@@ -1220,8 +1220,8 @@ async function modify_rooms_type() {
                         <td><input class="modRSpe" type="text" :value="room.specialty"></td>
                         <td><input class="modRpri" type="number" min="0" :value="room.price"></td>
                         <td><select class="modRBro">
-                            <option value="true" :selected="room.broken === true">正在维修</option>
-                            <option value="false" :selected="room.broken === false">无需维修</option>
+                            <option value="true" :selected="room.broken == true">正在维修</option>
+                            <option value="false" :selected="room.broken == false">无需维修</option>
                         </select>
                         </td>
                         <td>
@@ -1527,7 +1527,8 @@ async function modify_rooms_type() {
                                 roomNumber: {
                                     floor: newRFloor,
                                     number: newRNum
-                                }
+                                },
+                                broken: false
                             }),
                             beforeSend: function (xhr) {
                                 xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
