@@ -76,11 +76,9 @@ class TransactionServiceImpl : TransactionService {
         val room = roomService.getRoom(body.room.floor, body.room.number)
         val guests = mutableListOf<Guest>()
         body.guests.forEach {
-            //            userService.getGuest(user.phoneNumber, it)
-//                .let { guests.add(it) }
             val guest = guestRepository.findByIdentification(it)
-            if (guest == null) {
-                val g = Guest()
+            if (guest == null) { // 如果仓库里没找到，也就是没有添加绑定过
+                val g = Guest(identification = it, name = "代理用户")
                 guestRepository.save(g)
                 guests.add(g)
             } else {

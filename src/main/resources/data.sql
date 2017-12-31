@@ -1,5 +1,5 @@
-INSERT INTO astolfo_hotel.hibernate_sequence (next_val)
-VALUES (1);
+# INSERT INTO astolfo_hotel.hibernate_sequence (next_val)
+# VALUES (1);
 
 INSERT INTO astolfo_hotel.USER (id, nickname, password, phone_number, register_date, role)
 VALUES
@@ -50,7 +50,7 @@ INSERT INTO astolfo_hotel.TRANSACTION_guests (transactions_id, guests_id)
 VALUES (1, 13);
 
 
-INSERT INTO astolfo_hotel.COMMENT (id, body, createdDate, userId)
+INSERT INTO astolfo_hotel.COMMENT (id, body, createdDate, user_id)
 VALUES (1, 'abc', '2017-12-30 15:21:18', 3);
 INSERT INTO astolfo_hotel.ROOM_comments (Room_id, comments_id)
 VALUES (8, 1);

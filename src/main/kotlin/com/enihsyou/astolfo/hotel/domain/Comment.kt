@@ -8,6 +8,7 @@ import javax.persistence.Convert
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
+import javax.persistence.ManyToOne
 import javax.persistence.Table
 
 @Entity
@@ -19,7 +20,8 @@ data class Comment(
     var body: String = "",
 
     @CreatedBy
-    var userId: Int?= null,
+    @ManyToOne
+    var user: User = User(),
 
     @CreatedDate
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)

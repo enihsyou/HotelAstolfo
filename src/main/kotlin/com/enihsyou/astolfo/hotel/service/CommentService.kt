@@ -29,14 +29,13 @@ class CommentServiceImpl : CommentService {
         if (commentRepository.exists(commentId)) {
             val comment = commentRepository.findOne(commentId)
             return comment.let {
-                val usr = userRepository.findOne(it.userId)
                 mutableMapOf(
                     "id" to it.id,
                     "body" to it.body,
                     "user" to mapOf(
-                        "id" to usr.id,
-                        "nickname" to usr.nickname,
-                        "role" to usr.role.name
+                        "id" to it.user.id,
+                        "nickname" to it.user.nickname,
+                        "role" to it.user.role.name
                     ),
                     "createDate" to it.createdDate
                 )
@@ -58,14 +57,13 @@ class CommentServiceImpl : CommentService {
         val findOne = roomRepository.findOne(room)
         val comments = mutableListOf<Map<String, Any>>()
         findOne.comments.map {
-            val usr = userRepository.findOne(it.userId)
             mutableMapOf(
                 "id" to it.id,
                 "body" to it.body,
                 "user" to mapOf(
-                    "id" to usr.id,
-                    "nickname" to usr.nickname,
-                    "role" to usr.role.name
+                    "id" to it.user.id,
+                    "nickname" to it.user.nickname,
+                    "role" to it.user.role.name
                 ),
                 "createDate" to it.createdDate
             )
@@ -80,7 +78,7 @@ class CommentServiceImpl : CommentService {
             throw 评论已存在不可修改(transaction)
 
         /*设置评论的创建者*/
-        comment.userId = findOne.user.id
+        comment.user = findOne.user
 
         /*保存评论*/
         val save = commentRepository.save(comment)

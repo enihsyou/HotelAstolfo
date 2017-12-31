@@ -384,3 +384,10 @@ Content-Type: application/json
 }
 
 ###
+PATCH https://enihsyou.synology.me:8899/api/users?phone=10000000000
+content-type:application/json;charset=UTF-8
+authorization:Basic MTAwMDAwMDAwMDA6dW5kZWZpbmVk
+
+{"nickname":"123"}
+
+###

@@ -57,12 +57,12 @@ class UserController {
         = userService.getUser(phone)
 
     @PatchMapping
-    fun modifyUser(@RequestParam phone: String, @RequestBody payload: Map<String, String>, @RequestHeader("Authorization") header: String) {
+    fun modifyUser(@RequestParam phone_to_modify: String, @RequestBody payload: Map<String, String>, @RequestHeader("Authorization") header: String) {
         val (user_phone, password) = checkAuthorization(header)
-        val user = getUser(user_phone)
-        if (user.password != password)
-           throw 用户名和密码不匹配()
-        userService.modifyUser(phone, payload, user)
+        val up_user = getUser(user_phone) // 是这个人操作的
+        if (up_user.password != password)
+            throw 用户名和密码不匹配()
+        userService.modifyUser(phone_to_modify, payload, up_user)
     }
 
     @DeleteMapping
@@ -70,9 +70,10 @@ class UserController {
         = userService.deleteUser(phone)
 
     @PostMapping("/login")
-    fun login(@RequestBody user: User)
-        = user.run {
-        userService.login(phoneNumber, password)
+    fun login(@RequestBody user: Map<String, String>): User {
+        val number: String = user["phoneNumber"] ?: throw 用户名和密码不匹配()
+        val password: String = user["password"] ?: throw 用户名和密码不匹配()
+        return userService.login(number, password)
     }
 
     @PostMapping("/logout")
