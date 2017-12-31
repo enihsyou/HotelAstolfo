@@ -203,31 +203,36 @@ body {
 }
 
 .slider_container div:nth-child(5) {
-    background: url(../images/image5.jpg) center center;
+    /*background: url(../images/image5.jpg) center center;*/
+    background: url(http://imgsrc.baidu.com/forum/pic/item/7a10204a20a44623f5ee3f839322720e0df3d7da.jpg) center center;
     background-size: cover;
     animation-delay: 0s;
 }
 
 .slider_container div:nth-child(4) {
-    background: url(../images/image4.jpg) center center;
+    /*background: url(../images/image4.jpg) center center;*/
+    background: url(http://imgsrc.baidu.com/forum/pic/item/e52dd1096b63f62463e5a3e28c44ebf81b4ca34d.jpg) center center;
     background-size: cover;
     animation-delay: 5s;
 }
 
 .slider_container div:nth-child(3) {
-    background: url(../images/image3.jpg) center center;
+    /*background: url(../images/image3.jpg) center center;*/
+    background: url(http://imgsrc.baidu.com/forum/pic/item/0925e582b9014a90336ddc5ca2773912b21beeb7.jpg) center center;
     background-size: cover;
     animation-delay: 10s;
 }
 
 .slider_container div:nth-child(2) {
-    background: url(../images/image2.jpg) center center;
+    /*background: url(../images/image2.jpg) center center;*/
+    background: url(http://imgsrc.baidu.com/forum/pic/item/147d17f0f736afc3c079a584b819ebc4b6451288.jpg) center center;
     background-size: cover;
     animation-delay: 15s;
 }
 
 .slider_container div:nth-child(1) {
-    background: url(../images/image1.jpg) center center;
+    /*background: url(../images/image1.jpg) center center;*/
+    background: url(http://imgsrc.baidu.com/forum/pic/item/22c889cd7b899e51a9dda0f549a7d933c9950db6.jpg) center center;
     background-size: cover;
     animation-delay: 20s;
 }
