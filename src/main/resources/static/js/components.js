@@ -333,7 +333,7 @@ async function modify_my_info() {
                             type: 'PATCH',
                             data: JSON.stringify({
                                 nickname: newNickname,
-                                password: newPassword.length > 0 ? sha256(password) : undefined
+                                password: newPassword.length > 0 ? sha256(newPassword) : undefined
                             }),
                             dataType: 'json',
                             contentType: "application/json; charset=UTF-8",
@@ -1842,7 +1842,7 @@ async function modify_user_info() {
                                     id: -1,
                                     phoneNumber: username,
                                     nickname: nickname,
-                                    password: password,
+                                    password: sha256(password),
                                     register_date: new Date().toISOString().slice(0, 22),
                                     role: role.children('option:selected').text(),
                                     guests: []
