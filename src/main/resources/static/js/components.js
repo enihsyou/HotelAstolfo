@@ -333,7 +333,7 @@ async function modify_my_info() {
                             type: 'PATCH',
                             data: JSON.stringify({
                                 nickname: newNickname,
-                                password: newPassword.length > 0 ? newPassword : undefined
+                                password: newPassword.length > 0 ? sha256(password) : undefined
                             }),
                             dataType: 'json',
                             contentType: "application/json; charset=UTF-8",
@@ -1220,8 +1220,8 @@ async function modify_rooms_type() {
                         <td><input class="modRSpe" type="text" :value="room.specialty"></td>
                         <td><input class="modRpri" type="number" min="0" :value="room.price"></td>
                         <td><select class="modRBro">
-                            <option value="true" :selected="room.broken === true">正在维修</option>
-                            <option value="false" :selected="room.broken === false">无需维修</option>
+                            <option value="true" :selected="room.broken == true">正在维修</option>
+                            <option value="false" :selected="room.broken == false">无需维修</option>
                         </select>
                         </td>
                         <td>
@@ -1527,7 +1527,8 @@ async function modify_rooms_type() {
                                 roomNumber: {
                                     floor: newRFloor,
                                     number: newRNum
-                                }
+                                },
+                                broken: false
                             }),
                             beforeSend: function (xhr) {
                                 xhr.setRequestHeader("Authorization", "Basic " + btoa(sessionStorage.username + ":" + sessionStorage.password));
@@ -1797,7 +1798,7 @@ async function modify_user_info() {
                             contentType: "application/json; charset=UTF-8",
                             data: JSON.stringify({
                                 phoneNumber: username,
-                                password: password,
+                                password: sha256(password),
                                 nickname: nickname
                             }),
                             success: function (data, textStatus, jqXHR) {
@@ -1842,7 +1843,7 @@ async function modify_user_info() {
                             url: `${serverHost}/api/users?phone=${username}`,
                             type: 'PATCH',
                             data: JSON.stringify({
-                                password: password.length > 0 ? password : undefined,
+                                password: password.length > 0 ? sha256(password) : undefined,
                                 nickname: nickname,
                                 role: role
                             }),

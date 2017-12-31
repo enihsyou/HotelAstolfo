@@ -137,7 +137,7 @@ $('.signup .window .confirm').click(function () {
         success: function (data, textStatus, jqXHR) {
             $('.window .close').trigger('click');
             sessionStorage.username = username;
-            sessionStorage.username = password;
+            sessionStorage.password = password;
             sessionStorage.nickname = data.nickname;
             sessionStorage.role = data.role;
             sessionStorage.isLogin = true;

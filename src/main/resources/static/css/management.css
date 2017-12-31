@@ -30,11 +30,13 @@
 
 .container .welcome {
     position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 60px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     text-align: center;
+    background: url("https://danbooru.donmai.us/data/__astolfo_fate_apocrypha_fate_grand_order_fate_series_and_jackie_chan_adventures_drawn_by_shou_jian_yu__5d42b3707052e96b582bebca79e492a2.jpg") no-repeat center center;
+    background-size: contain;
 }
 
 /* check_my_order and check_my_booking*/
