@@ -1,159 +1,90 @@
 package com.sorahjy.kotlintest;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.StreamTokenizer;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.PriorityQueue;
-import java.util.Scanner;
+import java.util.LinkedList;
 
 public class Main {
-    static class Node {
-        HashMap<Integer, Integer> map = new HashMap<>();
-
-        public void add(int key, int val) {
-            map.put(key, val);
-        }
-    }
-
     static int n;
-    static Node node[];
+    static final int max = 99999999;
+    static int m;
+    static boolean take[];
 
-    static class com implements Comparator<Temp> {
-
-        public int compare(Temp a, Temp b) {
-            // TODO Auto-generated method stub
-            if (a.min < b.min)
-                return -1;
-            if (a.min > b.min)
-                return 1;
-            return 0;
-        }
+    static class Edge {
+        int to, from, len;
     }
 
-    static class Temp {
-        int min, node;
+    static int ans[];
+    static Edge[] edge;
 
-        Temp(int a, int b) {
-            min = a;
-            node = b;
-        }
-    }
-
-    static int[] ans;
-
-    public  void f(){
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        int m = sc.nextInt();
-        node = new Node[n];
-        ans = new int[n];
-        for (int i = 0; i < n; i++) {
-            node[i] = new Node();
-        }
-        int a, b;
+    public static void f() throws IOException {
+        StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));
+        PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out));
+        in.nextToken();
+        n = (int) in.nval;
+        in.nextToken();
+        m = (int) in.nval;
+        edge = new Edge[m];
+        ans = new int[n + 1];
+        LinkedList<Integer> list = new LinkedList<>();
+        take = new boolean[n + 1];
         for (int i = 0; i < m; i++) {
-            a = sc.nextInt();
-            b = sc.nextInt();
-            node[a].add(b, sc.nextInt());
+            edge[i] = new Edge();
+            in.nextToken();
+            edge[i].from = (int) in.nval;
+            in.nextToken();
+            edge[i].to = (int) in.nval;
+            in.nextToken();
+            edge[i].len = (int) in.nval;
+
         }
-        PriorityQueue<Temp> queue = new PriorityQueue<>(new com());
-        //准备
 
-        int s = 0;//初始的点
-        queue.add(new Temp(0, s));
-        Arrays.fill(ans, 999999999);
-        ans[s] = 0;
-
-        //
-        while (!queue.isEmpty()) {
-            Temp t = queue.poll();
-            int v = t.node;
-            if (ans[v] < t.min)
-                continue;
-            for (Entry<Integer, Integer> entry : node[v].map.entrySet()) {
-                int to = entry.getKey();
-                int cost = entry.getValue();
-
-                if (ans[to] > ans[v] + cost) {
-                    ans[to] = ans[v] + cost;
-                    queue.add(new Temp(ans[to], to));
+        Arrays.fill(ans, max);
+        list.add(1);
+        ans[1] = 0;
+        take[1] = true;
+        while (list.size() > 0) {
+            int v = list.removeFirst();
+            for (int i = 0; i < edge.length; i++) {
+                if (edge[i].from == v && ans[edge[i].to] > ans[edge[i].from] + edge[i].len) {
+                    ans[edge[i].to] = ans[edge[i].from] + edge[i].len;
+                    list.addLast(edge[i].to);
+                    if (edge[i].to > n) {
+                        //这里表示这个图里有负环路
+                        return;
+                    }
+                    take[edge[i].to] = true;
                 }
-
             }
+            take[v] = false;
         }
-
-        for (int i = 0; i < n; i++)
-            if (i != s)
-                System.out.println(ans[i]);
-
+        for (int i = 2; i <= n; i++) {
+            out.println(ans[i]);
+        }
+        out.flush();
     }//main
-
-
-    public void f2()
-
-    {
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        int m = sc.nextInt();
-        node = new Node[n];
-        ans = new int[n];
-        for (int i = 0; i < n; i++) {
-            node[i] = new Node();
-        }
-        int a, b;
-        for (int i = 0; i < m; i++) {
-            a = sc.nextInt();
-            b = sc.nextInt();
-            node[a].add(b, sc.nextInt());
-        }
-        PriorityQueue<Temp> queue = new PriorityQueue<>(new com());
-        //准备
-
-        int s = 0;//初始的点
-        queue.add(new Temp(0, s));
-        Arrays.fill(ans, 999999999);
-        ans[s] = 0;
-
-        //
-        while (!queue.isEmpty()) {
-            Temp t = queue.poll();
-            int v = t.node;
-            if (ans[v] < t.min)
-                continue;
-            for (Entry<Integer, Integer> entry : node[v].map.entrySet()) {
-                int to = entry.getKey();
-                int cost = entry.getValue();
-
-                if (ans[to] > ans[v] + cost) {
-                    ans[to] = ans[v] + cost;
-                    queue.add(new Temp(ans[to], to));
-                }
-
-            }
-        }
-
-        for (int i = 0; i < n; i++)
-            if (i != s)
-                System.out.println(ans[i]);
-
-    }//main
-
 
 }
 /*
-Test Date:
-5 7
-0 1 3
-0 3 8
-1 2 5
-1 4 4
-2 3 4
-2 4 7
-3 4 2
-Out put:
-0->1:3
-0->2:8
-0->3:8
-0->4:7
+10
+1 2 1
+1 3 4
+1 6 6
+2 4 8
+2 5 3
+3 6 5
+3 5 9
+4 5 7
+4 6 10
+5 6 2
 */
+
+
+//17
+
+
