@@ -61,5 +61,9 @@ class TransactionController {
     @PatchMapping
     fun modifyBook(@RequestParam bookId: Int, @RequestBody payload: Map<String, String>): Transaction
         = transactionService.modifyRoom(bookId, payload)
+
+    @PostMapping("/checkout")
+    fun checkOut(@RequestParam bookId: Int)
+        = transactionService.checkOut(bookId)
 }
 

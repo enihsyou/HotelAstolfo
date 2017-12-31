@@ -297,7 +297,7 @@ Content-Type: application/json
 GET http://localhost:10080/api/rooms
 
 ###
-GET http://47.100.117.174:8899/api/rooms/types
+GET http://localhost:10080/api/rooms/load2
 
 ###
 POST http://localhost:10080/api/rooms
@@ -382,5 +382,15 @@ Content-Type: application/json
 {
 "body":"abc"
 }
+
+###
+PATCH https://enihsyou.synology.me:8899/api/users?phone=10000000000
+content-type:application/json;charset=UTF-8
+authorization:Basic MTAwMDAwMDAwMDA6dW5kZWZpbmVk
+
+{"nickname":"123"}
+
+###
+POST http://localhost:10080/api/transactions/checkout?bookId=3
 
 ###

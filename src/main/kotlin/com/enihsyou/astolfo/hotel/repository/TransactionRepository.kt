@@ -21,8 +21,8 @@ interface TransactionRepository : PagingAndSortingRepository<Transaction, Int> {
     fun findByRoomNumber(@Param("floor") floor: Int, @Param("number") number: Int): List<Transaction>
 
     @Query(value = "SELECT T FROM Transaction T where not (T.dateTo <?1 OR T.dateFrom >?2)")
-    fun findByCreateDateBetween(from: LocalDateTime,
-                                to: LocalDateTime): List<Transaction>
+    fun findByCreatedDateBetween(from: LocalDateTime,
+                                 to: LocalDateTime): List<Transaction>
 
     @Query(value = "SELECT T FROM Transaction T where T.dateFrom > ?1")
     fun findByJoinDate(from: LocalDateTime): List<Transaction>

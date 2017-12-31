@@ -1,6 +1,5 @@
 package com.enihsyou.astolfo.hotel.service
 
-import com.enihsyou.astolfo.hotel.domain.Comment
 import com.enihsyou.astolfo.hotel.domain.Room
 import com.enihsyou.astolfo.hotel.domain.RoomDirection
 import com.enihsyou.astolfo.hotel.domain.RoomType
@@ -20,6 +19,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import kotlin.reflect.full.memberProperties
 
 
 interface RoomService {
