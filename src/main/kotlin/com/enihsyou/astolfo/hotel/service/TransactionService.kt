@@ -136,7 +136,7 @@ class TransactionServiceImpl : TransactionService {
             result = result.filter { it.room.price <= priceTo }
         }
         if (createFrom != null && createTo != null) {
-            result = result.filter { it in transactionRepository.findByCreateDateBetween(createFrom, createTo) }
+            result = result.filter { it in transactionRepository.findByCreatedDateBetween(createFrom, createTo) }
         }
         if (validFrom != null && validTo != null) {
             result = result.filter { it in transactionRepository.findByValidBetween(validFrom, validTo) }

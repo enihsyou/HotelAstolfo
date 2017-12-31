@@ -24,7 +24,7 @@ data class Transaction(
 
     @CreatedDate
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
-    var createDate: LocalDateTime = LocalDateTime.now(),
+    var createdDate: LocalDateTime = LocalDateTime.now(),
 
     @ManyToOne
     @CreatedBy

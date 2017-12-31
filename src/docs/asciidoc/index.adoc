@@ -724,7 +724,7 @@ GET http://localhost:10080/api/transactions/list
 [
   {
     "id": 17,
-    "createDate": "2017-12-30T14:42:11",
+    "createdDate": "2017-12-30T14:42:11",
     "user": {
       "id": 3,
       "phoneNumber": "18800000001",
@@ -880,7 +880,7 @@ GET http://localhost:10080/api/comments/?commentId=1
     "nickname": "一娃",
     "role": "注册用户"
   },
-  "createDate": "2017-12-30T15:21:18"
+  "createdDate": "2017-12-30T15:21:18"
 }
 
 
@@ -900,7 +900,7 @@ GET http://localhost:10080/api/comments/room?roomId=8
       "nickname": "一娃",
       "role": "注册用户"
     },
-    "createDate": "2017-12-30T15:21:18"
+    "createdDate": "2017-12-30T15:21:18"
   }
 ]
 

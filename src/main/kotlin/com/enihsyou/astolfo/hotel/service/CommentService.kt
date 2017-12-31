@@ -37,7 +37,7 @@ class CommentServiceImpl : CommentService {
                         "nickname" to it.user.nickname,
                         "role" to it.user.role.name
                     ),
-                    "createDate" to it.createdDate
+                    "createdDate" to it.createdDate
                 )
             }
         } else throw 评论不存在(commentId)
@@ -65,7 +65,7 @@ class CommentServiceImpl : CommentService {
                     "nickname" to it.user.nickname,
                     "role" to it.user.role.name
                 ),
-                "createDate" to it.createdDate
+                "createdDate" to it.createdDate
             )
         }.forEach { comments += it }
         return comments.toList()

@@ -42,7 +42,7 @@ VALUES (13, '111111200001013334', '宋二娘');
 INSERT INTO astolfo_hotel.GUEST (id, identification, name)
 VALUES (14, '111111200001013335', '宋三娘');
 
-INSERT INTO astolfo_hotel.TRANSACTION (id, activated, commentId, createDate, dateFrom, dateTo, used, room_id, user_id)
+INSERT INTO astolfo_hotel.TRANSACTION (id, activated, commentId, createdDate, dateFrom, dateTo, used, room_id, user_id)
 VALUES (1, TRUE, 1, '2017-12-30 15:19:27', '2017-12-30 15:19:27', '2017-12-30 15:19:27', FALSE, 8, 3);
 INSERT INTO astolfo_hotel.TRANSACTION_guests (transactions_id, guests_id)
 VALUES (1, 12);
