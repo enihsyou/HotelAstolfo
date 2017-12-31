@@ -1346,6 +1346,9 @@ async function modify_rooms_type() {
                             error: function (jqXHR, textStatus, errorThrown) {
                                 let msg = '修改失败：';
                                 switch (jqXHR.status) {
+                                    case 500:
+                                        msg+='有房间使用了该类型参数，请先删除对应房间';
+                                        break;
                                     default:
                                         msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
                                 }
@@ -1456,6 +1459,9 @@ async function modify_rooms_type() {
                             error: function (jqXHR, textStatus, errorThrown) {
                                 let msg = '修改失败：';
                                 switch (jqXHR.status) {
+                                    case 500:
+                                        msg+='有房间使用了该方位参数，请先删除对应房间';
+                                        break;
                                     default:
                                         msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
                                 }
@@ -1606,6 +1612,9 @@ async function modify_rooms_type() {
                             error: function (jqXHR, textStatus, errorThrown) {
                                 let msg = '修改失败：';
                                 switch (jqXHR.status) {
+                                    case 500:
+                                        msg+='该房间存在订单，禁止删除';
+                                        break;
                                     default:
                                         msg += jqXHR.responseJSON && jqXHR.responseJSON.message || '网络错误';
                                 }

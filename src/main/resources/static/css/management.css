@@ -34,6 +34,7 @@
     left: 50%;
     transform: translateX(-50%);
     font-size: 60px;
+    text-align: center;
 }
 
 /* check_my_order and check_my_booking*/
