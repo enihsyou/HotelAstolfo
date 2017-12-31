@@ -1,11 +1,12 @@
 //服务器地址
 /*
 * Ali-2G:       'http://47.100.117.174:8899'
-* enihsyou-PC   ‘https://enihsyou.synology.me:8899'
+* enihsyou-PC   'https://enihsyou.synology.me:8899'
+* Production    'https://astolfo.20001.me'
 * Default       'http://localhost:10080'
 *
 * */
-let serverHost = 'https://enihsyou.synology.me:8899';
+let serverHost = 'https://astolfo.20001.me';
 
 //封装消息提示
 function showMsg(msg) {
