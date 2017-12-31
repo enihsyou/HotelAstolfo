@@ -4,8 +4,7 @@ import io.restassured.RestAssured.given
 import org.junit.Test
 
 
-class EmployeeControllerTest internal constructor() {
-
+class CommentControllerTest internal constructor() {
 
 
     @Test
