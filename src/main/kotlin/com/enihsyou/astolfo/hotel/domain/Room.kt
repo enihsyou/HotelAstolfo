@@ -53,10 +53,6 @@ data class Room(
     @CreatedDate
     var createdDate: LocalDateTime = LocalDateTime.now()
 ) {
-
-    val occupied
-        = transactions.any { it.activated || it.used }
-
     fun occupied(from: LocalDateTime, to: LocalDateTime)
         =        transactions.filter { it.dateFrom >= from && it.dateTo <= to }
             .any { it.activated || it.used }

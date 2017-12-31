@@ -3,10 +3,10 @@ package com.enihsyou.astolfo.hotel.service
 import com.enihsyou.astolfo.hotel.domain.Room
 import com.enihsyou.astolfo.hotel.domain.RoomDirection
 import com.enihsyou.astolfo.hotel.domain.RoomType
+import com.enihsyou.astolfo.hotel.exception.已有订单的房间不能删除
 import com.enihsyou.astolfo.hotel.exception.房号不存在
 import com.enihsyou.astolfo.hotel.exception.房间朝向不存在
 import com.enihsyou.astolfo.hotel.exception.房间类型不存在
-import com.enihsyou.astolfo.hotel.exception.评论不存在
 import com.enihsyou.astolfo.hotel.repository.CommentRepository
 import com.enihsyou.astolfo.hotel.repository.GuestRepository
 import com.enihsyou.astolfo.hotel.repository.RoomDirectionRepository
@@ -19,7 +19,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
-import kotlin.reflect.full.memberProperties
 
 
 interface RoomService {
@@ -163,8 +162,14 @@ class RoomServiceImpl : RoomService {
         return room
     }
 
-    override fun deleteRoom(floor: Int, number: Int)
-        = roomRepository.delete(getRoom(floor, number))
+    override fun deleteRoom(floor: Int, number: Int) {
+        val room = getRoom(floor, number)
+        if (room.transactions.isNotEmpty())
+            throw 已有订单的房间不能删除(floor, number)
+
+        roomRepository.delete(room)
+    }
+
 
     override fun listTypes(): List<RoomType>
         = roomTypeRepository.findAll().toList()
