@@ -131,13 +131,13 @@ $('.signup .window .confirm').click(function () {
         contentType: "application/json; charset=UTF-8",
         data: JSON.stringify({
             phoneNumber: username,
-            password: password,
+            password: sha256(password),
             nickname: nickname
         }),
         success: function (data, textStatus, jqXHR) {
             $('.window .close').trigger('click');
             sessionStorage.username = username;
-            sessionStorage.password = password;
+            sessionStorage.password = sha256(password);
             sessionStorage.nickname = data.nickname;
             sessionStorage.role = data.role;
             sessionStorage.isLogin = true;
