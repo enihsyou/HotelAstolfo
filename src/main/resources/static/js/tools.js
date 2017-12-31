@@ -53,7 +53,10 @@ function dateTimeISOFormat(time) {
 //清空jqObj.val()
 function clearVal(jqObj1, jqObj2, ...jqObjN) {
     for (let jqObj of arguments) {
-        if (jqObj instanceof $) jqObj.val();
+        if (jqObj instanceof $) jqObj.val('');
+        else {
+            console.error(`${jqObj}不是jqObj类型`);
+        }
     }
 }
 
@@ -64,6 +67,9 @@ $.mask.definitions['X'] = '[0-9Xx]';
 function constraintID(jqObj1, jqObj2, ...jqObjN) {
     for (let jqObj of arguments) {
         if (jqObj instanceof $) jqObj.mask("99999999999999999X");
+        else {
+            console.error(`${jqObj}不是jqObj类型`);
+        }
     }
 }
 
@@ -71,6 +77,9 @@ function constraintID(jqObj1, jqObj2, ...jqObjN) {
 function constraintTel(jqObj1, jqObj2, ...jqObjN) {
     for (let jqObj of arguments) {
         if (jqObj instanceof $) jqObj.mask("99999999999");
+        else {
+            console.error(`${jqObj}不是jqObj类型`);
+        }
     }
 }
 
