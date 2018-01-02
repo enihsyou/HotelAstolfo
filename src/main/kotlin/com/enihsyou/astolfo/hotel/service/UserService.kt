@@ -150,10 +150,10 @@ class UserServiceImpl : UserService {
         val user = User(
             phoneNumber = phoneNumber,
             nickname = nickname,
-            /*如果密码不是经过前端哈希的，这里进行哈希*/
-            password = getCheckedPassword(password),
             role = role
         )
+        /*如果密码不是经过前端哈希的，这里进行哈希*/
+        user.password = getCheckedPassword(password)
         userRepository.save(user)
         return user
     }

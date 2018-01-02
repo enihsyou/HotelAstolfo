@@ -28,11 +28,11 @@ data class Transaction(
     @ManyToOne
     @CreatedBy
     /*这个用户创建的订单*/
-    var user: User = User(guests = mutableListOf()),
+    var user: User = User(),
 
     @ManyToOne
     /*预定的这个房间*/  //现在只支持单个房间
-    var room: Room = Room(broken = false),
+    var room: Room = Room(),
 
     /*入住这些旅客*/
     @ManyToMany
