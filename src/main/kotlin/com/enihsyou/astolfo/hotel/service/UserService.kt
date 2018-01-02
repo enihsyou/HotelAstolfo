@@ -3,12 +3,7 @@ package com.enihsyou.astolfo.hotel.service
 import com.enihsyou.astolfo.hotel.domain.Guest
 import com.enihsyou.astolfo.hotel.domain.Transaction
 import com.enihsyou.astolfo.hotel.domain.User
-import com.enihsyou.astolfo.hotel.exception.注册时用户已存在
-import com.enihsyou.astolfo.hotel.exception.用户不存在
-import com.enihsyou.astolfo.hotel.exception.用户名和密码不匹配
-import com.enihsyou.astolfo.hotel.exception.用户未绑定身份证
-import com.enihsyou.astolfo.hotel.exception.相同身份证已存在
-import com.enihsyou.astolfo.hotel.exception.身份证不存在
+import com.enihsyou.astolfo.hotel.exception.*
 import com.enihsyou.astolfo.hotel.repository.GuestRepository
 import com.enihsyou.astolfo.hotel.repository.TransactionRepository
 import com.enihsyou.astolfo.hotel.repository.UserRepository
@@ -18,7 +13,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.nio.charset.StandardCharsets
-
 
 interface UserService {
 
@@ -96,7 +90,7 @@ class UserServiceImpl : UserService {
     override fun addGuest(phone: String, guest: Guest): ResponseEntity<Guest> {
         val iden = guest.identification
         val user = existUser(phone)
-        if (guestRepository.findByIdentification(iden) == null) {
+        return if (guestRepository.findByIdentification(iden) == null) {
             val new_guest = Guest(identification = iden, name = guest.name, user = mutableListOf())
 
             new_guest.user.add(user)
@@ -104,7 +98,7 @@ class UserServiceImpl : UserService {
 
             user.guests.add(new_guest)
             userRepository.save(user)
-            return ResponseEntity(HttpStatus.CREATED)
+            ResponseEntity(HttpStatus.CREATED)
         } else
             throw 相同身份证已存在(iden)
     }

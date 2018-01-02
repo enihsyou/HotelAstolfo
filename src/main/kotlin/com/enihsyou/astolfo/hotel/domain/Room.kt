@@ -7,15 +7,7 @@ import org.hibernate.annotations.OnDeleteAction
 import org.springframework.data.annotation.CreatedDate
 import java.io.Serializable
 import java.time.LocalDateTime
-import javax.persistence.Embeddable
-import javax.persistence.Embedded
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
-import javax.persistence.Table
-
+import javax.persistence.*
 
 @Entity
 @Table(name = "ROOM")
