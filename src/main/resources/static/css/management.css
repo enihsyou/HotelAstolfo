@@ -25,7 +25,7 @@
     height: inherit;
     background: linear-gradient(to bottom, white 10%, #eff8ff);
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
 }
 
 .container .welcome {
@@ -43,9 +43,18 @@
 .container table {
     position: absolute;
     left: 5%;
-    width: 90%;
+    width: 1200px;
     text-align: center;
     border: 1px solid darkgrey;
+}
+
+.container table input {
+    width: 80%;
+}
+
+.container table select {
+    width: 80%;
+    text-align: center;
 }
 
 .container table span {
@@ -79,6 +88,18 @@
     text-align: center;
     cursor: pointer;
     width: 4em;
+}
+
+.container #check_my_order table tr td:nth-child(1) {
+    width: 6em;
+}
+
+.container #check_my_order table tr td:nth-last-child(2) {
+    width: 6em;
+}
+
+.container #check_my_order table tr td:nth-last-child(1) {
+    width: 8em;
 }
 
 .container #check_my_order .commentList {
@@ -195,6 +216,34 @@
     margin: 0 2em .5em 0;
 }
 
+.container #rooms_all_info dd table tr td:nth-child(1) {
+    width: 6em;
+}
+
+.container #rooms_all_info dd table tr td:nth-child(2) {
+    width: 4em;
+}
+
+.container #rooms_all_info dd table tr td:nth-child(3) {
+    width: 10em;
+}
+
+.container #rooms_all_info dd table tr td:nth-child(5) {
+    width: 6em;
+}
+
+.container #rooms_all_info dd table tr td:nth-child(6) {
+    width: 6em;
+}
+
+.container #rooms_all_info dd table tr td:nth-child(7) {
+    width: 6em;
+}
+
+.container #rooms_all_info dd table tr td:nth-child(8) {
+    width: 6em;
+}
+
 .container #rooms_all_info .bookWindow {
     position: fixed;
     z-index: 49;
@@ -250,6 +299,26 @@
     margin-bottom: 3em;
 }
 
+.container #modify_rooms_type table tr td:nth-child(1) {
+    width: 20em;
+}
+
+.container #modify_rooms_type table tr td:nth-last-child(2) {
+    width: 5em;
+}
+
+.container #modify_rooms_type table tr td:nth-last-child(1) {
+    width: 5em;
+}
+
+.container #modify_rooms_type .room table tr td:nth-child(1) {
+    width: 6em;
+}
+
+.container #modify_rooms_type .room table tr td:nth-child(2) {
+    width: 6em;
+}
+
 .container #check_all_booking table tr td:nth-last-child(2) {
     border-left: 1px solid rgba(100, 100, 100, .8);
 }
@@ -267,6 +336,18 @@
 
 .container #check_all_booking dt select {
     height: 2em;
+}
+
+.container #check_all_booking dd table tr td:nth-child(1) {
+    width: 6em;
+}
+
+.container #check_all_booking dd table tr td:nth-child(2) {
+    width: 15em;
+}
+
+.container #check_all_booking dd table tr td:nth-child(3) {
+    width: 15em;
 }
 
 .container #check_all_booking .checkOutList {
@@ -292,6 +373,23 @@
 .container #check_all_booking .checkOutList p span {
     font-size: 2.5em;
     font-weight: bold;
+}
+
+.container #modify_user_info dd table tr td:nth-child(1) {
+    width: 10em;
+}
+
+.container #modify_user_info dd table tr td:nth-last-child(3) {
+    width: 15em;
+    overflow: auto;
+}
+
+.container #modify_user_info dd table tr td:nth-last-child(2) {
+    width: 4em;
+}
+
+.container #modify_user_info dd table tr td:nth-last-child(1) {
+    width: 4em;
 }
 
 .container #modify_user_info .addAccount table {

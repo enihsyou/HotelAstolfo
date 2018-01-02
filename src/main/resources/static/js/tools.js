@@ -67,7 +67,7 @@ $.mask.definitions['X'] = '[0-9Xx]';
 //身份证约束
 function constraintID(jqObj1, jqObj2, ...jqObjN) {
     for (let jqObj of arguments) {
-        if (jqObj instanceof $) jqObj.mask("99999999999999999X");
+        if (jqObj instanceof $) jqObj.mask("99999999999999999X",{placeholder:""});
         else {
             console.error(`constraintID:${jqObj}不是jqObj类型`);
         }
@@ -77,7 +77,7 @@ function constraintID(jqObj1, jqObj2, ...jqObjN) {
 //手机号约束
 function constraintTel(jqObj1, jqObj2, ...jqObjN) {
     for (let jqObj of arguments) {
-        if (jqObj instanceof $) jqObj.mask("99999999999");
+        if (jqObj instanceof $) jqObj.mask("99999999999",{placeholder:""});
         else {
             console.error(`constraintTel:${jqObj}不是jqObj类型`);
         }

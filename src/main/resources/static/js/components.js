@@ -516,7 +516,7 @@ async function rooms_all_info() {
                 <dd>
                     <table>
                         <tr>
-                            <td>楼层-房号</td>
+                            <td >楼层-房号</td>
                             <td>朝向</td>
                             <td>房间类型</td>
                             <td>特色</td>
@@ -1259,8 +1259,8 @@ async function modify_rooms_type() {
                         </td>
                     </tr>
                     <tr>
-                        <td><input type="number" min="0" id="newRFloor" title="开放新房间楼层" placeholder="开放新房间楼层"></td>
-                        <td><input type="number" min="0" id="newRNum" title="开放新房间房号" placeholder="开放新房间房号"></td>
+                        <td><input type="number" min="0" max="99" id="newRFloor" title="开放新房间的楼层" placeholder="新楼层"></td>
+                        <td><input type="number" min="0" max="99" id="newRNum" title="开放新房间的房号" placeholder="新房号"></td>
                         <td>
                             <select id="newRDir" title="开放新房间朝向">
                                 <option v-for="edirection in directions" v-cloak>{{edirection.type}}</option>

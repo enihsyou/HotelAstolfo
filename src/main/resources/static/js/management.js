@@ -59,7 +59,7 @@ $(function init() {
     let nickname = sessionStorage.nickname || localStorage.nickname;
     if (sessionStorage.isLogin !== 'true') {
         //未登录则返回主页
-        // location.href = '/';
+        location.href = '/';
     }
     else {
         startCatLoading(100);
