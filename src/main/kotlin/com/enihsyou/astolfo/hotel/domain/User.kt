@@ -1,23 +1,12 @@
 package com.enihsyou.astolfo.hotel.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.annotations.NaturalId
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters
 import java.time.LocalDateTime
-import javax.persistence.AttributeConverter
-import javax.persistence.CascadeType
-import javax.persistence.Column
-import javax.persistence.Convert
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.ManyToMany
-import javax.persistence.OneToMany
-import javax.persistence.Table
-
+import javax.persistence.*
 
 @Entity
 @Table(name = "USER")
@@ -31,10 +20,6 @@ data class User(
 
     var nickname: String = "",
 
-    @Column(nullable = false)
-    @JsonIgnore
-    var password: String = "",
-
     @CreatedDate
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter::class)
     val register_date: LocalDateTime = LocalDateTime.now(),
@@ -46,6 +31,11 @@ data class User(
     @ManyToMany
     var guests: MutableList<Guest> = mutableListOf()
 ) {
+
+    @Column(nullable = false)
+    var password = ""
+        @JsonIgnore get
+        @JsonProperty set
 
     enum class UserRole {
         经理, 前台, 注册用户, 未注册
