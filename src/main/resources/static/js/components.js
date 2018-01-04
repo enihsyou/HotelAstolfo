@@ -608,8 +608,12 @@ async function rooms_all_info() {
             const app = new Vue({
                 el: '#rooms_all_info',
                 data: {
-                    allRooms: data,
-                    rooms: data,
+                    allRooms: data.sort((a, b) => {
+                        return a.roomNumber.floor - b.roomNumber.floor
+                    }),
+                    rooms: data.sort((a, b) => {
+                        return a.roomNumber.floor - b.roomNumber.floor
+                    }),
                     info: {},
                     tours: [],
                     curFloor: -1,
@@ -1296,7 +1300,9 @@ async function modify_rooms_type() {
                 data: {
                     types: data.types,
                     directions: data.directions,
-                    rooms: data.rooms
+                    rooms: data.rooms.sort((a, b) => {
+                        return a.roomNumber.floor - b.roomNumber.floor
+                    })
                 },
                 methods: {
                     addType: function () {
