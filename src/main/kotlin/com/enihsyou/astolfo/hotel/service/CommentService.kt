@@ -4,16 +4,9 @@ import com.enihsyou.astolfo.hotel.domain.Comment
 import com.enihsyou.astolfo.hotel.exception.订单不存在
 import com.enihsyou.astolfo.hotel.exception.评论不存在
 import com.enihsyou.astolfo.hotel.exception.评论已存在不可修改
-import com.enihsyou.astolfo.hotel.repository.CommentRepository
-import com.enihsyou.astolfo.hotel.repository.GuestRepository
-import com.enihsyou.astolfo.hotel.repository.RoomDirectionRepository
-import com.enihsyou.astolfo.hotel.repository.RoomRepository
-import com.enihsyou.astolfo.hotel.repository.RoomTypeRepository
-import com.enihsyou.astolfo.hotel.repository.TransactionRepository
-import com.enihsyou.astolfo.hotel.repository.UserRepository
+import com.enihsyou.astolfo.hotel.repository.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-
 
 interface CommentService {
     fun createComment(transaction: Int, comment: Comment)
@@ -26,9 +19,9 @@ interface CommentService {
 class CommentServiceImpl : CommentService {
 
     override fun getComment(commentId: Int): Map<String, Any> {
-        if (commentRepository.exists(commentId)) {
+        return if (commentRepository.exists(commentId)) {
             val comment = commentRepository.findOne(commentId)
-            return comment.let {
+            comment.let {
                 mutableMapOf(
                     "id" to it.id,
                     "body" to it.body,
@@ -44,10 +37,10 @@ class CommentServiceImpl : CommentService {
     }
 
     override fun showTransactionComment(transaction: Int): Comment {
-        if (transactionRepository.exists(transaction)) {
+        return if (transactionRepository.exists(transaction)) {
             val transaction1 = transactionRepository.findOne(transaction)
             if (transaction1.comment != null)
-                return transaction1.comment!!
+                transaction1.comment!!
             else
                 throw 评论不存在(transaction)
         } else throw 订单不存在(transaction)

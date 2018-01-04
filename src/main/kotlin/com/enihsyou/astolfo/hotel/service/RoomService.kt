@@ -7,19 +7,12 @@ import com.enihsyou.astolfo.hotel.exception.已有订单的房间不能删除
 import com.enihsyou.astolfo.hotel.exception.房号不存在
 import com.enihsyou.astolfo.hotel.exception.房间朝向不存在
 import com.enihsyou.astolfo.hotel.exception.房间类型不存在
-import com.enihsyou.astolfo.hotel.repository.CommentRepository
-import com.enihsyou.astolfo.hotel.repository.GuestRepository
-import com.enihsyou.astolfo.hotel.repository.RoomDirectionRepository
-import com.enihsyou.astolfo.hotel.repository.RoomRepository
-import com.enihsyou.astolfo.hotel.repository.RoomTypeRepository
-import com.enihsyou.astolfo.hotel.repository.TransactionRepository
-import com.enihsyou.astolfo.hotel.repository.UserRepository
+import com.enihsyou.astolfo.hotel.repository.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
-
 
 interface RoomService {
     fun addRoom(room: Room): ResponseEntity<Room>
